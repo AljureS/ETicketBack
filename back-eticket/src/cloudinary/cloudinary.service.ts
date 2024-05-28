@@ -1,14 +1,15 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CloudinaryRepository } from './cloudinary.repsitory';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Ticket } from 'src/entities/ticket.entity';
+import { Repository } from 'typeorm';
+import { Event } from 'src/entities/event.entity';
 
 @Injectable()
 export class CloudinaryService {
     constructor(
         private readonly cloudinaryRepository: CloudinaryRepository,
-        @InjectRepository(Ticket)
-        private readonly eventRepository: any //Repository<Event>
+        @InjectRepository(Event)
+        private readonly eventRepository: Repository<Event>
     ) {}
 
     async uploadImage(file: Express.Multer.File, productId: string) {
