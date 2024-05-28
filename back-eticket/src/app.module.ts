@@ -7,9 +7,23 @@ import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { EventsModule } from './events/events.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import typeOrmConfig from './config/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 
 @Module({
-  imports: [AuthModule, UserModule, CategoriesModule, OrdersModule, CloudinaryModule, EventsModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [typeOrmConfig],
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        configService.get('typeorm'),
+    }),
+    AuthModule, UserModule, CategoriesModule, OrdersModule, CloudinaryModule, EventsModule],
   controllers: [AppController],
   providers: [AppService],
 })

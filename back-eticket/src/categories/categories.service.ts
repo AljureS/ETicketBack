@@ -6,6 +6,10 @@ export class CategoriesService {
     constructor(private categoriesRepository: CategoriesRepository) {}
 
     getCategories(){
-        return this.categoriesRepository.getCategories()
+        return this.categoriesRepository.getCategories();
+    }
+
+    addCategories() {
+        return this.categoriesRepository.addCategories();
     }
 }

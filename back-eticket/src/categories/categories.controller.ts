@@ -9,4 +9,9 @@ export class CategoriesController {
     getCategories(){
     return this.categoriesService.getCategories()
     }
+
+    @Get('seeder') 
+    addCategories(){
+        return this.categoriesService.addCategories()
+    }
 }
