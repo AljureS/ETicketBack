@@ -1,37 +1,54 @@
-import {Entity, PrimaryGeneratedColumn,JoinTable ,Column, ManyToOne,ManyToMany, OneToMany, JoinColumn} from "typeorm"
-import { v4 as uuid} from 'uuid'
-import { Category } from "./category.entity"
-import { OrderDetails } from "./orderDetails.entity"
-import { Ticket } from "./ticket.entity"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  JoinTable,
+  Column,
+  ManyToOne,
+  ManyToMany,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
+import { v4 as uuid } from 'uuid';
+import { Category } from './category.entity';
+import { OrderDetails } from './orderDetails.entity';
+import { Ticket } from './ticket.entity';
 
 @Entity({
-    name:"event"
+  name: 'event',
 })
-export class Event{
+export class Event {
+  @PrimaryGeneratedColumn('uuid')
+  id: string = uuid();
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string = uuid()
+  @Column({ length: 50, nullable: false })
+  name: string;
 
-    @Column({length:50, nullable:false})
-    name: string
+  @Column({ nullable: false })
+  description: string;
 
-    @Column({nullable:false})
-    description: string
-    
-    @Column({type:"varchar", default:"https://upload.wikimedia.org/wikipedia/commons/6/64/Ejemplo.png"})
-    imgUrl: string
+  @Column({
+    type: 'varchar',
+    default: 'https://upload.wikimedia.org/wikipedia/commons/6/64/Ejemplo.png',
+  })
+  imgUrl: string;
 
-    @ManyToOne(() => Category, (category) => category.event)
-    category: Category
+  @ManyToOne(() => Category, (category) => category.event)
+  category: Category;
 
-    // Relación N:N con orderDetails.
-    @ManyToMany(()=> OrderDetails, (orderDetail) => orderDetail.events)
-    @JoinTable()
-    orderDetails: OrderDetails[]
+  @Column({ nullable: false, type: 'date' })
+  fecha: Date;
 
-    @OneToMany(() => Ticket, (ticket)=> ticket.event)
-    @JoinColumn()
-    tickets: Ticket[]
+  @Column()
+  ubicacion:string
+
+  // Relación N:N con orderDetails.
+  @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.events)
+  @JoinTable()
+  orderDetails: OrderDetails[];
+
+  @OneToMany(() => Ticket, (ticket) => ticket.event)
+  @JoinColumn()
+  tickets: Ticket[];
 }
 
 // @ManyToMany(() => Category)
