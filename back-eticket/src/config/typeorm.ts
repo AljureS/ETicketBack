@@ -11,7 +11,7 @@ const config = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT as unknown as number,
   username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
+  password: process.env.DB_PASSWORD as string,
   autoLoadEntities: true,
   entities:['dist/**/*.entity{.ts,.js}'],
   migrations:['dist/migrations/*{.js,.ts}'],

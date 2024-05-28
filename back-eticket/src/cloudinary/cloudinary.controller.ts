@@ -1,4 +1,34 @@
-import { Controller } from '@nestjs/common';
+import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { CloudinaryService } from './cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('cloudinary')
-export class CloudinaryController {}
+export class CloudinaryController {
+    constructor(
+        private readonly cloudinaryService: CloudinaryService
+    ){}
+
+    //@ApiBearerAuth()
+    @Post('uploadImage/:id')
+    // @Roles(Role.Admin)
+    // @UseGuards(AuthGuard, RolesGuard)
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadImage(
+        @Param('id') productID: string,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new MaxFileSizeValidator({
+                        maxSize: 250000,
+                        message: 'The file is too large',
+                    }),
+                    new FileTypeValidator({
+                        fileType: /(jpg|jpeg|png|webp|gif|svg)/,
+                    })
+                ]
+            })
+        ) file: Express.Multer.File // tipo de tapo "type": ["multer"]
+    ){
+        return await this.cloudinaryService.uploadImage(file, productID)
+    }
+}
