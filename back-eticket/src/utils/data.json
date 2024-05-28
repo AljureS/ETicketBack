@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Bad Bunny",
+        "description": "The best singer in the world",
+        "category": "Reggaeton",
+        "imgUrl": "https://example.com/badbunny.jpg"
+    },
+    {
+        "name": "Shakira",
+        "description": "The Queen of Latin Music",
+        "category": "Pop",
+        "imgUrl": "https://example.com/shakira.jpg"
+    },
+    {
+        "name": "Daddy Yankee",
+        "description": "The best",
+        "category": "Reggaeton",
+        "imgUrl": "https://example.com/badbunny.jpg"
+    },
+    {
+        "name": "Romeo Santos",
+        "description": "The Bachata King",
+        "category": "Bachata",
+        "imgUrl": "https://example.com/romeosantos.jpg"
+    },
+    {
+        "name": "Juanes",
+        "description": "Colombian Rockstar with soulful tunes",
+        "category": "Rock",
+        "imgUrl": "https://example.com/juanes.jpg"
+    }
+]

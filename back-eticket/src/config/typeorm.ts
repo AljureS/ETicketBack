@@ -5,7 +5,7 @@ import { registerAs } from '@nestjs/config';
 
 dotenvConfig({ path: '.env.development' });
 
-const config = {
+const config = {  
   type: 'postgres',
   database: process.env.DB_DATABASE,
   host: process.env.DB_HOST,
@@ -17,7 +17,7 @@ const config = {
   migrations:['dist/migrations/*{.js,.ts}'],
   logging: true,
   synchronize: true,
-  dropSchema:true
+  dropSchema: true,
 };
 
 export default registerAs('typeorm', ()=> config)
