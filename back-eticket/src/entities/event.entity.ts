@@ -20,7 +20,7 @@ export class Event {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid();
 
-  @Column({ length: 50, nullable: false })
+  @Column({ length: 50, nullable: false, unique:true })
   name: string;
 
   @Column({ nullable: false })
@@ -36,10 +36,10 @@ export class Event {
   category: Category;
 
   @Column({ nullable: false, type: 'date' })
-  fecha: Date;
+  date: Date;
 
   @Column()
-  ubicacion:string
+  location:string
 
   // Relación N:N con orderDetails.
   @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.events)

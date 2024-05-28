@@ -56,46 +56,61 @@ export class EventsRepository {
       name: event.name,
       description: event.description,
       category: categorySearched,
-      fecha: event.fecha,
-      ubicacion: event.ubicacion,
-      tickets:[]
+      date: event.date,
+      location: event.location,
+      tickets: [],
+
     });
     for (const ticket of event.tickets) {
-      
       const newTicket = this.ticketRepository.create({
         stock: ticket.stock,
         price: ticket.price,
-        localization: ticket.localization
+        zone: ticket.zone,
       });
-      
+
       const tickerGuardadoEnDB = await this.ticketRepository.save(newTicket);
-      eventSinTickets.tickets.push(tickerGuardadoEnDB)
+      eventSinTickets.tickets.push(tickerGuardadoEnDB);
     }
     const eventConTicketsEnDB =
       await this.eventsRepository.save(eventSinTickets);
     return eventConTicketsEnDB;
   }
 
-  async modifyEvent(id:string,event: ModifyEventDto) {
-    let eventoBuscado = await this.eventsRepository.findOne({where:{id}})
-    if(!eventoBuscado)throw new NotFoundException("Evento no encontrado")
-      const categoriaExisteEnDB = await this.categoryRepository.findOne({where:{name:event.category}})
-    if(categoriaExisteEnDB){
-      eventoBuscado = {...eventoBuscado, ...event, category:categoriaExisteEnDB}
-    }if(!categoriaExisteEnDB && event.category){
-      const nuevaCategoria = await this.categoryRepository.save({name:event.category})
-      eventoBuscado = {...eventoBuscado, ...event, category:nuevaCategoria}
-    }else{
-      eventoBuscado = {...eventoBuscado, ...event, category:eventoBuscado.category}
-    }
+  async modifyEvent(id: string, event: ModifyEventDto) {
+    let eventoBuscado = await this.eventsRepository.findOne({ where: { id } });
+    console.log("llego hasta aca");
     
-    return await this.eventsRepository.save(eventoBuscado)
+    if (!eventoBuscado) throw new NotFoundException('Evento no encontrado');
+    const categoriaExisteEnDB = await this.categoryRepository.findOne({
+      where: { name: event.category },
+    });
+    if (categoriaExisteEnDB) {
+      eventoBuscado = {
+        ...eventoBuscado,
+        ...event,
+        category: categoriaExisteEnDB,
+      };
+    }
+    if (!categoriaExisteEnDB && event.category) {
+      const nuevaCategoria = await this.categoryRepository.save({
+        name: event.category,
+      });
+      eventoBuscado = { ...eventoBuscado, ...event, category: nuevaCategoria };
+    } else {
+      eventoBuscado = {
+        ...eventoBuscado,
+        ...event,
+        category: eventoBuscado.category,
+      };
+    }
+
+    return await this.eventsRepository.save(eventoBuscado);
   }
 
   async deleteEvent(id: string) {
-    await this.eventsRepository.delete(id)
-    return id
- }
+    await this.eventsRepository.delete(id);
+    return id;
+  }
 
   //TODO: hay que arreglarlo
   async addEvents() {

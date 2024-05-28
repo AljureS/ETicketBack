@@ -43,11 +43,11 @@ export class PostEventDto {
 
   @IsNotEmpty()
   @IsDate()
-  fecha: Date;
+  date: Date;
 
   @IsString()
   @IsNotEmpty()
-  ubicacion: string;
+  location: string;
 
   @IsArray()
   @ValidateNested({ each: true }) // Para validar cada elemento del array
@@ -75,5 +75,5 @@ class TicketDto {
 
   @IsNotEmpty()
   @IsString()
-  localization: string;
+  zone: string;
 }

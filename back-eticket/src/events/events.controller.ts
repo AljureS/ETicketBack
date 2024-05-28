@@ -32,7 +32,7 @@ export class EventsController {
   postEvent(@Body() event: PostEventDto) {
     return this.eventsService.postEvent(event);
   }
-  @Put()
+  @Put(':id')
   modifyEvent(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() event: ModifyEventDto,
@@ -42,8 +42,8 @@ export class EventsController {
 
   @Delete()
   deleteEvent(id: string) {
-    return this.deleteEvent(id)
- }
+    return this.deleteEvent(id);
+  }
 
   //TODO: dejar para despues de realizado el crud basico
   @Get('seeder')

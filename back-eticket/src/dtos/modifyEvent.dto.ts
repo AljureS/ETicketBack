@@ -19,9 +19,9 @@ export class ModifyEventDto {
 
   @IsOptional()
   @IsDate()
-  fecha: Date;
+  date: Date;
 
   @IsString()
   @IsOptional()
-  ubicacion: string;
+  location: string;
 }
