@@ -1,5 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column,OneToOne, ManyToMany, JoinColumn} from "typeorm"
-import {v4 as uuid} from 'uuid'
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, JoinColumn } from "typeorm"
+import { v4 as uuid } from 'uuid'
 import { Order } from "./order.entity"
 import { Event } from "./event.entity"
 

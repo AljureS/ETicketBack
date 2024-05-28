@@ -1,5 +1,5 @@
 import {Entity, PrimaryGeneratedColumn,JoinTable ,Column, ManyToOne,ManyToMany, OneToMany, JoinColumn} from "typeorm"
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid} from 'uuid'
 import { Category } from "./category.entity"
 import { OrderDetails } from "./orderDetails.entity"
 import { Ticket } from "./ticket.entity"
