@@ -10,5 +10,6 @@ import { EventsController } from './events.controller';
   imports: [TypeOrmModule.forFeature([Event, Category])],
   controllers: [EventsController],
   providers: [EventsService, EventsRepository],
+  exports: [TypeOrmModule], // Exporta TypeOrmModule para que otros módulos puedan usar EventRepository
 })
 export class EventsModule {}
