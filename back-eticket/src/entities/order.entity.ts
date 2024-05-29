@@ -1,6 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm"
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne} from "typeorm"
 import {v4 as uuid} from 'uuid'
 import { User } from "./user.entity"
+import { OrderDetails } from "./orderDetails.entity"
 
 @Entity({
     name:"orders"
@@ -15,5 +16,7 @@ export class Order{
     @Column()
     date:Date
     
+    @OneToOne(() => OrderDetails, (orderDetails) => orderDetails.order)
+    orderDetails: OrderDetails;
 }
 
