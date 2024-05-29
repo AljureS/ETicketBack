@@ -10,6 +10,7 @@ import { EventsModule } from './events/events.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TicketsModule } from './tickets/tickets.module';
 
 
 @Module({
@@ -23,7 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
-    AuthModule, UserModule, CategoriesModule, OrdersModule, CloudinaryModule, EventsModule],
+    AuthModule, UserModule, CategoriesModule, OrdersModule, CloudinaryModule, EventsModule, TicketsModule],
   controllers: [AppController],
   providers: [AppService],
 })

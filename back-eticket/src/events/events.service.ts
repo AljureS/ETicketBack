@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EventsRepository } from './events.repository';
+import { PostEventDto } from 'src/dtos/postEvent.dto';
+import { ModifyEventDto } from 'src/dtos/modifyEvent.dto';
 
 @Injectable()
 export class EventsService {
@@ -16,4 +18,13 @@ export class EventsService {
   addEvents() {
     return this.eventsRepository.addEvents();
   }
+  postEvent(event: PostEventDto) {
+    return this.eventsRepository.postEvent(event);
+  }
+  modifyEvent(id: string, event: ModifyEventDto) {
+    return this.eventsRepository.modifyEvent(id, event);
+  }
+  deleteProduct(id: string) {
+    return this.eventsRepository.deleteEvent(id)
+ }
 }
