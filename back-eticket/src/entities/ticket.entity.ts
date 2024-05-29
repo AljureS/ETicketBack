@@ -1,5 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Event } from './event.entity';
 
 @Entity({
@@ -7,13 +6,17 @@ import { Event } from './event.entity';
 })
 export class Ticket {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
+
   @Column({ type: 'int', nullable: false })
   stock: number;
+
   @Column('decimal', { precision: 10, scale: 2, nullable: false })
   price: number;
+
   @Column()
   zone: string;
+
   @ManyToOne(() => Event, (event) => event.tickets)
   event: Event;
 }
