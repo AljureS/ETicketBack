@@ -40,7 +40,9 @@ export class EventsRepository {
     return event;
   }
 
-  async postEvent(event: PostEventDto): Promise<Event> {
+
+  async postEvent(event: PostEventDto, email:string) {
+
     const { category } = event;
     const categorySearched = await this.categoryRepository.findOne({
       where: { name: category },
@@ -58,6 +60,7 @@ export class EventsRepository {
       date: event.date,
       location: event.location,
       tickets: [],
+      userEmail:email
     });
 
     for (const ticket of event.tickets) {
@@ -74,9 +77,9 @@ export class EventsRepository {
     return await this.eventsRepository.save(eventSinTickets);
   }
 
-  async modifyEvent(id: string, event: ModifyEventDto): Promise<Event> {
+  async modifyEvent(id: string, event: ModifyEventDto, email:string) {
     let eventoBuscado = await this.eventsRepository.findOne({ where: { id } });
-
+    
     if (!eventoBuscado) throw new NotFoundException('Evento no encontrado');
 
     const categoriaExisteEnDB = await this.categoryRepository.findOne({

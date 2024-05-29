@@ -39,6 +39,8 @@ export class Event {
   @Column()
   location: string;
 
+  @Column({nullable:true})
+  userEmail?:string
   @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.events)
   orderDetails: OrderDetails[];
 

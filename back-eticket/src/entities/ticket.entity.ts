@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { v4 as uuid } from 'uuid';
 import { Event } from './event.entity';
 
 @Entity({
@@ -18,5 +20,6 @@ export class Ticket {
   zone: string;
 
   @ManyToOne(() => Event, (event) => event.tickets)
+  @JoinColumn()
   event: Event;
 }
