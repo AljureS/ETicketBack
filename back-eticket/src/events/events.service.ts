@@ -10,6 +10,12 @@ export class EventsService {
   getEvents(page: number, limit: number) {
     return this.eventsRepository.getEvents(page, limit);
   }
+  getEventsAntiguosARecientes(page: number, limit: number){
+    return this.eventsRepository.getEventsAntiguosARecientes(page,limit)
+  }
+  getEventsRecientesAAntiguos(page: number, limit: number){
+    return this.eventsRepository.getEventsRecientesAAntiguos(page,limit)
+  }
 
   getEvent(id) {
     return this.eventsRepository.getEvent(id);
