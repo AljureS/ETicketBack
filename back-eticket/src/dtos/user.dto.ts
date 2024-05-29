@@ -10,6 +10,23 @@ export class createUserDto {
     @Length(3, 80, { message: 'El nombre debe tener entre 3 y 80 caracteres.' })
     @IsString({ message: 'name must be a string' })
     name: string
+    
+    /**
+    This is the name of the user 
+    @example 'Cristiano'
+     */
+    @IsNotEmpty({message: 'Name required'})
+    @Length(3, 80, { message: 'El nombre debe tener entre 3 y 80 caracteres.' })
+    @IsString({ message: 'name must be a string' })
+    lastName: string
+
+    /**
+     * This is the phone of the user
+     * @example '123456789'
+     */
+    @IsNumber()
+    @IsNotEmpty({message: 'Phone required'})
+    phone: number 
 
     /**
      * This is the email of the user
@@ -36,40 +53,6 @@ export class createUserDto {
     @IsNotEmpty({ message: 'Confirm password required' })
     @Validate(MatchingPassword, ['password'])
     confirmPassword: string
-
-    /**
-     * This is the address of the user
-     * @example 'Calle 123'
-     */
-    @IsNotEmpty({message: 'Address required'})
-    @Length(3, 80 )
-    address: string
-
-    /**
-     * This is the phone of the user
-     * @example '123456789'
-     */
-    @IsNumber()
-    @IsNotEmpty({message: 'Phone required'})
-    phone: number 
-
-    /**
-     * This is the country of the user
-     * @example 'Colombia'
-     */
-    @IsNotEmpty({message: 'Country required'})
-    @Length(5, 20)
-    @IsString({ message: 'country must be a string' })
-    country: string
-
-    /**
-     * This is the city of the user
-     * @example 'Bogota'
-     */
-    @IsNotEmpty({message: 'City required'})
-    @Length(5, 20)
-    @IsString({ message: 'city must be a string' })
-    city: string
 
     @IsEmpty()
     idAdmin?: boolean

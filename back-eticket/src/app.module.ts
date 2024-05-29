@@ -10,8 +10,8 @@ import { EventsModule } from './events/events.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
 import { TicketsModule } from './tickets/tickets.module';
-
 
 @Module({
   imports: [
@@ -19,10 +19,16 @@ import { TicketsModule } from './tickets/tickets.module';
       isGlobal: true,
       load: [typeOrmConfig],
     }),
+
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
+    }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '60m' },
     }),
     AuthModule, UserModule, CategoriesModule, OrdersModule, CloudinaryModule, EventsModule, TicketsModule],
   controllers: [AppController],
