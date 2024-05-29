@@ -51,6 +51,8 @@ export class EventsController {
   @UseGuards(AuthGuard, RoleGuard)
   @Post()
   postEvent(@Body() event: PostEventDto, @Req() req: Request & { user: User }) {
+    console.log("llego hasta aca");
+    
     const { email } = req.user;
     return this.eventsService.postEvent(event, email);
   }

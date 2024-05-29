@@ -60,15 +60,15 @@ export class EventsRepository {
       tickets: [],
       userEmail: email,
     });
-
     for (const ticket of event.tickets) {
       const newTicket = this.ticketRepository.create({
         stock: ticket.stock,
         price: ticket.price,
-        zone: ticket.zone,
-        event: eventSinTickets,
+        zone: ticket.zone
       });
+      
       const tickerGuardadoEnDB = await this.ticketRepository.save(newTicket);
+      
       eventSinTickets.tickets.push(tickerGuardadoEnDB);
     }
 
@@ -136,7 +136,6 @@ export class EventsRepository {
 
         const savedTicket = await this.ticketRepository.save(newTicket);
         newEvent.tickets.push(savedTicket);
-        newEvent.ticketId = savedTicket.id;
         await this.eventsRepository.save(newEvent);
       }
     }
