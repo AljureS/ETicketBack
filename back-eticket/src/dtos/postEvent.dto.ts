@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
     IsArray,
@@ -13,19 +14,19 @@ import {
 } from 'class-validator';
 
 export class PostEventDto {
-  /**
-   * El nombre debe ser una cadena de minimo 4 letras
-   * @example Concierto de Bad Bunny
-   */
+  @ApiProperty({
+    description:"El nombre debe ser una cadena de minimo 4 letras",
+    example:"Concierto de Bad Bunny"
+  })
   @MaxLength(50)
   @IsString()
   @IsNotEmpty()
   name: string; 
 
-  /**
-   * La descripcion debe ser una cadena
-   * @example Bad Bunny llega a [Ciudad] con un concierto inolvidable, lleno de energía y ritmo, prometiendo una experiencia emocionante.
-   */
+  @ApiProperty({
+    description:"La descripcion debe ser una cadena",
+    example:"Bad Bunny llega a Colombia con un concierto inolvidable, lleno de energía y ritmo, prometiendo una experiencia emocionante."
+  })
   @IsNotEmpty()
   @IsString()
   description: string;
@@ -35,16 +36,24 @@ export class PostEventDto {
     'https://upload.wikimedia.org/wikipedia/commons/6/64/Ejemplo.png';
   /**
    * La categoria debe ser una categoria registrada
-   * @example Smartphone
+   * @example Reggaeton
    */
   @IsString()
   @IsNotEmpty()
   category: string;
 
+  @ApiProperty({
+    description:"Debe ser un Date",
+    example:"2025/01/20"
+  })
   @IsNotEmpty()
   @IsDate()
   date: Date;
 
+  @ApiProperty({
+    description:"Debe ser un string",
+    example:"Movistar Arena"
+  })
   @IsString()
   @IsNotEmpty()
   location: string;
@@ -73,6 +82,10 @@ class TicketDto {
   @IsNotEmpty()
   stock: number;
 
+  /**
+   * La zona debe ser un string
+   * @example General
+   */
   @IsNotEmpty()
   @IsString()
   zone: string;

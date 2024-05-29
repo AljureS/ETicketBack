@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
 export class LoginUserDto {
     /**
      * This is the email of the user
-     * @example 'X8l8C@example.com'
+     * @example 'x8l8c@example.com'
      */
     @IsEmail()
     @IsNotEmpty({message: 'Email required'})

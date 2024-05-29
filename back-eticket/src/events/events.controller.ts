@@ -10,6 +10,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { PostEventDto } from 'src/dtos/postEvent.dto';
@@ -21,6 +22,7 @@ import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
 import { User } from 'src/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { categoryInterceptor } from 'src/interceptors/categoryAMayuscula';
 
 @ApiTags('Events')
 @Controller('events')
@@ -31,6 +33,16 @@ export class EventsController {
   getEvents(@Query('page') page: string, @Query('limit') limit: string) {
     if (!page || !limit) return this.eventsService.getEvents(1, 5);
     return this.eventsService.getEvents(Number(page), Number(limit));
+  }
+  @Get('antiguosPrimero')
+  getEventsAntiguosARecientes(@Query('page') page: string, @Query('limit') limit: string) {
+    if (!page || !limit) return this.eventsService.getEventsAntiguosARecientes(1, 5);
+    return this.eventsService.getEventsAntiguosARecientes(Number(page), Number(limit));
+  }
+  @Get('recientesPrimero')
+  getEventsRecientesAAntiguos(@Query('page') page: string, @Query('limit') limit: string) {
+    if (!page || !limit) return this.eventsService.getEventsRecientesAAntiguos(1, 5);
+    return this.eventsService.getEventsRecientesAAntiguos(Number(page), Number(limit));
   }
 
   @ApiBearerAuth()
@@ -47,6 +59,7 @@ export class EventsController {
   }
 
   @ApiBearerAuth()
+  @UseInterceptors(categoryInterceptor)
   @Roles(Role.ADMIN, Role.SUPERADMIN)
   @UseGuards(AuthGuard, RoleGuard)
   @Post()

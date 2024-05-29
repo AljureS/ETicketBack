@@ -2,7 +2,7 @@
     {
         "name": "J Balvin",
         "description": "A leading figure in reggaeton music globally.",
-        "category": "Reggaeton",
+        "category": "REGGAETON",
         "imgUrl": "https://example.com/jbalvin.jpg",
         "date": "2025-02-15",
         "location": "Arena Ciudad de México",
@@ -22,7 +22,7 @@
     {
         "name": "Karol G",
         "description": "The queen of reggaeton in a spectacular night.",
-        "category": "Reggaeton",
+        "category": "REGGAETON",
         "imgUrl": "https://example.com/karolg.jpg",
         "date": "2025-03-05",
         "location": "Madison Square Garden",
@@ -42,7 +42,7 @@
     {
         "name": "Maluma",
         "description": "Experience the charm of Maluma live.",
-        "category": "Reggaeton",
+        "category": "REGGAETON",
         "imgUrl": "https://example.com/maluma.jpg",
         "date": "2025-04-10",
         "location": "Staples Center",
@@ -62,7 +62,7 @@
     {
         "name": "Ozuna",
         "description": "Join Ozuna for an unforgettable night of music.",
-        "category": "Reggaeton",
+        "category": "REGGAETON",
         "imgUrl": "https://example.com/ozuna.jpg",
         "date": "2025-05-20",
         "location": "The O2 Arena",
@@ -82,7 +82,7 @@
     {
         "name": "Daddy Yankee",
         "description": "Don't miss the legend of reggaeton live in concert.",
-        "category": "Reggaeton",
+        "category": "REGGAETON",
         "imgUrl": "https://example.com/daddyyankee.jpg",
         "date": "2025-06-30",
         "location": "American Airlines Arena",
@@ -102,7 +102,7 @@
     {
         "name": "Coldplay",
         "description": "Experience an electrifying night with Coldplay's unique sound.",
-        "category": "Rock",
+        "category": "ROCK",
         "imgUrl": "https://example.com/coldplay.jpg",
         "date": "2025-07-10",
         "location": "Wembley Stadium",
@@ -122,7 +122,7 @@
     {
         "name": "Beyoncé",
         "description": "Join Beyoncé for a night of powerhouse vocals and stunning visuals.",
-        "category": "Pop",
+        "category": "POP",
         "imgUrl": "https://example.com/beyonce.jpg",
         "date": "2025-08-15",
         "location": "Rose Bowl",
@@ -142,7 +142,7 @@
     {
         "name": "Ed Sheeran",
         "description": "Get up close with Ed Sheeran's heartfelt lyrics and acoustic performance.",
-        "category": "Acoustic",
+        "category": "ACOUSTIC",
         "imgUrl": "https://example.com/edsheeran.jpg",
         "date": "2025-09-05",
         "location": "Gillette Stadium",
@@ -162,7 +162,7 @@
     {
         "name": "Kendrick Lamar",
         "description": "Witness the lyrical genius of Kendrick Lamar in his prime.",
-        "category": "Hip-Hop",
+        "category": "HIP-HOP",
         "imgUrl": "https://example.com/kendricklamar.jpg",
         "date": "2025-10-20",
         "location": "Madison Square Garden",
@@ -182,7 +182,7 @@
     {
         "name": "Billie Eilish",
         "description": "Dive into the moody and atmospheric soundscapes of Billie Eilish.",
-        "category": "Alternative",
+        "category": "ALTERNATIVE",
         "imgUrl": "https://example.com/billieeilish.jpg",
         "date": "2025-11-30",
         "location": "Staples Center",
@@ -202,7 +202,7 @@
     {
         "name": "Taylor Swift",
         "description": "Sing along with Taylor Swift's greatest hits in this stunning concert series.",
-        "category": "Country",
+        "category": "COUNTRY",
         "imgUrl": "https://example.com/taylorswift.jpg",
         "date": "2026-01-10",
         "location": "AT&T Stadium",
@@ -222,7 +222,7 @@
     {
         "name": "Andrea Bocelli",
         "description": "Experience the timeless voice of Andrea Bocelli in a breathtaking performance.",
-        "category": "Classical",
+        "category": "CLASSICAL",
         "imgUrl": "https://example.com/andreabocelli.jpg",
         "date": "2026-02-25",
         "location": "Carnegie Hall",

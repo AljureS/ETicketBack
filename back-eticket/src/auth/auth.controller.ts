@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/dtos/login.dto';
 import { createUserDto } from 'src/dtos/user.dto';
@@ -7,6 +7,7 @@ import { Role } from 'src/user/role.enum';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { EmailInterceptor } from 'src/interceptors/emailAMinuscula';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -14,6 +15,8 @@ export class AuthController {
     constructor (private readonly authService: AuthService){}
 
     // [url]/auth/signup 
+    
+  @UseInterceptors(EmailInterceptor)
     @Post('signup') 
     signUp(@Body() user: createUserDto) {
         return this.authService.signUp(user);

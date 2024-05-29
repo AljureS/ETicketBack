@@ -28,6 +28,26 @@ export class EventsRepository {
     });
     return events;
   }
+  async getEventsAntiguosARecientes(page: number, limit: number) {
+    const eventos = await this.eventsRepository
+      .createQueryBuilder('event')
+      .orderBy('event.date', 'ASC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getMany();
+
+    return eventos;
+  }
+  async getEventsRecientesAAntiguos(page: number, limit: number) {
+    const eventos = await this.eventsRepository
+      .createQueryBuilder('event')
+      .orderBy('event.date', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getMany();
+
+    return eventos;
+  }
 
   async getEvent(id: string): Promise<Event> {
     const event = await this.eventsRepository.findOne({
@@ -64,11 +84,11 @@ export class EventsRepository {
       const newTicket = this.ticketRepository.create({
         stock: ticket.stock,
         price: ticket.price,
-        zone: ticket.zone
+        zone: ticket.zone,
       });
-      
+
       const tickerGuardadoEnDB = await this.ticketRepository.save(newTicket);
-      
+
       eventSinTickets.tickets.push(tickerGuardadoEnDB);
     }
 
@@ -88,7 +108,7 @@ export class EventsRepository {
       ...eventoBuscado,
       ...event,
       category: categoriaExisteEnDB || eventoBuscado.category,
-      userEmail:email
+      userEmail: email,
     };
 
     if (!categoriaExisteEnDB && event.category) {
