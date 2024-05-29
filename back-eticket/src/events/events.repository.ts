@@ -24,9 +24,7 @@ export class EventsRepository {
       },
     });
 
-    events = events.slice(startIndex, endIndex);
-
-    return events;
+    return events.slice(startIndex, endIndex);
   }
 
   async getEvent(id: string) {
@@ -35,13 +33,14 @@ export class EventsRepository {
         return `Evento con ID ${id} no encontrado`;
     }
     return event;
-}
-  async addEvents () {
+  }
+
+  async addEvents() {
     try {
-        const categories = await this.categoryRepository.find();
-        if(categories.length === 0) {
-          return 'No se pueden crear eventos sin género';
-        }
+      const categories = await this.categoryRepository.find();
+      if (categories.length === 0) {
+        return 'No se pueden crear eventos sin género';
+      }
 
       const existingEvents = await this.eventsRepository.find();
       const existingEventsName = existingEvents.map(event => event.name);
@@ -49,7 +48,7 @@ export class EventsRepository {
       const newEventsName = data.map(element => element.name);
       const duplicateEvents = newEventsName.filter(name => existingEventsName.includes(name));
 
-      if(duplicateEvents.length > 0) {
+      if (duplicateEvents.length > 0) {
         return 'El evento ya está en la base de datos';
       }
 
@@ -58,21 +57,21 @@ export class EventsRepository {
           (category) => category.name === element.category,
         );
 
-        const event = new Event ();
+        const event = new Event();
         event.name = element.name;
         event.description = element.description;
         event.imgUrl = element.imgUrl;
         event.category = category;
 
         await this.eventsRepository
-        .createQueryBuilder()
-        .insert()
-        .into(Event)
-        .values(event)
-        .execute()
+          .createQueryBuilder()
+          .insert()
+          .into(Event)
+          .values(event)
+          .execute()
       }));
 
-      return 'Evento creado!'
+      return 'Evento creado!';
     } catch (error) {
       console.error('Error al crear evento');
       throw error;
