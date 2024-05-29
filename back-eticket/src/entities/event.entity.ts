@@ -41,13 +41,11 @@ export class Event {
 
   @Column({nullable:true})
   userEmail?:string
+
   @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.events)
   orderDetails: OrderDetails[];
 
   @OneToMany(() => Ticket, (ticket) => ticket.event)
   @JoinColumn({ name: 'ticket_id' })
   tickets: Ticket[];
-
-  @Column({ nullable: true })
-  ticketId: string;
 }
