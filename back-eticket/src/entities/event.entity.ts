@@ -41,6 +41,9 @@ export class Event {
   @Column()
   location:string
 
+  @Column({nullable:true})
+  userEmail?:string
+
   // Relación N:N con orderDetails.
   @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.events)
   @JoinTable()
