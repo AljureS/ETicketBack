@@ -9,7 +9,7 @@ import { EventsModule } from '../events/events.module'; // Asegúrate de importa
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Ticket]),
+    TypeOrmModule.forFeature([Event, Ticket]),
     EventsModule, // Importa EventsModule
   ],
   controllers: [CloudinaryController],
