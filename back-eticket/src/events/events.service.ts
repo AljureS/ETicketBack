@@ -18,11 +18,11 @@ export class EventsService {
   preLoadData() {
     return this.eventsRepository.preLoadData(); 
   }
-  postEvent(event: PostEventDto) {
-    return this.eventsRepository.postEvent(event);
+  postEvent(event: PostEventDto, email:string) {
+    return this.eventsRepository.postEvent(event, email);
   }
-  modifyEvent(id: string, event: ModifyEventDto) {
-    return this.eventsRepository.modifyEvent(id, event);
+  modifyEvent(id: string, event: ModifyEventDto, email:string) {
+    return this.eventsRepository.modifyEvent(id, event, email);
   }
   deleteProduct(id: string) {
     return this.eventsRepository.deleteEvent(id)

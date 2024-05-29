@@ -40,7 +40,7 @@ export class EventsRepository {
     return event;
   }
 
-  async postEvent(event: PostEventDto) {
+  async postEvent(event: PostEventDto, email:string) {
     const { category } = event;
     const categorySearched = await this.categoryRepository.findOne({
       where: { name: category },
@@ -59,7 +59,7 @@ export class EventsRepository {
       date: event.date,
       location: event.location,
       tickets: [],
-
+      userEmail:email
     });
     for (const ticket of event.tickets) {
       const newTicket = this.ticketRepository.create({
@@ -76,9 +76,8 @@ export class EventsRepository {
     return eventConTicketsEnDB;
   }
 
-  async modifyEvent(id: string, event: ModifyEventDto) {
+  async modifyEvent(id: string, event: ModifyEventDto, email:string) {
     let eventoBuscado = await this.eventsRepository.findOne({ where: { id } });
-    console.log("llego hasta aca");
     
     if (!eventoBuscado) throw new NotFoundException('Evento no encontrado');
     const categoriaExisteEnDB = await this.categoryRepository.findOne({
