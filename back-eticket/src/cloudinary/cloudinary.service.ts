@@ -16,14 +16,14 @@ export class CloudinaryService {
         //Verificar la existencia del producto 
         const product = await this.eventRepository.findOneBy({id: productId});
         if (!product) {
-            throw new NotFoundException(`Product with ID ${productId} not found.`);
+            throw new NotFoundException(`Event with ID ${productId} not found.`);
         }
         //* => query a cloudinary
         const response = await this.cloudinaryRepository.uploadImage(file);
 
         //* => update en la base de datos
         if (!productId) {
-            throw new NotFoundException('Product ID is null.');
+            throw new NotFoundException('Event ID is null.');
         }
         const updateResult = await this.eventRepository.update({id: productId}, {
             imgUrl: response.secure_url
