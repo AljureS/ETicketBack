@@ -8,7 +8,7 @@ export class AuthController {
     constructor (private readonly authService: AuthService){}
 
     // [url]/auth/signup 
-    @Post('signup')
+    @Post('signup') 
     signUp(@Body() user: createUserDto) {
         return this.authService.signUp(user);
     }
@@ -20,7 +20,7 @@ export class AuthController {
     }
 
     @Put('update/:id')
-    updateRole(@Param('id') ParseUUIDPipe, id: string){
+    updateRole(@Param('id') id: string){
         return this.authService.updateRole( id)
     }
 }
