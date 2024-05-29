@@ -10,7 +10,7 @@ import { ModifyEventDto } from 'src/dtos/modifyEvent.dto';
 
 @Injectable()
 export class EventsRepository {
-  constructor(
+  constructor( 
     @InjectRepository(Event)
     private eventsRepository: Repository<Event>,
     @InjectRepository(Category)
@@ -113,50 +113,57 @@ export class EventsRepository {
   }
 
   //TODO: hay que arreglarlo
-  async addEvents() {
-    try {
-      const categories = await this.categoryRepository.find();
-      if (categories.length === 0) {
-        return 'No se pueden crear eventos sin género';
-      }
+  async preLoadData() {
+    // Verificar si existe esa categoria 
+    const categories = await this.categoryRepository.find();
+    data?.map(async (element) => {
+        const category = categories.find(
+            (category) => category.name === element.category
+        )
+        // Se necesita crear el producto que va en database
+        
+        const newEvent = new Event()
+        newEvent.name = element.name
+        newEvent.description = element.description
+        newEvent.category = category
+        newEvent.imgUrl = element.imgUrl
+        newEvent.date = new Date(element.date)
+        newEvent.location = element.location
+        newEvent.tickets = []
+    //aÑADIR ESTO A LA BD
+    await this.eventsRepository
+        .createQueryBuilder() // para crear la consulta SQL 
+        .insert() // insercion de datos 
+        .into(Event) // En esa entidad van los datos 
+        .values(newEvent) // valor que va en entidad 
+        //.orIgnore() // no inserta si ya existe //? si ya existe se actualiza =>
+        // .orUpdate(
+        //     [ "description", "imgUrl"],["name"] //* name no se actualiza
+        // )
+        .execute()
+    
+        newEvent.tickets = []
 
-      const existingEvents = await this.eventsRepository.find();
-      const existingEventsName = existingEvents.map((event) => event.name);
+        const newTicket = new Ticket()
+        element.tickets.forEach(async (element) => {
+          newTicket.event = newEvent
+          newTicket.price = element.price
+          newTicket.stock = element.stock
+          newTicket.zone = element.zone
 
-      const newEventsName = data.map((element) => element.name);
-      const duplicateEvents = newEventsName.filter((name) =>
-        existingEventsName.includes(name),
-      );
+          await this.ticketRepository
+          .createQueryBuilder() // para crear la consulta SQL 
+          .insert() // insercion de datos 
+          .into(Ticket) // En esa entidad van los datos 
+          .values(newTicket) // valor que va en entidad
+          .execute()
 
-      if (duplicateEvents.length > 0) {
-        return 'El evento ya está en la base de datos';
-      }
+        });
+        newEvent.tickets.push(newTicket)
+        
+        await this.eventsRepository.save(newEvent)
+    })
 
-      await Promise.all(
-        data.map(async (element) => {
-          const category = categories.find(
-            (category) => category.name === element.category,
-          );
-
-          const event = new Event();
-          event.name = element.name;
-          event.description = element.description;
-          event.imgUrl = element.imgUrl;
-          event.category = category;
-
-          await this.eventsRepository
-            .createQueryBuilder()
-            .insert()
-            .into(Event)
-            .values(event)
-            .execute();
-        }),
-      );
-
-      return 'Evento creado!';
-    } catch (error) {
-      console.error('Error al crear evento');
-      throw error;
-    }
+    return 'eventos creados'
   }
 }

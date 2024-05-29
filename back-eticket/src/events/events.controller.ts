@@ -23,6 +23,11 @@ export class EventsController {
     return this.eventsService.getEvents(Number(page), Number(limit));
   }
 
+  @Get('seeder')
+  preLoadData() {
+    return this.eventsService.preLoadData(); 
+  }
+
   @Get(':id')
   getEvent(@Param('id') id: string) {
     return this.eventsService.getEvent(id);
@@ -46,8 +51,5 @@ export class EventsController {
   }
 
   //TODO: dejar para despues de realizado el crud basico
-  @Get('seeder')
-  addEvents() {
-    return this.eventsService.addEvents();
-  }
+  
 }

@@ -15,8 +15,8 @@ export class EventsService {
     return this.eventsRepository.getEvent(id);
   }
 
-  addEvents() {
-    return this.eventsRepository.addEvents();
+  preLoadData() {
+    return this.eventsRepository.preLoadData(); 
   }
   postEvent(event: PostEventDto) {
     return this.eventsRepository.postEvent(event);
