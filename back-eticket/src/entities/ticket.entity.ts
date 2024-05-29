@@ -13,7 +13,7 @@ export class Ticket {
   @Column('decimal', { precision: 10, scale: 2, nullable: false })
   price: number;
   @Column()
-  localization: string;
+  zone: string;
   @ManyToOne(() => Event, (event) => event.tickets)
   event: Event;
 }

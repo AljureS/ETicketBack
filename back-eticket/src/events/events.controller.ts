@@ -1,5 +1,17 @@
-import { Controller, Param, Query, Get} from '@nestjs/common';
+import {
+  Controller,
+  Param,
+  Query,
+  Get,
+  Post,
+  Body,
+  Put,
+  ParseUUIDPipe,
+  Delete,
+} from '@nestjs/common';
 import { EventsService } from './events.service';
+import { PostEventDto } from 'src/dtos/postEvent.dto';
+import { ModifyEventDto } from 'src/dtos/modifyEvent.dto';
 
 @Controller('events')
 export class EventsController {
@@ -16,6 +28,24 @@ export class EventsController {
     return this.eventsService.getEvent(id);
   }
 
+  @Post()
+  postEvent(@Body() event: PostEventDto) {
+    return this.eventsService.postEvent(event);
+  }
+  @Put(':id')
+  modifyEvent(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() event: ModifyEventDto,
+  ) {
+    return this.eventsService.modifyEvent(id, event);
+  }
+
+  @Delete()
+  deleteEvent(id: string) {
+    return this.deleteEvent(id);
+  }
+
+  //TODO: dejar para despues de realizado el crud basico
   @Get('seeder')
   addEvents() {
     return this.eventsService.addEvents();
