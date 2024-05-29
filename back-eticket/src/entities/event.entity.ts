@@ -1,14 +1,12 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  JoinTable,
   Column,
   ManyToOne,
   ManyToMany,
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { Category } from './category.entity';
 import { OrderDetails } from './orderDetails.entity';
 import { Ticket } from './ticket.entity';
@@ -18,9 +16,9 @@ import { Ticket } from './ticket.entity';
 })
 export class Event {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
 
-  @Column({ length: 50, nullable: false, unique:true })
+  @Column({ length: 50, nullable: false, unique: true })
   name: string;
 
   @Column({ nullable: false })
@@ -39,21 +37,17 @@ export class Event {
   date: Date;
 
   @Column()
-  location:string
+  location: string;
 
   @Column({nullable:true})
   userEmail?:string
-
-  // Relación N:N con orderDetails.
   @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.events)
-  @JoinTable()
   orderDetails: OrderDetails[];
 
   @OneToMany(() => Ticket, (ticket) => ticket.event)
-  @JoinColumn()
+  @JoinColumn({ name: 'ticket_id' })
   tickets: Ticket[];
-}
 
-// @ManyToMany(() => Category)
-// @JoinTable()
-// categories: Category[]
+  @Column({ nullable: true })
+  ticketID: string;
+}
