@@ -20,7 +20,9 @@ import { Role } from 'src/user/role.enum';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
 import { User } from 'src/entities/user.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Events')
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
@@ -31,6 +33,9 @@ export class EventsController {
     return this.eventsService.getEvents(Number(page), Number(limit));
   }
 
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
+  @UseGuards(AuthGuard, RoleGuard)
   @Get('seeder')
   preLoadData() {
     return this.eventsService.preLoadData();
@@ -41,6 +46,7 @@ export class EventsController {
     return this.eventsService.getEvent(id);
   }
 
+  @ApiBearerAuth()
   @Roles(Role.ADMIN, Role.SUPERADMIN)
   @UseGuards(AuthGuard, RoleGuard)
   @Post()
@@ -49,6 +55,7 @@ export class EventsController {
     return this.eventsService.postEvent(event, email);
   }
 
+  @ApiBearerAuth()
   @Roles(Role.ADMIN, Role.SUPERADMIN)
   @UseGuards(AuthGuard, RoleGuard)
   @Put(':id')
@@ -61,6 +68,9 @@ export class EventsController {
     return this.eventsService.modifyEvent(id, event, email);
   }
 
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
+  @UseGuards(AuthGuard, RoleGuard)
   @Delete()
   deleteEvent(id: string) {
     return this.deleteEvent(id);

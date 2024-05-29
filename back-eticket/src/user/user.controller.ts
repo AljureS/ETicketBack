@@ -5,12 +5,16 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from './role.enum';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('user')
 export class UserController {
     constructor (
         private readonly userService: UserService
     ) {}
+
+    @ApiBearerAuth()
     @Roles(Role.SUPERADMIN)
     @UseGuards(AuthGuard, RoleGuard)
     @Get()
@@ -27,6 +31,7 @@ export class UserController {
         } else return this.userService.getUsers(Number(page), Number(limit));
     }
 
+    @ApiBearerAuth()
     @Roles(Role.SUPERADMIN)
     @UseGuards(AuthGuard, RoleGuard)
     @Get(':id')
@@ -34,6 +39,7 @@ export class UserController {
         return this.userService.getUserById((id));
     }
 
+    @ApiBearerAuth()
     @Roles(Role.SUPERADMIN)
     @UseGuards(AuthGuard, RoleGuard)
     @Put(':id')
