@@ -1,6 +1,7 @@
 import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('cloudinary')
 export class CloudinaryController {
@@ -8,6 +9,7 @@ export class CloudinaryController {
         private readonly cloudinaryService: CloudinaryService
     ){}
 
+    @ApiTags('UploadImage')
     //@ApiBearerAuth()
     @Post('uploadImage/:id')
     // @Roles(Role.Admin)

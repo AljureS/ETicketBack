@@ -23,7 +23,7 @@ export class OrdersRepository {
     ) {}
 
     async addOrder() {
-        return 'Endpoint para agregar orden'
+        return await this.orderRepository.find();
     }
 
     getOrder(id: string) {
