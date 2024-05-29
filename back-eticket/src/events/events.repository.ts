@@ -90,6 +90,7 @@ export class EventsRepository {
       ...eventoBuscado,
       ...event,
       category: categoriaExisteEnDB || eventoBuscado.category,
+      userEmail:email
     };
 
     if (!categoriaExisteEnDB && event.category) {
@@ -137,7 +138,7 @@ export class EventsRepository {
 
         const savedTicket = await this.ticketRepository.save(newTicket);
         newEvent.tickets.push(savedTicket);
-        newEvent.ticketID = savedTicket.id;
+        newEvent.ticketId = savedTicket.id;
         await this.eventsRepository.save(newEvent);
       }
     }
