@@ -20,7 +20,7 @@ export class PostEventDto {
   @MaxLength(50)
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name: string; 
 
   /**
    * La descripcion debe ser una cadena
