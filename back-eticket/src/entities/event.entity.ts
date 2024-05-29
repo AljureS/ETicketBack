@@ -49,5 +49,5 @@ export class Event {
   tickets: Ticket[];
 
   @Column({ nullable: true })
-  ticketID: string;
+  ticketId: string;
 }
