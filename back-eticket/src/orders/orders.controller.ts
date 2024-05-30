@@ -14,14 +14,14 @@ export class OrdersController {
     ) {
         return this.orderService.addOrder(order);
     }
+    @Get()
+    getAllOrder() {
+        return this.orderService.getAllOrder()
+    }
 
     @Get(':id')
     getOrder(@Param('id') id: string) {
         return this.orderService.getOrder(id);
     }
 
-    @Get()
-    getAllOrder() {
-        return this.orderService.getAllOrder()
-    }
 }

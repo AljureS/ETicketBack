@@ -125,8 +125,10 @@ export class EventsRepository {
     const categorySearched = await this.categoryRepository.findOne({
       where: { name: category },
     });
-    const existeElEvento = this.eventsRepository.findOne({where:{name:event.name}})
-    if(existeElEvento) throw new BadRequestException("Ya existe un Evento con ese nombre")
+    const existeElEvento = await this.eventsRepository.findOne({where:{name:event.name}})
+    console.log(existeElEvento);
+    
+    if(existeElEvento) new BadRequestException("Ya existe un Evento con ese nombre")
     if (!categorySearched) {
       throw new NotFoundException(
         'No existe esa categoria en la base de datos',
