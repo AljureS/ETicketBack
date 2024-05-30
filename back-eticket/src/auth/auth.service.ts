@@ -35,7 +35,7 @@ export class AuthService {
         //*BBDD
         const userCreated = await this.userRepository.createUser({...user, password: hashedPassword})
         // Genera un token de confirmación (esto puede ser un JWT, un UUID, etc.)
-        const confirmationToken = this.generateConfirmationToken(user);
+        const confirmationToken = await this.generateConfirmationToken(user);
         // const confirmationToken = "token";
 
         // Envía el correo de confirmación
@@ -50,16 +50,16 @@ export class AuthService {
         await this.usersRepository.save(user);
         return user;
       }
-      private generateConfirmationToken(user) {
+       private async generateConfirmationToken(user) {
         // Implementa tu lógica para generar un token de confirmación
         const payload = {id: user.id, email: user.email, isAdmin: user.isAdmin, isSuperAdmin: user.isSuperAdmin}
-        const token = this.jwtService.sign(payload)
+        const token = await this.jwtService.sign(payload)
         return token;
       }
       private async verifyConfirmationToken(token: string) {
         // Implementa tu lógica para verificar el token
         const secret = process.env.JWT_SECRET;
-        const user = this.jwtService.verify(token, { secret });
+        const user = await this.jwtService.verify(token, { secret });
         return await this.usersRepository.findOne({ where: { email: user.email } });
       }
 
