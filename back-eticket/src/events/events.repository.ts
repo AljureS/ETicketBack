@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/entities/category.entity';
 import { Event } from 'src/entities/event.entity';
@@ -19,14 +19,19 @@ export class EventsRepository {
     private ticketRepository: Repository<Ticket>,
   ) {}
 
-  async getEvents(page: number, limit: number): Promise<Event[]> {
+  async getEvents(page: number, limit: number) {
     const startIndex = (page - 1) * limit;
-    const events = await this.eventsRepository.find({
+
+    const [events, total] = await this.eventsRepository.findAndCount({
       relations: ['category', 'tickets'],
       skip: startIndex,
       take: limit,
     });
-    return events;
+
+    return {
+      events,
+      total
+    };
   }
   async getAllEvents() {
     return await this.eventsRepository.find({
@@ -39,7 +44,7 @@ export class EventsRepository {
       .orderBy('event.date', 'ASC')
       .skip((page - 1) * limit)
       .take(limit)
-      .getMany();
+      .getMany()
 
     return eventos;
   }
@@ -70,6 +75,8 @@ export class EventsRepository {
     const categorySearched = await this.categoryRepository.findOne({
       where: { name: category },
     });
+    const existeElEvento = this.eventsRepository.findOne({where:{name:event.name}})
+    if(existeElEvento) throw new BadRequestException("Ya existe un Evento con ese nombre")
     if (!categorySearched) {
       throw new NotFoundException(
         'No existe esa categoria en la base de datos',
