@@ -24,9 +24,9 @@ export class createUserDto {
      * This is the phone of the user
      * @example '123456789'
      */
-    @IsNumber()
+    @IsString()
     @IsNotEmpty({message: 'Phone required'})
-    phone: number 
+    phone: string 
 
     /**
      * This is the email of the user

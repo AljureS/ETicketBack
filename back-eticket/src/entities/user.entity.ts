@@ -14,8 +14,8 @@ export class User{
     @Column({ length: 50, nullable: false })
     lastName: string
 
-    @Column({type:"integer"})
-    phone: number
+    @Column()
+    phone: string
 
     @Column({length:50,unique:true,nullable:false})
     email:string
