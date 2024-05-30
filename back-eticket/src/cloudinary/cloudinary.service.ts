@@ -14,26 +14,26 @@ export class CloudinaryService {
         private readonly eventRepository: Repository<Event>,
     ) {}
 
-    async uploadImage(file: Express.Multer.File, productId: string) {
-        //Verificar la existencia del producto 
-        const product = await this.eventRepository.findOneBy({id: productId});
-        if (!product) {
-            throw new NotFoundException(`Event with ID ${productId} not found.`);
+    async uploadImage(file: Express.Multer.File, eventID: string) {
+        //Verificar la existencia del evento 
+        const event = await this.eventRepository.findOneBy({id: eventID});
+        if (!event) {
+            throw new NotFoundException(`Event with ID ${eventID} not found.`);
         }
         //* => query a cloudinary
         const response = await this.cloudinaryRepository.uploadImage(file);
 
         //* => update en la base de datos
-        if (!productId) {
+        if (!eventID) {
             throw new NotFoundException('Event ID is null.');
         }
-        const updateResult = await this.eventRepository.update({id: productId}, {
+        const updateResult = await this.eventRepository.update({id: eventID}, {
             imgUrl: response.secure_url
         })
         console.log(updateResult);
         
 
-        const foundProduct = await this.eventRepository.findOneBy({id: productId});
-        return foundProduct
+        const foundEvent = await this.eventRepository.findOneBy({id: eventID});
+        return foundEvent
     }
 }

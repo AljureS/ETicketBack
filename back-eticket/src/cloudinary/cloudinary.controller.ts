@@ -16,7 +16,7 @@ export class CloudinaryController {
     // @UseGuards(AuthGuard, RolesGuard)
     @UseInterceptors(FileInterceptor('file'))
     async uploadImage(
-        @Param('id') productID: string,
+        @Param('id') eventID: string,
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
@@ -31,6 +31,6 @@ export class CloudinaryController {
             })
         ) file: Express.Multer.File // tipo de tapo "type": ["multer"]
     ){
-        return await this.cloudinaryService.uploadImage(file, productID)
+        return await this.cloudinaryService.uploadImage(file, eventID)
     }
 }
