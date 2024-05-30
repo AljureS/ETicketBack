@@ -48,7 +48,7 @@ export class OrdersRepository {
 
       if (ticketBuscado) {
         if(ticketBuscado.stock < ticket.quantity){
-          throw new BadRequestException("El producto tiene stock insuficiente")
+          throw new BadRequestException("El ticket tiene stock insuficiente")
         }
         ticketBuscado.stock -= ticket.quantity;
         
@@ -58,6 +58,8 @@ export class OrdersRepository {
           if(ticketBuscado.id === tic.id) throw new BadRequestException("No se puede mandar dos veces el mismo ticket")
         }
         tickets.push(ticketBuscado);
+      }else{
+        throw new BadRequestException("No existe ese tipo de ticket")
       }
     });
     const detalleDeCompra = new OrderDetails();
@@ -72,6 +74,7 @@ export class OrdersRepository {
       IdDetalleDeCompra: detalleDeCompraInDb.id,
     };
   }
+
   async descontarStock(ticket:Ticket) {
     await this.ticketRepository.save(ticket);
   }
