@@ -70,6 +70,56 @@ export class EventsRepository {
     return event;
   }
 
+  async getEventsAZ(
+    order: 'ascending' | 'descending',
+    page: number, 
+    limit: number
+  ): Promise<Event[]> {
+    const orderDirection = order.toUpperCase() === 'ASCENDING' ? 'ASC' : 'DESC';
+    const startIndex = (page - 1) * limit;
+    const events = await this.eventsRepository
+      .createQueryBuilder('event')
+      .orderBy('SUBSTRING(event.name, 1, 1)', orderDirection)
+      .skip(startIndex)
+      .take(limit)
+      .getMany();
+    return events;
+  }
+
+  async getEventsByPrice(
+    order: 'ascending' | 'descending',
+    page: number, 
+    limit: number
+  ): Promise<Event[]> {
+
+    const orderDirection = order.toUpperCase() === 'ASCENDING' ? 'ASC' : 'DESC';
+    const startIndex = (page - 1) * limit;
+    // Subconsulta para obtener los IDs de los eventos ordenados por el precio mínimo
+    const subQuery = this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoin('event.tickets', 'ticket')
+      .select('event.id')
+      .addSelect('MIN(ticket.price)', 'minPrice')
+      .groupBy('event.id')
+      .orderBy('"minPrice"', orderDirection)
+      .skip(startIndex)
+      .take(limit);
+
+    // Ejecutar la subconsulta y obtener los resultados crudos
+    const rawResults = await subQuery.getRawMany();
+    const eventIds = rawResults.map(result => result.event_id);
+
+    // Obtener los eventos completos usando los IDs de la subconsulta
+    const events = await this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.tickets', 'ticket')
+      .whereInIds(eventIds)
+      .orderBy(`CASE event.id ${eventIds.map((id, index) => `WHEN '${id}' THEN ${index}`).join(' ')} END`)
+      .getMany();
+
+    return events;
+  }
+
   async postEvent(event: PostEventDto, email: string) {
     const { category } = event;
     const categorySearched = await this.categoryRepository.findOne({

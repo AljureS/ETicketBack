@@ -37,7 +37,7 @@ export class Event {
   date: Date;
 
   @Column()
-  location: string;
+  location: string; 
 
   @Column({nullable:true})
   userEmail?:string

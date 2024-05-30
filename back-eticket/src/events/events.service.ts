@@ -24,6 +24,23 @@ export class EventsService {
     return this.eventsRepository.getEvent(id);
   }
 
+  getEventsAZ(
+    order: 'ascending' | 'descending',
+    page: number, 
+    limit: number
+  ) {
+    return this.eventsRepository.getEventsAZ(order, page, limit);
+  }
+
+  getEventsByPrice(
+    order: 'ascending' | 'descending',
+    page: number, 
+    limit: number
+  ) {
+    return this.eventsRepository.getEventsByPrice(order, page, limit);
+  }
+
+
   preLoadData() {
     return this.eventsRepository.preLoadData(); 
   }
