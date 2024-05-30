@@ -8,32 +8,34 @@ import { CloudinaryRepository } from './cloudinary.repository';
 
 @Injectable()
 export class CloudinaryService {
-	constructor(
-        private readonly cloudinaryRepository: CloudinaryRepository,
-        @InjectRepository(Event)
-        private readonly eventRepository: Repository<Event>,
-    ) {}
+  constructor(
+    private readonly cloudinaryRepository: CloudinaryRepository,
+    @InjectRepository(Event)
+    private readonly eventRepository: Repository<Event>,
+  ) {}
 
-    async uploadImage(file: Express.Multer.File, eventID: string) {
-        //Verificar la existencia del evento 
-        const event = await this.eventRepository.findOneBy({id: eventID});
-        if (!event) {
-            throw new NotFoundException(`Event with ID ${eventID} not found.`);
-        }
-        //* => query a cloudinary
-        const response = await this.cloudinaryRepository.uploadImage(file);
-
-        //* => update en la base de datos
-        if (!eventID) {
-            throw new NotFoundException('Event ID is null.');
-        }
-        const updateResult = await this.eventRepository.update({id: eventID}, {
-            imgUrl: response.secure_url
-        })
-        console.log(updateResult);
-        
-
-        const foundEvent = await this.eventRepository.findOneBy({id: eventID});
-        return foundEvent
+  async uploadImage(file: Express.Multer.File, eventID: string) {
+    //Verificar la existencia del evento
+    const event = await this.eventRepository.findOneBy({ id: eventID });
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventID} not found.`);
     }
+    //* => query a cloudinary
+    const response = await this.cloudinaryRepository.uploadImage(file);
+
+    //* => update en la base de datos
+    if (!eventID) {
+      throw new NotFoundException('Event ID is null.');
+    }
+    const updateResult = await this.eventRepository.update(
+      { id: eventID },
+      {
+        imgUrl: response.secure_url,
+      },
+    );
+    console.log(updateResult);
+
+    const foundEvent = await this.eventRepository.findOneBy({ id: eventID });
+    return foundEvent;
+  }
 }
