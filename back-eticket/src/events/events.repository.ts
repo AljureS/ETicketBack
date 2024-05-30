@@ -22,35 +22,44 @@ export class EventsRepository {
   async getEvents(page: number, limit: number) {
     const startIndex = (page - 1) * limit;
 
-    const [events, total] = await this.eventsRepository.findAndCount({
-      relations: ['category', 'tickets'],
-      skip: startIndex,
-      take: limit,
-    });
+    try {
+      const [events, total] = await this.eventsRepository.findAndCount({
+        relations: ['category', 'tickets'],
+        skip: startIndex,
+        take: limit,
+      });
 
-    return {
-      events,
-      total
-    };
+      return {
+        events,
+        total
+      };
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      throw new Error('Error fetching events');
+    }
   }
+
   async getAllEvents() {
     return await this.eventsRepository.find({
       relations: ['category', 'tickets'],
     });
   }
-  async getEventsAntiguosARecientes(page: number, limit: number) {
+  async getEventsAntiguosARecientes(page: number, limit: number): Promise<Event[]> {
     const eventos = await this.eventsRepository
       .createQueryBuilder('event')
+      .leftJoinAndSelect('event.tickets', 'ticket')
       .orderBy('event.date', 'ASC')
       .skip((page - 1) * limit)
       .take(limit)
-      .getMany()
+      .getMany();
 
     return eventos;
   }
+
   async getEventsRecientesAAntiguos(page: number, limit: number) {
     const eventos = await this.eventsRepository
       .createQueryBuilder('event')
+      .leftJoinAndSelect('event.tickets', 'ticket')
       .orderBy('event.date', 'DESC')
       .skip((page - 1) * limit)
       .take(limit)
@@ -75,8 +84,9 @@ export class EventsRepository {
     page: number, 
     limit: number
   ): Promise<Event[]> {
-    const orderDirection = order.toUpperCase() === 'ASCENDING' ? 'ASC' : 'DESC';
+    const orderDirection = order === 'ascending' ? 'ASC' : 'DESC';
     const startIndex = (page - 1) * limit;
+
     const events = await this.eventsRepository
       .createQueryBuilder('event')
       .leftJoinAndSelect('event.tickets', 'ticket')
@@ -85,6 +95,7 @@ export class EventsRepository {
       .skip(startIndex)
       .take(limit)
       .getMany();
+
     return events;
   }
 
