@@ -49,18 +49,19 @@ export class AuthService {
         user.isEmailConfirmed = true;
         await this.usersRepository.save(user);
         return user;
-
-       private async generateConfirmationToken(user) {
-        // Implementa tu lógica para generar un token de confirmación
-        const payload = {id: user.id, email: user.email, isAdmin: user.isAdmin, isSuperAdmin: user.isSuperAdmin}
-        const token = await this.jwtService.sign(payload)
-        return token;
-      }
+    }
+       
       private async verifyConfirmationToken(token: string) {
         // Implementa tu lógica para verificar el token
         const secret = process.env.JWT_SECRET;
         const user = await this.jwtService.verify(token, { secret });
         return await this.usersRepository.findOne({ where: { email: user.email } });
+      }
+      private async generateConfirmationToken(user) {
+        // Implementa tu lógica para generar un token de confirmación
+        const payload = {id: user.id, email: user.email, isAdmin: user.isAdmin, isSuperAdmin: user.isSuperAdmin}
+        const token = await this.jwtService.sign(payload)
+        return token;
       }
 
     async logIn(credentials: LoginUserDto) {
