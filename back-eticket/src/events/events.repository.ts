@@ -89,9 +89,7 @@ export class EventsRepository {
 
     const events = await this.eventsRepository
       .createQueryBuilder('event')
-      .leftJoinAndSelect('event.tickets', 'ticket')
-      .addSelect('SUBSTRING(event.name, 1, 1)', 'name_first_char')
-      .orderBy('name_first_char', orderDirection)
+      .orderBy('SUBSTRING(event.name, 1, 1)', orderDirection)
       .skip(startIndex)
       .take(limit)
       .getMany();
@@ -144,7 +142,7 @@ export class EventsRepository {
 
     return events;
   }
-
+  
   async postEvent(event: PostEventDto, email: string) {
     const { category } = event;
     const categorySearched = await this.categoryRepository.findOne({
@@ -153,7 +151,7 @@ export class EventsRepository {
     const existeElEvento = await this.eventsRepository.findOne({where:{name:event.name}})
     console.log(existeElEvento);
     
-    if(existeElEvento) new BadRequestException("Ya existe un Evento con ese nombre")
+    if(existeElEvento) throw new BadRequestException("Ya existe un Evento con ese nombre")
     if (!categorySearched) {
       throw new NotFoundException(
         'No existe esa categoria en la base de datos',
@@ -169,12 +167,15 @@ export class EventsRepository {
       tickets: [],
       userEmail: email,
     });
+    console.log('llegue aqui');
+    
     for (const ticket of event.tickets) {
       const newTicket = this.ticketRepository.create({
         stock: ticket.stock,
         price: ticket.price,
         zone: ticket.zone,
       });
+      console.log('Estoy en el for de tickets');
 
       const tickerGuardadoEnDB = await this.ticketRepository.save(newTicket);
 
