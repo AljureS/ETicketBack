@@ -11,7 +11,7 @@ import { Event } from 'src/entities/event.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Event, Ticket]),
-     // Importa EventsModule
+    // Importa EventsModule
   ],
   controllers: [CloudinaryController],
   providers: [CloudinaryService, CloudinaryConfig, CloudinaryRepository],
