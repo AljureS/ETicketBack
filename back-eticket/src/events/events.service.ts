@@ -31,6 +31,9 @@ export class EventsService {
   ) {
     return this.eventsRepository.getEventsAZ(order, page, limit);
   }
+  getEventsByCategory(page: string,limit: string,category:string){
+    return this.eventsRepository.getEventsByCategory(page,limit,category)
+  }
 
   getEventsByPrice(
     order: 'ascending' | 'descending',
