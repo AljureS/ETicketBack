@@ -29,7 +29,7 @@ import { EmailModule } from './email/email.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '60m' },
+      signOptions: { expiresIn: '1440m' },
     }),
     AuthModule, UserModule, CategoriesModule, OrdersModule, CloudinaryModule, EventsModule, TicketsModule, EmailModule],
   controllers: [AppController],
