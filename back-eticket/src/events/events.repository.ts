@@ -28,8 +28,10 @@ export class EventsRepository {
     });
     return events;
   }
-  async getAllEvents(){
-    return await this.eventsRepository.find()
+  async getAllEvents() {
+    return await this.eventsRepository.find({
+      relations: ['category', 'tickets'],
+    });
   }
   async getEventsAntiguosARecientes(page: number, limit: number) {
     const eventos = await this.eventsRepository
