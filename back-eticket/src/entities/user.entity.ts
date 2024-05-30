@@ -29,6 +29,9 @@ export class User{
     @Column({default:false})
     isSuperAdmin:boolean
 
+    @Column({default:false})
+    isEmailConfirmed:boolean
+
     @OneToMany(() => Order, (order) => order.user)
     @JoinColumn()
     orders: Order[]

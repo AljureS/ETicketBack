@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/dtos/login.dto';
 import { createUserDto } from 'src/dtos/user.dto';
@@ -34,4 +34,8 @@ export class AuthController {
     updateRole(@Param('id',ParseUUIDPipe) id: string){
         return this.authService.updateRole( id)
     }
+    @Get('confirm')
+    async confirm(@Query('token') token: string) {
+    return await this.authService.confirmEmail(token);
+  }
 }
