@@ -86,6 +86,15 @@ export class EventsRepository {
     return events;
   }
 
+  async getEventsByCategory(page: string,limit: string,category:string){
+    const [data, count] = await this.eventsRepository.findAndCount({
+      where: { category: { name: category } },
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
+    });
+
+    return { data, count };
+  }
   async getEventsByPrice(
     order: 'ascending' | 'descending',
     page: number, 

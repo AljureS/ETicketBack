@@ -61,6 +61,13 @@ export class EventsController {
     if (!page || !limit) return this.eventsService.getEventsAZ(order, 1, 5);
     return this.eventsService.getEventsAZ(order, Number(page), Number(limit));
   }
+  @Get('bycategory')
+  getEventsByCategory(@Query('page') page: string, @Query('limit') limit: string, @Query('category') category:string) {
+    console.log(category.toUpperCase());
+    
+    if (!page || !limit) return this.eventsService.getEventsByCategory(String(1), String(5), category.toUpperCase());
+    return this.eventsService.getEventsByCategory(page, limit,category.toUpperCase());
+  }
 
   @Get('price')
   getEventsByPrice(
