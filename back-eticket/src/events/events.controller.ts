@@ -81,8 +81,8 @@ export class EventsController {
   }
 
   @ApiBearerAuth()
-  @Roles(Role.ADMIN, Role.SUPERADMIN)
-  @UseGuards(AuthGuard, RoleGuard)
+  // @Roles(Role.ADMIN, Role.SUPERADMIN)
+  // @UseGuards(AuthGuard, RoleGuard)
   @Get('seeder')
   preLoadData() {
     return this.eventsService.preLoadData();

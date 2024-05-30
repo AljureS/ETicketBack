@@ -49,7 +49,7 @@ export class AuthService {
         user.isEmailConfirmed = true;
         await this.usersRepository.save(user);
         return user;
-      }
+    }
       private generateConfirmationToken(user) {
         // Implementa tu lógica para generar un token de confirmación
         const payload = {id: user.id, email: user.email, isAdmin: user.isAdmin, isSuperAdmin: user.isSuperAdmin}
