@@ -28,6 +28,9 @@ export class EventsRepository {
     });
     return events;
   }
+  async getAllEvents(){
+    return await this.eventsRepository.find()
+  }
   async getEventsAntiguosARecientes(page: number, limit: number) {
     const eventos = await this.eventsRepository
       .createQueryBuilder('event')

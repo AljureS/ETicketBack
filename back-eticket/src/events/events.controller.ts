@@ -44,6 +44,10 @@ export class EventsController {
     if (!page || !limit) return this.eventsService.getEventsRecientesAAntiguos(1, 5);
     return this.eventsService.getEventsRecientesAAntiguos(Number(page), Number(limit));
   }
+  @Get('all')
+  getAllEvents(){
+    return this.eventsService.getAllEvents();
+  }
 
   @ApiBearerAuth()
   @Roles(Role.ADMIN, Role.SUPERADMIN)

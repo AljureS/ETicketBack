@@ -16,6 +16,9 @@ export class EventsService {
   getEventsRecientesAAntiguos(page: number, limit: number){
     return this.eventsRepository.getEventsRecientesAAntiguos(page,limit)
   }
+  getAllEvents(){
+    return this.eventsRepository.getAllEvents()
+  }
 
   getEvent(id) {
     return this.eventsRepository.getEvent(id);
