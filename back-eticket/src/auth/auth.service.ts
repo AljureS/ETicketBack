@@ -78,7 +78,7 @@ export class AuthService {
             throw new BadRequestException("La cuenta no está confirmada") 
         }
         //envio de token //* forma token
-        const payload = {id: user.id, email: user.email, isAdmin: user.isAdmin, isSuperAdmin: user.isSuperAdmin}
+        const payload = {id: user.id, email: user.email, isAdmin: user.isAdmin, isSuperAdmin: user.isSuperAdmin, name:user.name, phone:user.phone}
         const token = await this.jwtService.sign(payload)
         //Retornar mensaje de ingreso y token 
         return {
