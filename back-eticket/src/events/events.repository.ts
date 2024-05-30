@@ -79,7 +79,9 @@ export class EventsRepository {
     const startIndex = (page - 1) * limit;
     const events = await this.eventsRepository
       .createQueryBuilder('event')
-      .orderBy('SUBSTRING(event.name, 1, 1)', orderDirection)
+      .leftJoinAndSelect('event.tickets', 'ticket')
+      .addSelect('SUBSTRING(event.name, 1, 1)', 'name_first_char')
+      .orderBy('name_first_char', orderDirection)
       .skip(startIndex)
       .take(limit)
       .getMany();
