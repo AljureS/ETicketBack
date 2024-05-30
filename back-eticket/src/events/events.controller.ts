@@ -34,19 +34,43 @@ export class EventsController {
     if (!page || !limit) return this.eventsService.getEvents(1, 5);
     return this.eventsService.getEvents(Number(page), Number(limit));
   }
+
   @Get('antiguosPrimero')
   getEventsAntiguosARecientes(@Query('page') page: string, @Query('limit') limit: string) {
     if (!page || !limit) return this.eventsService.getEventsAntiguosARecientes(1, 5);
     return this.eventsService.getEventsAntiguosARecientes(Number(page), Number(limit));
   }
+
   @Get('recientesPrimero')
   getEventsRecientesAAntiguos(@Query('page') page: string, @Query('limit') limit: string) {
     if (!page || !limit) return this.eventsService.getEventsRecientesAAntiguos(1, 5);
     return this.eventsService.getEventsRecientesAAntiguos(Number(page), Number(limit));
   }
+
   @Get('all')
   getAllEvents(){
     return this.eventsService.getAllEvents();
+  }
+
+  @Get('alphabetical')
+  getEventsAZ(
+      @Query('order') order: 'ascending' | 'descending',
+      @Query('page') page: string, 
+      @Query('limit') limit: string
+    ) {
+    if (!page || !limit) return this.eventsService.getEventsAZ(order, 1, 5);
+    return this.eventsService.getEventsAZ(order, Number(page), Number(limit));
+  }
+
+  @Get('price')
+  getEventsByPrice(
+    @Query('order') order: 'ascending' | 'descending',
+    @Query('page') page: string, 
+    @Query('limit') limit: string
+  ) {
+    
+    if (!page || !limit) return this.eventsService.getEventsByPrice(order, 1, 5);
+    return this.eventsService.getEventsByPrice(order, Number(page), Number(limit));
   }
 
   @ApiBearerAuth()
