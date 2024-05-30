@@ -7,12 +7,14 @@ import { User } from 'src/entities/user.entity';
 import { UserRepository } from 'src/user/user.repository';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly jwtService: JwtService,
+        private readonly emailService: EmailService,
         
         @InjectRepository(User)
         private readonly usersRepository: Repository<User>,
@@ -31,8 +33,35 @@ export class AuthService {
         const hashedPassword = await bcrypt.hash(password, 10)
 
         //*BBDD
-        return await this.userRepository.createUser({...user, password: hashedPassword})
+        const userCreated = await this.userRepository.createUser({...user, password: hashedPassword})
+        // Genera un token de confirmación (esto puede ser un JWT, un UUID, etc.)
+        const confirmationToken = this.generateConfirmationToken(user);
+        // const confirmationToken = "token";
+
+        // Envía el correo de confirmación
+        await this.emailService.sendConfirmationEmail(user.email, confirmationToken);
+        return userCreated
     }
+    async confirmEmail(token: string) {
+        // Lógica para verificar el token y confirmar el usuario
+        // const user = await this.verifyConfirmationToken(token);
+        const user = await this.verifyConfirmationToken(token);
+        user.isEmailConfirmed = true;
+        await this.usersRepository.save(user);
+        return user;
+      }
+      private generateConfirmationToken(user) {
+        // Implementa tu lógica para generar un token de confirmación
+        const payload = {id: user.id, email: user.email, isAdmin: user.isAdmin, isSuperAdmin: user.isSuperAdmin}
+        const token = this.jwtService.sign(payload)
+        return token;
+      }
+      private async verifyConfirmationToken(token: string) {
+        // Implementa tu lógica para verificar el token
+        const secret = process.env.JWT_SECRET;
+        const user = this.jwtService.verify(token, { secret });
+        return await this.usersRepository.findOne({ where: { email: user.email } });
+      }
 
     async logIn(credentials: LoginUserDto) {
         const { email, password} = credentials
@@ -44,6 +73,9 @@ export class AuthService {
         const validPassword = await bcrypt.compare(password, user.password)
         if (!validPassword) {
             throw new BadRequestException('Invalid credentials')
+        }
+        if(!user.isEmailConfirmed){
+            throw new BadRequestException("La cuenta no está confirmada") 
         }
         //envio de token //* forma token
         const payload = {id: user.id, email: user.email, isAdmin: user.isAdmin, isSuperAdmin: user.isSuperAdmin}
