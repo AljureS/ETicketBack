@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, JoinColum
 import { v4 as uuid } from 'uuid'
 import { Order } from "./order.entity"
 import { Event } from "./event.entity"
+import { Ticket } from "./ticket.entity"
 
 
 @Entity({
@@ -21,5 +22,7 @@ export class OrderDetails{
     @ManyToMany(()=> Event, (event)=> event.orderDetails)
     events: Event[]
 
+    // @Column()
+    // tickets: Ticket[]
 }
 
