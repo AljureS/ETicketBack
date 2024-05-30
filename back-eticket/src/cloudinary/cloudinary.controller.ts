@@ -12,13 +12,13 @@ import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-@Controller('cloudinary')
+@Controller('uploadImage')
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
   @ApiTags('UploadImage')
   //@ApiBearerAuth()
-  @Post('uploadImage/:id')
+  @Post('/:id')
   // @Roles(Role.Admin)
   // @UseGuards(AuthGuard, RolesGuard)
   @ApiConsumes('multipart/form-data')
