@@ -169,6 +169,7 @@ export class EventsRepository {
       location: event.location,
       tickets: [],
       userEmail: email,
+      imgUrl:event.imgUrl
     });
     console.log('llegue aqui');
     
