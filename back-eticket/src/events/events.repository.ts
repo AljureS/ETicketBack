@@ -18,55 +18,71 @@ export class EventsRepository {
     @InjectRepository(Ticket)
     private ticketRepository: Repository<Ticket>,
   ) {}
-
-  async getEvents(page: number, limit: number) {
-    const startIndex = (page - 1) * limit;
-
-    try {
-      const [events, total] = await this.eventsRepository.findAndCount({
-        relations: ['category', 'tickets'],
-        skip: startIndex,
-        take: limit,
-      });
-
-      return {
-        events,
-        total
-      };
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      throw new Error('Error fetching events');
-    }
-  }
-
+  
   async getAllEvents() {
     return await this.eventsRepository.find({
       relations: ['category', 'tickets'],
     });
   }
-  async getEventsAntiguosARecientes(page: number, limit: number): Promise<Event[]> {
-    const eventos = await this.eventsRepository
-      .createQueryBuilder('event')
-      .leftJoinAndSelect('event.tickets', 'ticket')
-      .orderBy('event.date', 'ASC')
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getMany();
+  async getEvents(page: number, limit: number, category?: string) {
+    const startIndex = (page - 1) * limit;
+    
+    let whereClause = {};
+    if (category !== undefined) {
+        whereClause = { category: { name: category.toUpperCase() } };
+    }
 
-    return eventos;
+    const [events, total] = await this.eventsRepository.findAndCount({
+        relations: ['category', 'tickets'],
+        where: whereClause,
+        skip: startIndex,
+        take: limit,
+    });
+
+    return {
+        events,
+        total
+    };
+}
+
+async getEventsByDate(page: number, limit: number, category?: string, order?: 'ascending' | 'descending') {
+  const startIndex = (page - 1) * limit;
+  
+  // Construcción del whereClause
+  let whereClause = {};
+  if (category !== undefined) {
+      whereClause = { category: { name: category.toUpperCase() } };
   }
 
-  async getEventsRecientesAAntiguos(page: number, limit: number) {
-    const eventos = await this.eventsRepository
-      .createQueryBuilder('event')
-      .leftJoinAndSelect('event.tickets', 'ticket')
-      .orderBy('event.date', 'DESC')
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getMany();
-
-    return eventos;
+  // Determinar el orden de la fecha
+  let orderDirection: 'ASC' | 'DESC' = 'DESC'; // Valor por defecto
+  if (order === 'ascending') {
+      orderDirection = 'ASC';
+  } else if (order === 'descending') {
+      orderDirection = 'DESC';
   }
+
+  // Construcción del queryBuilder con las condiciones y ordenamiento
+  const queryBuilder = this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.category', 'category')
+      .leftJoinAndSelect('event.tickets', 'ticket')
+      .where(whereClause)
+      .orderBy('event.date', orderDirection)
+      .skip(startIndex)
+      .take(limit);
+
+  const [events, total] = await queryBuilder.getManyAndCount();
+
+  return {
+      events,
+      total
+  };
+}
+
+
+
+
 
   async getEvent(id: string): Promise<Event> {
     const event = await this.eventsRepository.findOne({
@@ -82,24 +98,38 @@ export class EventsRepository {
   async getEventsAZ(
     order: 'ascending' | 'descending',
     page: number, 
-    limit: number
-  ): Promise<Event[]> {
+    limit: number,
+    category?: string
+): Promise<{ events: Event[], total: number }> {
     const orderDirection = order === 'ascending' ? 'ASC' : 'DESC';
     const startIndex = (page - 1) * limit;
-  
-    const events = await this.eventsRepository
-      .createQueryBuilder('event')
-      .leftJoinAndSelect('event.tickets', 'ticket') // Añadimos esta línea para incluir las relaciones
-      .orderBy('event.name', orderDirection)
-      .skip(startIndex)
-      .take(limit)
-      .getMany();
-  
-    return events;
-  }
-  
-  
 
+    // Construcción del whereClause
+    let whereClause = {};
+    if (category !== undefined) {
+        whereClause = { category: { name: category.toUpperCase() } };
+    }
+
+    const queryBuilder = this.eventsRepository
+        .createQueryBuilder('event')
+        .leftJoinAndSelect('event.tickets', 'ticket')
+        .leftJoinAndSelect('event.category', 'category')
+        .where(whereClause)
+        .orderBy('event.name', orderDirection)
+        .skip(startIndex)
+        .take(limit);
+
+    const [events, total] = await queryBuilder.getManyAndCount();
+
+    return {
+        events,
+        total
+    };
+}
+
+  
+  
+//ESTA ESTARIA EN DES USO
   async getEventsByCategory(page: string, limit: string, category: string) {
     
     const [data, count] = await this.eventsRepository.findAndCount({
@@ -115,7 +145,8 @@ export class EventsRepository {
   async getEventsByPrice(
     order: 'ascending' | 'descending',
     page: number, 
-    limit: number
+    limit: number,
+    category:string
   ): Promise<Event[]> {
 
     const orderDirection = order.toUpperCase() === 'ASCENDING' ? 'ASC' : 'DESC';

@@ -7,14 +7,11 @@ import { ModifyEventDto } from 'src/dtos/modifyEvent.dto';
 export class EventsService {
   constructor(private readonly eventsRepository: EventsRepository) {}
 
-  getEvents(page: number, limit: number) {
-    return this.eventsRepository.getEvents(page, limit);
+  getEvents(page: number, limit: number, category:string) {
+    return this.eventsRepository.getEvents(page, limit,category);
   }
-  getEventsAntiguosARecientes(page: number, limit: number){
-    return this.eventsRepository.getEventsAntiguosARecientes(page,limit)
-  }
-  getEventsRecientesAAntiguos(page: number, limit: number){
-    return this.eventsRepository.getEventsRecientesAAntiguos(page,limit)
+  getEventsByDate(page: number, limit: number, category?: string, order?: 'ascending' | 'descending'){
+    return this.eventsRepository.getEventsByDate(page,limit, category, order)
   }
   getAllEvents(){
     return this.eventsRepository.getAllEvents()
@@ -27,9 +24,10 @@ export class EventsService {
   getEventsAZ(
     order: 'ascending' | 'descending',
     page: number, 
-    limit: number
+    limit: number,
+    category?: string
   ) {
-    return this.eventsRepository.getEventsAZ(order, page, limit);
+    return this.eventsRepository.getEventsAZ(order, page, limit, category);
   }
   getEventsByCategory(page: string,limit: string,category:string){
     return this.eventsRepository.getEventsByCategory(page,limit,category)
@@ -38,9 +36,10 @@ export class EventsService {
   getEventsByPrice(
     order: 'ascending' | 'descending',
     page: number, 
-    limit: number
+    limit: number,
+    category:string
   ) {
-    return this.eventsRepository.getEventsByPrice(order, page, limit);
+    return this.eventsRepository.getEventsByPrice(order, page, limit,category);
   }
 
 
