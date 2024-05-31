@@ -15,5 +15,6 @@ import { Event } from 'src/entities/event.entity';
   ],
   controllers: [CloudinaryController],
   providers: [CloudinaryService, CloudinaryConfig, CloudinaryRepository],
+  exports:[CloudinaryRepository]
 })
 export class CloudinaryModule {}

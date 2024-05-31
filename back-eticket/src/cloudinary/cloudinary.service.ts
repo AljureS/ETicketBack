@@ -14,7 +14,7 @@ export class CloudinaryService {
     private readonly eventRepository: Repository<Event>,
   ) {}
 
-  async uploadImage(file: Express.Multer.File, eventID: string) {
+  async modifyImage(file: Express.Multer.File, eventID: string) {
     //Verificar la existencia del evento
     const event = await this.eventRepository.findOneBy({ id: eventID });
     if (!event) {
@@ -37,5 +37,10 @@ export class CloudinaryService {
 
     const foundEvent = await this.eventRepository.findOneBy({ id: eventID });
     return foundEvent;
+  }
+
+  async uploadImage(file:Express.Multer.File){
+    const response = await this.cloudinaryRepository.uploadImage(file);
+    return response
   }
 }

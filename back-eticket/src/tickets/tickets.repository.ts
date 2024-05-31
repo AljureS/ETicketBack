@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostTicketDto } from 'src/dtos/PostTicket.dto';
 import { Event } from 'src/entities/event.entity';
 import { Ticket } from 'src/entities/ticket.entity';
 import { Repository } from 'typeorm';

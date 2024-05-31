@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 import {
     IsArray,
   IsDate,
@@ -13,34 +13,21 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-export class PostTicketDto {
-  /**
-   * Debe ser un numero entero
-   * @example 50
-   */
-  @IsInt()
-  @IsNotEmpty()
-  stock: number;
-
-  /** 
-    * El precio debe ser un numero
-    * @example 300.80
-    */
+export class TicketDto {
+  @ApiProperty({ example: 300.80, description: 'El precio debe ser un número' })
   @IsNotEmpty()
   @IsNumber()
   @Min(0.01, { message: 'Price must be at least 0.01' })
   @Max(9999999.99, { message: 'Price cannot exceed 9999999.99' })
   price: number;
 
-  /** 
-    * Debe ser un string
-    * @example Estadio Gran Rex
-    */
+  @ApiProperty({ example: 50, description: 'El stock debe ser un número mayor a cero' })
+  @IsInt()
   @IsNotEmpty()
-  @IsString()
-  zone:string
+  stock: number;
 
-  @IsString()
+  @ApiProperty({ example: 'General', description: 'La zona debe ser un string' })
   @IsNotEmpty()
-  eventName:string
+  @IsString()
+  zone: string;
 }
