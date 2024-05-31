@@ -86,16 +86,19 @@ export class EventsRepository {
   ): Promise<Event[]> {
     const orderDirection = order === 'ascending' ? 'ASC' : 'DESC';
     const startIndex = (page - 1) * limit;
-
+  
     const events = await this.eventsRepository
       .createQueryBuilder('event')
-      .orderBy('SUBSTRING(event.name, 1, 1)', orderDirection)
+      .leftJoinAndSelect('event.tickets', 'ticket') // Añadimos esta línea para incluir las relaciones
+      .orderBy('event.name', orderDirection)
       .skip(startIndex)
       .take(limit)
       .getMany();
-
+  
     return events;
   }
+  
+  
 
   async getEventsByCategory(page: string, limit: string, category: string) {
     
