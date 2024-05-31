@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { createUserDto } from 'src/dtos/user.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from './role.enum';
-import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { AuthGuards } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -16,7 +16,7 @@ export class UserController {
 
     @ApiBearerAuth()
     @Roles(Role.SUPERADMIN)
-    @UseGuards(AuthGuard, RoleGuard)
+    @UseGuards(AuthGuards, RoleGuard)
     @Get()
     getUsers(
         @Query('page') page: string,
@@ -33,7 +33,7 @@ export class UserController {
 
     @ApiBearerAuth()
     @Roles(Role.SUPERADMIN)
-    @UseGuards(AuthGuard, RoleGuard)
+    @UseGuards(AuthGuards, RoleGuard)
     @Get(':id')
     getUserById(@Param('id',ParseUUIDPipe) id: string) {
         return this.userService.getUserById((id));
@@ -41,7 +41,7 @@ export class UserController {
 
     @ApiBearerAuth()
     @Roles(Role.SUPERADMIN)
-    @UseGuards(AuthGuard, RoleGuard)
+    @UseGuards(AuthGuards, RoleGuard)
     @Put(':id')
     updateUser(@Param('id',ParseUUIDPipe) id: string, @Body() user: Partial<createUserDto>){
         return this.userService.updateUser(id, user);

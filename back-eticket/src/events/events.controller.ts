@@ -18,7 +18,7 @@ import { ModifyEventDto } from 'src/dtos/modifyEvent.dto';
 import { Request } from 'express';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/user/role.enum';
-import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { AuthGuards } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
 import { User } from 'src/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -96,7 +96,7 @@ export class EventsController {
   @ApiBearerAuth()
   @UseInterceptors(categoryInterceptor)
   @Roles(Role.ADMIN, Role.SUPERADMIN)
-  @UseGuards(AuthGuard, RoleGuard)
+  @UseGuards(AuthGuards, RoleGuard)
   @Post()
   postEvent(@Body() event: PostEventDto, @Req() req: Request & { user: User }) {
     console.log("llego hasta aca");
@@ -107,7 +107,7 @@ export class EventsController {
 
   @ApiBearerAuth()
   @Roles(Role.ADMIN, Role.SUPERADMIN)
-  @UseGuards(AuthGuard, RoleGuard)
+  @UseGuards(AuthGuards, RoleGuard)
   @Put(':id')
   modifyEvent(
     @Param('id', ParseUUIDPipe) id: string,
@@ -120,7 +120,7 @@ export class EventsController {
 
   @ApiBearerAuth()
   @Roles(Role.ADMIN, Role.SUPERADMIN)
-  @UseGuards(AuthGuard, RoleGuard)
+  @UseGuards(AuthGuards, RoleGuard)
   @Delete()
   deleteEvent(id: string) {
     return this.deleteEvent(id);

@@ -24,7 +24,33 @@ export class AuthService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async signUp(user: createUserDto) {
+  async Auth0 (userDetail: any) {
+    const { email } = userDetail;
+        const user = await this.userRepository.getUserByEmail(email);
+        if (user) {
+          throw new BadRequestException('Email already registered');
+        }
+        const userCreated = this.usersRepository.create({
+          ...userDetail,
+          phone: '',
+          password: '65765765765765',
+        });
+        await this.usersRepository.save(userCreated);
+
+    // Genera un token de confirmación (esto puede ser un JWT, un UUID, etc.)
+    const confirmationToken = await this.generateConfirmationToken(user);
+    // const confirmationToken = "token";
+
+    // Envía el correo de confirmación
+    await this.emailService.sendConfirmationEmail(
+      user.email,
+      confirmationToken,
+    );
+
+    return userCreated;
+  }
+
+  async signUp(user: any) {
     const { email, password } = user;
     // Verificar si el email esta registrado
     const userEmail = await this.userRepository.getUserByEmail(email); // llamda al repository de users
@@ -50,7 +76,7 @@ export class AuthService {
       user.email,
       confirmationToken,
     );
-    return userCreated;
+    return userCreated; 
   }
   async confirmEmail(token: string) {
     // Lógica para verificar el token y confirmar el usuario
