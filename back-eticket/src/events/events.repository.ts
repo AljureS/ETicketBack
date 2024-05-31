@@ -148,18 +148,23 @@ export class EventsRepository {
     order: 'ascending' | 'descending',
     page: number,
     limit: number,
-    category: string,
+    category?: string, // Hacer la categoría opcional
   ): Promise<Event[]> {
-    const orderDirection = order.toUpperCase() === 'ASCENDING' ? 'ASC' : 'DESC';
+    const orderDirection = order === 'ascending' ? 'ASC' : 'DESC';
     const startIndex = (page - 1) * limit;
 
-    // Obtener el ID de la categoría
-    const categoryEntity = await this.categoryRepository.findOne({
-      where: { name: category.toUpperCase() },
-    });
+    let categoryFilter = {}; // Objeto vacío para filtrar todas las categorías si no se proporciona una
 
-    if (!categoryEntity) {
-      throw new NotFoundException(`Categoría ${category} no encontrada`);
+    if (category) { // Si se proporciona una categoría, filtrar por ella
+      const categoryEntity = await this.categoryRepository.findOne({
+        where: { name: category.toUpperCase() },
+      });
+
+      if (!categoryEntity) {
+        throw new NotFoundException(`Categoría ${category} no encontrada`);
+      }
+
+      categoryFilter = { category: categoryEntity.id };
     }
 
     // Subconsulta para obtener los IDs de los eventos ordenados por el precio mínimo
@@ -168,9 +173,7 @@ export class EventsRepository {
       .leftJoin('event.tickets', 'ticket')
       .select('event.id')
       .addSelect('MIN(ticket.price)', 'minPrice')
-      .where('event.categoryId = :categoryId', {
-        categoryId: categoryEntity.id,
-      })
+      .where(categoryFilter) // Aplicar el filtro de categoría
       .groupBy('event.id')
       .orderBy('"minPrice"', orderDirection)
       .skip(startIndex)
@@ -185,16 +188,15 @@ export class EventsRepository {
       .createQueryBuilder('event')
       .leftJoinAndSelect('event.tickets', 'ticket')
       .whereInIds(eventIds)
-      .andWhere('event.categoryId = :categoryId', {
-        categoryId: categoryEntity.id,
-      }) // Asegúrate de filtrar por categoría en la consulta principal también
+      .andWhere(categoryFilter) // Aplicar el filtro de categoría
       .orderBy(
         `CASE event.id ${eventIds.map((id, index) => `WHEN '${id}' THEN ${index}`).join(' ')} END`,
       )
       .getMany();
 
     return events;
-  }
+}
+
 
   async postEvent(event: PostEventDto, email: string) {
     const { category } = event;
