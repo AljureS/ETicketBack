@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { Role } from '../../user/role.enum';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthGuards implements CanActivate { // le puse una "s" a AuthGuard
   constructor(private readonly jwtService: JwtService) {}
 
   canActivate(context: ExecutionContext,): boolean | Promise<boolean> | Observable<boolean> {

@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as morgan from 'morgan';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { auth } from 'express-openid-connect'
+import { config as auth0Config} from './config/auth0.config'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,10 +18,12 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
-
+  app.use(auth(auth0Config))
   app.use(morgan('dev'));
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
   await app.listen(3001);
+
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
