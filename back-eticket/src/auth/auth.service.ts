@@ -26,26 +26,32 @@ export class AuthService {
 
   async Auth0 (userDetail: any) {
     const { email } = userDetail;
-        const user = await this.userRepository.getUserByEmail(email);
-        if (user) {
-          throw new BadRequestException('Email already registered');
-        }
-        const userCreated = this.usersRepository.create({
-          ...userDetail,
-          phone: '',
-          password: '65765765765765',
-        });
-        await this.usersRepository.save(userCreated);
+    const user = await this.userRepository.getUserByEmail(email);
+    if (user) {
+      throw new BadRequestException('Email already registered');
+    }
 
-    // Genera un token de confirmación (esto puede ser un JWT, un UUID, etc.)
-    const confirmationToken = await this.generateConfirmationToken(user);
-    // const confirmationToken = "token";
+    const userCreated = this.usersRepository.create({
+      ...userDetail,
+      phone: '', 
+      password: 'This is a super safe password',
+    });
+    await this.usersRepository.save(userCreated);
 
-    // Envía el correo de confirmación
-    await this.emailService.sendConfirmationEmail(
-      user.email,
-      confirmationToken,
-    );
+    const payload = {
+      id: user.id,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      isSuperAdmin: user.isSuperAdmin,
+      name: user.name,
+      phone: user.phone, //! no es "obligatorio"
+    };
+    const token = await this.jwtService.sign(payload);
+    //Retornar mensaje de ingreso y token
+    return {
+      message: 'Logged user',
+      token,
+    };
 
     return userCreated;
   }

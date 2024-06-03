@@ -17,12 +17,12 @@ export class AuthController {
     constructor (private readonly authService: AuthService){}
 
     // [url]/auth/signup 
-    @Get('/auth0')
+    @Post('/auth0')
     redirectToAuth0Login(@Req() req: Request) {
         const { given_name: name, family_name: lastName, email } = req.oidc.user
-        this.authService.Auth0({ name, lastName, email });
-        const userToken = JSON.stringify(req.oidc.accessToken);
-        return userToken
+        
+        // const userToken = JSON.stringify(req.oidc.accessToken);
+        return this.authService.Auth0({ name, lastName, email });
     }
 
     // @Post('signup/auth0')

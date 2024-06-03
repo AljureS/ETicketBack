@@ -25,7 +25,7 @@ export class AuthGuards implements CanActivate { // le puse una "s" a AuthGuard
       user.roles = user.isSuperAdmin ? [...user.roles, Role.SUPERADMIN]: [...user.roles]
       request.user = user;
       
-      return true;
+      return true;  
     } catch (error) {
       throw new UnauthorizedException('Invalid token');
     }
