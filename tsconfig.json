@@ -18,6 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true, // Que en este proyecto se van a usar archivos json
-    "types": ["Multer"] // Que en este proyecto se van a usar tipos de multer 
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["multer"] // Que en este proyecto se van a usar tipos de multer 
   }
 }
