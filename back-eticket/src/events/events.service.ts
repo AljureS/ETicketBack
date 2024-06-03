@@ -12,7 +12,7 @@ export class EventsService {
   }
   getEventsByDate(page: number, limit: number, category?: string, order?: 'ascending' | 'descending'){
     return this.eventsRepository.getEventsByDate(page,limit, category, order)
-  }
+  } 
   getAllEvents(){
     return this.eventsRepository.getAllEvents()
   }
@@ -37,9 +37,9 @@ export class EventsService {
     order: 'ascending' | 'descending',
     page: number, 
     limit: number,
-    category:string
+    category?:string
   ) {
-    return this.eventsRepository.getEventsByPrice(order, page, limit,category);
+    return this.eventsRepository.getEventsByPrice(order, page, limit, category);
   }
 
 

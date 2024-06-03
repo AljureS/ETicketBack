@@ -162,9 +162,7 @@ export class EventsRepository {
 
       if (!categoryEntity) {
         throw new NotFoundException(`Categoría ${category} no encontrada`);
-      }
-
-      categoryFilter = { category: categoryEntity.id };
+      } else categoryFilter = { category: categoryEntity.id };
     }
 
     // Subconsulta para obtener los IDs de los eventos ordenados por el precio mínimo
