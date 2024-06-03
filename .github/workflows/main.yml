@@ -24,4 +24,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/radioticket:v1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/radioticket:latest
