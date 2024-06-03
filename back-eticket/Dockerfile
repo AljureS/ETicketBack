@@ -1,5 +1,5 @@
 FROM node:18         
-WORKDIR /radio             
+WORKDIR /back-eticket             
 COPY package*.json ./
 RUN npm install          
 COPY . .                
