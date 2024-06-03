@@ -1,0 +1,242 @@
+[
+    {
+        "name": "J Balvin",
+        "description": "A leading figure in reggaeton music globally.",
+        "category": "REGGAETON",
+        "imgUrl": "https://example.com/jbalvin.jpg",
+        "date": "2025-02-15",
+        "location": "Arena Ciudad de México",
+        "tickets": [
+            {
+                "price": 120,
+                "stock": 15,
+                "zone": "VIP"
+            },
+            {
+                "price": 60,
+                "stock": 20,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Karol G",
+        "description": "The queen of reggaeton in a spectacular night.",
+        "category": "REGGAETON",
+        "imgUrl": "https://example.com/karolg.jpg",
+        "date": "2025-03-05",
+        "location": "Madison Square Garden",
+        "tickets": [
+            {
+                "price": 130,
+                "stock": 20,
+                "zone": "VIP"
+            },
+            {
+                "price": 70,
+                "stock": 25,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Maluma",
+        "description": "Experience the charm of Maluma live.",
+        "category": "REGGAETON",
+        "imgUrl": "https://example.com/maluma.jpg",
+        "date": "2025-04-10",
+        "location": "Staples Center",
+        "tickets": [
+            {
+                "price": 110,
+                "stock": 12,
+                "zone": "VIP"
+            },
+            {
+                "price": 55,
+                "stock": 15,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Ozuna",
+        "description": "Join Ozuna for an unforgettable night of music.",
+        "category": "REGGAETON",
+        "imgUrl": "https://example.com/ozuna.jpg",
+        "date": "2025-05-20",
+        "location": "The O2 Arena",
+        "tickets": [
+            {
+                "price": 125,
+                "stock": 18,
+                "zone": "VIP"
+            },
+            {
+                "price": 65,
+                "stock": 20,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Daddy Yankee",
+        "description": "Don't miss the legend of reggaeton live in concert.",
+        "category": "REGGAETON",
+        "imgUrl": "https://example.com/daddyyankee.jpg",
+        "date": "2025-06-30",
+        "location": "American Airlines Arena",
+        "tickets": [
+            {
+                "price": 140,
+                "stock": 10,
+                "zone": "VIP"
+            },
+            {
+                "price": 75,
+                "stock": 15,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Coldplay",
+        "description": "Experience an electrifying night with Coldplay's unique sound.",
+        "category": "ROCK",
+        "imgUrl": "https://example.com/coldplay.jpg",
+        "date": "2025-07-10",
+        "location": "Wembley Stadium",
+        "tickets": [
+            {
+                "price": 150,
+                "stock": 20,
+                "zone": "VIP"
+            },
+            {
+                "price": 85,
+                "stock": 25,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Beyoncé",
+        "description": "Join Beyoncé for a night of powerhouse vocals and stunning visuals.",
+        "category": "POP",
+        "imgUrl": "https://example.com/beyonce.jpg",
+        "date": "2025-08-15",
+        "location": "Rose Bowl",
+        "tickets": [
+            {
+                "price": 180,
+                "stock": 15,
+                "zone": "VIP"
+            },
+            {
+                "price": 100,
+                "stock": 20,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Ed Sheeran",
+        "description": "Get up close with Ed Sheeran's heartfelt lyrics and acoustic performance.",
+        "category": "ACOUSTIC",
+        "imgUrl": "https://example.com/edsheeran.jpg",
+        "date": "2025-09-05",
+        "location": "Gillette Stadium",
+        "tickets": [
+            {
+                "price": 120,
+                "stock": 18,
+                "zone": "VIP"
+            },
+            {
+                "price": 75,
+                "stock": 22,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Kendrick Lamar",
+        "description": "Witness the lyrical genius of Kendrick Lamar in his prime.",
+        "category": "HIP-HOP",
+        "imgUrl": "https://example.com/kendricklamar.jpg",
+        "date": "2025-10-20",
+        "location": "Madison Square Garden",
+        "tickets": [
+            {
+                "price": 160,
+                "stock": 15,
+                "zone": "VIP"
+            },
+            {
+                "price": 90,
+                "stock": 20,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Billie Eilish",
+        "description": "Dive into the moody and atmospheric soundscapes of Billie Eilish.",
+        "category": "ALTERNATIVE",
+        "imgUrl": "https://example.com/billieeilish.jpg",
+        "date": "2025-11-30",
+        "location": "Staples Center",
+        "tickets": [
+            {
+                "price": 135,
+                "stock": 12,
+                "zone": "VIP"
+            },
+            {
+                "price": 80,
+                "stock": 18,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Taylor Swift",
+        "description": "Sing along with Taylor Swift's greatest hits in this stunning concert series.",
+        "category": "COUNTRY",
+        "imgUrl": "https://example.com/taylorswift.jpg",
+        "date": "2026-01-10",
+        "location": "AT&T Stadium",
+        "tickets": [
+            {
+                "price": 170,
+                "stock": 20,
+                "zone": "VIP"
+            },
+            {
+                "price": 95,
+                "stock": 25,
+                "zone": "General"
+            }
+        ]
+    },
+    {
+        "name": "Andrea Bocelli",
+        "description": "Experience the timeless voice of Andrea Bocelli in a breathtaking performance.",
+        "category": "CLASSICAL",
+        "imgUrl": "https://example.com/andreabocelli.jpg",
+        "date": "2026-02-25",
+        "location": "Carnegie Hall",
+        "tickets": [
+            {
+                "price": 200,
+                "stock": 10,
+                "zone": "VIP"
+            },
+            {
+                "price": 110,
+                "stock": 20,
+                "zone": "General"
+            }
+        ]
+    }
+]
