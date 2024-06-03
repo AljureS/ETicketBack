@@ -14,8 +14,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/user/role.enum';
-import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
+import { AuthGuards } from 'src/guards/auth/auth.guard';
 
 @Controller('cloudinary')
 export class CloudinaryController {
@@ -67,7 +67,7 @@ export class CloudinaryController {
   //@ApiBearerAuth()
   @Post()
   @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard, RoleGuard)
+  @UseGuards(AuthGuards, RoleGuard)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
   @ApiBody({
