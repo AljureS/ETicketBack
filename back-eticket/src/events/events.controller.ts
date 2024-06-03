@@ -1,6 +1,6 @@
 import {
   Controller,
-  Param,
+  Param, 
   Query,
   Get,
   Post,
@@ -69,7 +69,7 @@ export class EventsController {
     @Query('order') order: 'ascending' | 'descending',
     @Query('page') page: string, 
     @Query('limit') limit: string,
-    @Query('category') category:string
+    @Query('category') category: string
   ) {
     
     if (!page || !limit) return this.eventsService.getEventsByPrice(order, 1, 5, category);
