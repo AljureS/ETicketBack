@@ -6,6 +6,7 @@ import { Role } from './role.enum';
 import { AuthGuards } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { modifyUserDto } from 'src/dtos/modifyUser.dto';
 
 @ApiTags('Users')
 @Controller('user')
@@ -43,7 +44,7 @@ export class UserController {
     @Roles(Role.SUPERADMIN)
     @UseGuards(AuthGuards, RoleGuard)
     @Put(':id')
-    updateUser(@Param('id',ParseUUIDPipe) id: string, @Body() user: Partial<createUserDto>){
+    updateUser(@Param('id',ParseUUIDPipe) id: string, @Body() user: modifyUserDto){
         return this.userService.updateUser(id, user);
     }
 }
