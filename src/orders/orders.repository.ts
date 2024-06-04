@@ -7,6 +7,8 @@ import { Event } from 'src/entities/event.entity'; // Asegúrate de tener la ent
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from 'src/dtos/createOrder.dto';
 import { Ticket } from 'src/entities/ticket.entity';
+import { TicketVendido } from 'src/entities/ticketVendido.entity';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class OrdersRepository {
@@ -23,60 +25,96 @@ export class OrdersRepository {
     @InjectRepository(Ticket)
     private readonly ticketRepository: Repository<Ticket>,
 
+    @InjectRepository(TicketVendido)
+    private readonly ticketVendidoRepository: Repository<TicketVendido>,
+
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
+    
+    private readonly emailService: EmailService,
   ) {}
 
   async addOrder(order: CreateOrderDto) {
     const user = await this.userRepository.findOne({
       where: { id: order.userId },
     });
-    if(!user)new NotFoundException("Usuario No Encontrado")
+    
+    if (!user) {
+        throw new NotFoundException("Usuario No Encontrado");
+    }
+
     const newOrder = new Order();
     newOrder.user = user;
     newOrder.date = new Date();
     const newOrderInDB = await this.orderRepository.save(newOrder);
 
-    const tickets = [];
+    const ticketsParaEnviarPorMail: TicketVendido[] = [];
     let total = 0;
-    const listaDeTicketsEnDB = await this.ticketRepository.find();
-    order.tickets.forEach((ticket) => {
+    const listaDeTicketsEnDB = await this.ticketRepository.find({relations:{event:true}});
 
-      const ticketBuscado = listaDeTicketsEnDB.find(
-        (ticketEnDB) => ticketEnDB.id === ticket.id
-      );
+    for (const ticket of order.tickets) {
+        const ticketBuscado = listaDeTicketsEnDB.find(ticketEnDB => ticketEnDB.id === ticket.id);
 
-      if (ticketBuscado) {
-        if(ticketBuscado.stock < ticket.quantity){
-          throw new BadRequestException("El ticket tiene stock insuficiente")
+        if (ticketBuscado) {
+            if (ticketBuscado.stock < ticket.quantity) {
+                throw new BadRequestException("El ticket tiene stock insuficiente");
+            }
+
+            // Crea y guarda los tickets vendidos
+            const nuevosTickets = await this.crearTicketsParaEnviarPorMail(ticketBuscado, ticket.quantity);
+            ticketsParaEnviarPorMail.push(...nuevosTickets);
+
+            // Actualiza el stock y el total
+            ticketBuscado.stock -= ticket.quantity;
+            total += Number(ticketBuscado.price * ticket.quantity);
+            await this.descontarStock(ticketBuscado);
+
+            // Verifica si el ticket ya está en la lista
+            if (ticketsParaEnviarPorMail.some(tic => tic.id === ticketBuscado.id)) {
+                throw new BadRequestException("No se puede mandar dos veces el mismo ticket");
+            }
+        } else {
+            throw new BadRequestException("No existe ese tipo de ticket");
         }
-        ticketBuscado.stock -= ticket.quantity;
-        
-        total += Number(ticketBuscado.price * ticket.quantity);
-        this.descontarStock(ticketBuscado);
-        for(const tic of tickets){
-          if(ticketBuscado.id === tic.id) throw new BadRequestException("No se puede mandar dos veces el mismo ticket")
-        }
-        tickets.push(ticketBuscado);
-      }else{
-        throw new BadRequestException("No existe ese tipo de ticket")
-      }
-    });
+    }
+
+    // Guarda los detalles de la compra
     const detalleDeCompra = new OrderDetails();
     detalleDeCompra.order = newOrderInDB;
-    
     detalleDeCompra.price = total;
     const detalleDeCompraInDb = await this.orderDetailsRepository.save(detalleDeCompra);
 
+    // Envía los tickets por correo electrónico
+    await this.emailService.sendTickets(user.email, ticketsParaEnviarPorMail);
+
     return {
-      ordenDecompra: newOrderInDB,
-      PrecioTotal: detalleDeCompraInDb.price,
-      IdDetalleDeCompra: detalleDeCompraInDb.id,
+        ordenDecompra: newOrderInDB,
+        PrecioTotal: detalleDeCompraInDb.price,
+        IdDetalleDeCompra: detalleDeCompraInDb.id,
     };
-  }
+}
+
 
   async descontarStock(ticket:Ticket) {
     await this.ticketRepository.save(ticket);
+  }
+
+  async crearTicketsParaEnviarPorMail(ticket:Ticket, quantity:number):Promise<TicketVendido[]>{
+    
+    let tickets = []
+    for(let i = 0; i < quantity ; i++){
+      
+      const newTicketAVender = this.ticketVendidoRepository.create({
+        event: ticket.event,
+        zone:ticket.zone,
+        isUsed:false,
+      })
+      const ticketVendidoEnDB = await this.ticketVendidoRepository.save(newTicketAVender)
+      tickets = [...tickets, ticketVendidoEnDB]
+      
+    }
+    
+    return tickets
   }
 
   async getOrder(id: string) {

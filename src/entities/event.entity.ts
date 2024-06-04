@@ -11,6 +11,7 @@ import { Category } from './category.entity';
 import { OrderDetails } from './orderDetails.entity';
 import { Ticket } from './ticket.entity';
 import { Discount } from './discount.entity';
+import { TicketVendido } from './ticketVendido.entity';
 
 @Entity({
   name: 'event',
@@ -49,6 +50,10 @@ export class Event {
   @OneToMany(() => Ticket, (ticket) => ticket.event)
   @JoinColumn({ name: 'ticket_id' })
   tickets: Ticket[];
+
+  @OneToMany(() => Ticket, (ticket) => ticket.event)
+  @JoinColumn({ name: 'ticket_id' })
+  ticketsVendidos: TicketVendido[];
 
 
   @OneToMany(() => Discount, (discount) => discount.event)
