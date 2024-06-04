@@ -7,6 +7,8 @@ import { Order } from 'src/entities/order.entity';
 import { OrderDetails } from 'src/entities/orderDetails.entity';
 import { User } from 'src/entities/user.entity';
 import { Ticket } from 'src/entities/ticket.entity';
+import { EmailService } from 'src/email/email.service';
+import { TicketVendido } from 'src/entities/ticketVendido.entity';
 
 @Module({
   imports: [
@@ -15,8 +17,10 @@ import { Ticket } from 'src/entities/ticket.entity';
   TypeOrmModule.forFeature([User]),
   TypeOrmModule.forFeature([Event]),
   TypeOrmModule.forFeature([Ticket]),
+  TypeOrmModule.forFeature([TicketVendido]),
+
 ],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersRepository]
+  providers: [OrdersService, OrdersRepository,EmailService]
 })
 export class OrdersModule {}
