@@ -85,7 +85,7 @@ export class EventsController {
   }
 
   @ApiBearerAuth()
-  @Roles(Role.SUPERADMIN)
+  @Roles(Role.ADMIN)
   @UseGuards(AuthGuards, RoleGuard)
   @Get('ofadmin')
   getEventOfUser(@Req() req:Request & {user:User}){
