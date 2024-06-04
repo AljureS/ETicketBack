@@ -43,23 +43,18 @@ export class UserRepository {
     }
 
     async updateUser(id: string, user: User) {
-
-        // Ejecuta la actualización
-        const updateResult = await this.userRepository.update(id, user);
-        
-        // Verifica si se actualizó algún registro
-        if (updateResult.affected === 0) {
-            throw new NotFoundException(`No se encontró el usuario con ID ${id} o no se pudo actualizar.`);
-        }
-
         // Recupera el usuario actualizado
-        const updatedUser = await this.userRepository.findOneBy({ id });
-        if (!updatedUser) {
-            throw new NotFoundException(`No se encontró el usuario con ID ${id} después de la actualización.`);
+        let userBuscado = await this.userRepository.findOneBy({ id });
+        if (!userBuscado) {
+            throw new NotFoundException(`No se encontró el usuario con ID ${id} `);
         }
+        userBuscado = {
+            ...userBuscado,
+            ...user
+          };
 
         // Retorna el usuario sin incluir la contraseña
-        const { password, ...userNoPassword } = updatedUser;
+        const { password, ...userNoPassword } = await this.userRepository.save(userBuscado);
         return userNoPassword;
     }
 

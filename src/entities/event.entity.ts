@@ -1,7 +1,7 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
+  Column, 
   ManyToOne,
   ManyToMany,
   OneToMany,

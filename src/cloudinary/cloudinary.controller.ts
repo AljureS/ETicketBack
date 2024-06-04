@@ -6,11 +6,16 @@ import {
   ParseFilePipe,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/user/role.enum';
+import { RoleGuard } from 'src/guards/roles/roles.guard';
+import { AuthGuards } from 'src/guards/auth/auth.guard';
 
 @Controller('cloudinary')
 export class CloudinaryController {
@@ -61,8 +66,8 @@ export class CloudinaryController {
   @ApiTags('UploadImage')
   //@ApiBearerAuth()
   @Post()
-  // @Roles(Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuards, RoleGuard)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
   @ApiBody({
