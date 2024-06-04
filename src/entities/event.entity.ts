@@ -10,6 +10,7 @@ import {
 import { Category } from './category.entity';
 import { OrderDetails } from './orderDetails.entity';
 import { Ticket } from './ticket.entity';
+import { Discount } from './discount.entity';
 
 @Entity({
   name: 'event',
@@ -31,7 +32,7 @@ export class Event {
   imgUrl: string;
 
   @ManyToOne(() => Category, (category) => category.event)
-  category: Category;
+  category: Category; 
 
   @Column({ nullable: false, type: 'date' })
   date: Date;
@@ -48,4 +49,9 @@ export class Event {
   @OneToMany(() => Ticket, (ticket) => ticket.event)
   @JoinColumn({ name: 'ticket_id' })
   tickets: Ticket[];
+
+
+  @OneToMany(() => Discount, (discount) => discount.event)
+  @JoinColumn({ name: 'discount_id' })
+  discounts: Discount[];
 }
