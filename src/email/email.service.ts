@@ -25,38 +25,57 @@ export class EmailService {
       to,
       subject: 'Confirm your account',
       text: `Click the link to confirm your account: ${url}`,
+      context: {
+        // Data to be sent to template engine.
+        verificationLink: url,
+      },
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Document</title>
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-          <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-      <style>
-          * {
-        margin: 0;
-        padding: 0;
-      }
-      .main {
-        padding: 1rem 0 1.5rem 0;
-        background-color: #EDF2F7;
-        font-family: "Roboto", sans-serif;
-      }
-      @media screen and (max-width: 769px) {
-        .main {
-          padding: 3rem 0 0.5rem 0;
-        }
-      }
-      </style>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+              }
+              .container {
+                  padding: 20px;
+                  text-align: center;
+                  background-color: #f4f4f4;
+                  border-radius: 10px;
+                  max-width: 600px;
+                  margin: auto;
+              }
+              .header {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 10px 0;
+                  border-radius: 10px 10px 0 0;
+              }
+              .button {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 15px 25px;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  margin-top: 20px;
+                  display: inline-block;
+              }
+          </style>
       </head>
       <body>
-          <section class="main">
-          <a href="${url}">Click here to confirm your account</a>
-          </section>
+          <div class="container">
+              <div class="header">
+                  <h1>Bienvenido a Radioticket</h1>
+              </div>
+              <p>Hola, {{token}}!</p>
+              <p>Gracias por registrarte en Radioticket. Estamos emocionados de tenerte con nosotros.</p>
+              <a href="${url}" class="button">Verificar mi cuenta</a>
+              <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+          </div>
       </body>
-      </html>`,
+      </html>
+      `,
     });
   }
 }
