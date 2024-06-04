@@ -10,6 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { EmailInterceptor } from 'src/interceptors/emailAMinuscula';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
+import { OIDCRequestFunction } from 'typeorm';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -18,8 +19,8 @@ export class AuthController {
 
     // [url]/auth/signup 
     @Post('/auth0')
-    redirectToAuth0Login(@Body() user: any) {
-        const { given_name: name, family_name: lastName, email } = user.oidc.user
+    redirectToAuth0Login(@Body() req: Request) {
+        const { given_name: name, family_name: lastName, email } = req.oidc.user
         
         // const userToken = JSON.stringify(req.oidc.accessToken);
         return this.authService.Auth0({ name, lastName, email });
