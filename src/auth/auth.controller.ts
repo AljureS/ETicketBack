@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Query, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Query, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/dtos/login.dto';
 import { createUserDto } from 'src/dtos/user.dto';
@@ -11,19 +11,27 @@ import { EmailInterceptor } from 'src/interceptors/emailAMinuscula';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { OIDCRequestFunction } from 'typeorm';
+import { Auth0LoginDto } from 'src/dtos/auth0.dto';
+import { config as dotenvConfig } from 'dotenv';
+
+dotenvConfig({ path: '.env.development' });
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor (private readonly authService: AuthService){}
 
-    // [url]/auth/signup 
+    constructor (
+        private readonly authService: AuthService
+    ){}
+    
     @Post('/auth0')
-    redirectToAuth0Login(@Body() req: Request) {
-        const { given_name: name, family_name: lastName, email } = req.oidc.user
-        
+    async redirectToAuth0Login(@Body() auth0LoginDto: Auth0LoginDto) {
+        const { accessToken } = auth0LoginDto;
+
+        const userDetail = await this.authService.getAuth0UserDetails(accessToken);
+        // const { given_name: name, family_name: lastName, email } = auth0LoginDto.oidc.user
         // const userToken = JSON.stringify(req.oidc.accessToken);
-        return this.authService.Auth0({ name, lastName, email });
+        return this.authService.Auth0(userDetail);
     }
 
     // @Post('signup/auth0')
