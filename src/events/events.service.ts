@@ -20,6 +20,9 @@ export class EventsService {
   getEvent(id) {
     return this.eventsRepository.getEvent(id);
   }
+  getEventOfUser(email:string){
+    return this.eventsRepository.getEventOfUser(email)
+  }
 
   getEventsAZ(
     order: 'ascending' | 'descending',
