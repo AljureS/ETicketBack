@@ -60,9 +60,6 @@ export class CloudinaryController {
     return await this.cloudinaryService.modifyImage(file, eventID);
   }
 
-
-  
-
   @ApiTags('UploadImage')
   //@ApiBearerAuth()
   @Post()

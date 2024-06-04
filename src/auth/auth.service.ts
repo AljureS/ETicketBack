@@ -12,10 +12,13 @@ import { UserRepository } from 'src/user/user.repository';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { EmailService } from 'src/email/email.service';
+import axios from 'axios';
+import { config as dotenvConfig } from 'dotenv';
 
+dotenvConfig({ path: '.env.development' });
 @Injectable()
 export class AuthService {
-  constructor(
+  constructor( 
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
@@ -23,6 +26,22 @@ export class AuthService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
   ) {}
+
+  async getAuth0UserDetails(token: string) {
+    try {
+        const response = await axios.get(`https://${process.env.AUTH0_BASE_URL}/userinfo`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        // Desestructuración de la información del token
+        const { given_name: name, family_name: lastName, email } = response.data;
+        return { name, lastName, email };
+    } catch (error) {
+        throw new BadRequestException('Invalid token');
+    }
+}
 
   async Auth0 (userDetail: any) {
     const { email } = userDetail;
