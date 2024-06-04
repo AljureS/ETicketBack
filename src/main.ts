@@ -29,7 +29,7 @@ async function bootstrap() {
   );
   app.use(morgan('dev'));
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('/', app, document);
   await app.listen(3001);
 
   console.log(`Application is running on: ${await app.getUrl()}`);
