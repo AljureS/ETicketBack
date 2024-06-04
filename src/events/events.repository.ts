@@ -194,6 +194,9 @@ export class EventsRepository {
 
     return events;
 }
+    async getEventOfUser(email:string){
+      return await this.eventsRepository.find({where:{userEmail:email},relations:{tickets:true, category:true}})
+    }
 
 
   async postEvent(event: PostEventDto, email: string) {

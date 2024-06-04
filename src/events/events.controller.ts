@@ -84,6 +84,14 @@ export class EventsController {
     return this.eventsService.preLoadData();
   }
 
+  @ApiBearerAuth()
+  @Roles(Role.SUPERADMIN)
+  @UseGuards(AuthGuards, RoleGuard)
+  @Get('ofadmin')
+  getEventOfUser(@Req() req:Request & {user:User}){
+    return this.eventsService.getEventOfUser(req.user.email)
+  }
+
   @Get(':id')
   getEvent(@Param('id') id: string) {
     return this.eventsService.getEvent(id);
