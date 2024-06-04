@@ -24,7 +24,7 @@ export class AuthController {
         private readonly authService: AuthService
     ){}
     
-    @Post('/auth0')
+    @Post('auth0')
     async redirectToAuth0Login(@Body() auth0LoginDto: Auth0LoginDto) {
         const { accessToken } = auth0LoginDto;
 
