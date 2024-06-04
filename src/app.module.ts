@@ -13,6 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { TicketsModule } from './tickets/tickets.module';
 import { EmailModule } from './email/email.module';
+import { DiscountModule } from './discount/discount.module';
 
 @Module({
   imports: [
@@ -31,7 +32,16 @@ import { EmailModule } from './email/email.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1440m' },
     }),
-    AuthModule, UserModule, CategoriesModule, OrdersModule, CloudinaryModule, EventsModule, TicketsModule, EmailModule],
+    AuthModule,
+    UserModule,
+    CategoriesModule,
+    OrdersModule,
+    CloudinaryModule,
+    EventsModule,
+    TicketsModule,
+    EmailModule,
+    DiscountModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
