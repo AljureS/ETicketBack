@@ -5,14 +5,17 @@ import {
   IsArray,
   ArrayMinSize,
   IsInt,
+  IsNumber,
+  IsOptional,
 } from 'class-validator';
+import { isFloat } from 'validator';
 
 export class CreateOrderDto {
   /**
    * El id de usuario debe ser un UUID
    * @example 550e8400-e29b-41d4-a716-446655440000
    */
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @IsUUID('4')
   userId: string;
@@ -35,4 +38,7 @@ class TicketDto {
   @IsInt()
   @IsNotEmpty()
   quantity: number;
+
+  @IsNumber()
+  price:number
 }

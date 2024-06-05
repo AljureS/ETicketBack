@@ -35,6 +35,8 @@ export class OrdersRepository {
   ) {}
 
   async addOrder(order: CreateOrderDto) {
+    console.log(order);
+    
     const user = await this.userRepository.findOne({
       where: { id: order.userId },
     });
@@ -66,7 +68,7 @@ export class OrdersRepository {
 
             // Actualiza el stock y el total
             ticketBuscado.stock -= ticket.quantity;
-            total += Number(ticketBuscado.price * ticket.quantity);
+            total += Number(ticket.price * ticket.quantity);
             await this.descontarStock(ticketBuscado);
 
             // Verifica si el ticket ya está en la lista
@@ -82,16 +84,12 @@ export class OrdersRepository {
     const detalleDeCompra = new OrderDetails();
     detalleDeCompra.order = newOrderInDB;
     detalleDeCompra.price = total;
-    const detalleDeCompraInDb = await this.orderDetailsRepository.save(detalleDeCompra);
+    await this.orderDetailsRepository.save(detalleDeCompra);
 
     // Envía los tickets por correo electrónico
     await this.emailService.sendTickets(user.email, ticketsParaEnviarPorMail);
 
-    return {
-        ordenDecompra: newOrderInDB,
-        PrecioTotal: detalleDeCompraInDb.price,
-        IdDetalleDeCompra: detalleDeCompraInDb.id,
-    };
+    return "Gracias por comprar en radioticket, por mail le llegaran los tickets que compró, revise el spam"
 }
 
 
