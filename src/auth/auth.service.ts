@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -46,6 +47,7 @@ export class AuthService {
   async Auth0 (userDetail: any) {
     const { email } = userDetail;
     const user = await this.userRepository.getUserByEmail(email);
+
     if (user) {
       throw new BadRequestException('Email already registered');
     }
@@ -54,25 +56,25 @@ export class AuthService {
       ...userDetail,
       phone: '', 
       password: 'This is a super safe password',
+      isEmailConfirmed: true
     });
-    await this.usersRepository.save(userCreated);
+
+    const savedUser = await this.usersRepository.save(userCreated);
+    if (!savedUser) {
+      throw new InternalServerErrorException('Error saving user');
+    }
 
     const payload = {
-      id: user.id,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      isSuperAdmin: user.isSuperAdmin,
-      name: user.name,
-      phone: user.phone, //! no es "obligatorio"
+      ...userCreated, //! no es "obligatorio"
     };
     const token = await this.jwtService.sign(payload);
-    //Retornar mensaje de ingreso y token
+    //Retornar mensaje de ingreso y token 
     return {
-      message: 'Logged user',
+      message: 'Auth 0 User created successfully',
       token,
+      // userCreated
     };
 
-    return userCreated;
   }
 
   async signUp(user: any) {

@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import * as morgan from 'morgan';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { auth } from 'express-openid-connect'
-import { config as auth0Config} from './config/auth0.config'
+// import { config as auth0Config} from './config/auth0.config'//? PORFA NO ELIMNAR ESTA LINEA
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -19,7 +19,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
-  app.use(auth(auth0Config))
+  // app.use(auth(auth0Config)) //? PORFA NO ELIMNAR ESTA LINEA
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
