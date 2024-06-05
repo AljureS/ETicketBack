@@ -142,12 +142,22 @@ export class EmailService {
       </html>
     `;
 
-    await this.transporter.sendMail({
+    const attachments = await Promise.all(tickets.map(async (ticket) => {
+      const qrCodeBuffer = await QRCode.toBuffer(ticket.id);
+      return {
+          filename: `qr_code_${ticket.id}.png`,
+          content: qrCodeBuffer,
+          encoding: 'base64',
+      };
+  }));
+  
+  await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
       to,
       subject: 'Estos son tus tickets',
       html: emailContent,
-    });
+      attachments: attachments,
+  });
 }
 
 }

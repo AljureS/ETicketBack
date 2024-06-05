@@ -29,7 +29,7 @@ export class PaymentsRepository {
           },
         ],
         back_urls: {
-          success: 'http://localhost:3001/payments/succes',
+          success: 'http://localhost:3001/',
         },
       };
 
