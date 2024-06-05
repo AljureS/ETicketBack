@@ -49,7 +49,14 @@ export class AuthService {
     const user = await this.userRepository.getUserByEmail(email);
 
     if (user) {
-      throw new BadRequestException('Email already registered');
+      const payload = {
+        ...user
+      }
+      const token = await this.jwtService.sign(payload);
+      return {
+        message: 'Auth 0 User logged in successfully',
+        token,
+      };
     }
 
     const userCreated = this.usersRepository.create({
