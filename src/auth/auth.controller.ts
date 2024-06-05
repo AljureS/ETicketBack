@@ -25,12 +25,9 @@ export class AuthController {
     ){}
     
     @Post('auth0')
-    async redirectToAuth0Login(@Body() auth0LoginDto: Auth0LoginDto) {
-        const { accessToken } = auth0LoginDto;
-
-        const userDetail = await this.authService.getAuth0UserDetails(accessToken);
-        // const { given_name: name, family_name: lastName, email } = auth0LoginDto.oidc.user
-        // const userToken = JSON.stringify(req.oidc.accessToken);
+    async redirectToAuth0Login(@Body() auth0: any) {
+        const { given_name: name, family_name: lastName, email } = auth0
+        const userDetail = { name, lastName, email }
         return this.authService.Auth0(userDetail);
     }
 

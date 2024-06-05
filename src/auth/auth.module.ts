@@ -25,6 +25,6 @@ dotenvConfig({ path: '.env.development' });
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(requiresAuth()).forRoutes('/auth/auth0');
+    // consumer.apply(requiresAuth()).forRoutes('/auth/auth0'); //? PORFA NO ELIMNAR ESTA LINEA
   }
 }
