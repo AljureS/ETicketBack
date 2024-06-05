@@ -10,7 +10,7 @@ export class DiscountService {
 
     createDiscount (eventId, discount) {
         return this.discountRepository.createDiscount(eventId, discount);
-    }
+    } 
 
     findByCode(code: string) {
         return this.discountRepository.findByCode(code);

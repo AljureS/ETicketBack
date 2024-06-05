@@ -23,7 +23,15 @@ export class DiscountRepository {
     }
 
     async findByCode(code: string){
-        return await this.discountRepository.findOne({ where: { code } });
+        return await this.discountRepository.findOne({ 
+            where: { code } , 
+            relations: ['event'] ,
+            select: {
+                event: {
+                    id: true
+                }
+            }
+        });
     }
 
     private generateRandomDiscountCode(): string {
