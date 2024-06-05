@@ -55,10 +55,10 @@ export class AuthController {
         return this.authService.updateRole( id)
     }
     @Get('confirm')
-    async confirm(@Query('token') token: string) {
-     await this.authService.confirmEmail(token);
-     return "Cuenta registrada, ya puede ingresar a radioticket con su cuenta oficial"
-  }
+        async confirm(@Query('token') token: string) {
+        await this.authService.confirmEmail(token);
+        return "Cuenta registrada, ya puede ingresar a radioticket con su cuenta oficial"
+    }
 
     @Get('callback')
     @UseGuards(AuthGuard('auth0'))

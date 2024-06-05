@@ -15,7 +15,7 @@ export class DiscountController {
         if (!isValid) {
             return  "Discount code is not valid" ;
         }
-        return  isValid ;
+        return  isValid ; 
     }
 
     @Post('create/:id')
