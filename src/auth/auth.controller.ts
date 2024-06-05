@@ -56,7 +56,8 @@ export class AuthController {
     }
     @Get('confirm')
     async confirm(@Query('token') token: string) {
-    return await this.authService.confirmEmail(token);
+     await this.authService.confirmEmail(token);
+     return "Cuenta registrada, ya puede ingresar a radioticket con su cuenta oficial"
   }
 
     @Get('callback')

@@ -14,6 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TicketsModule } from './tickets/tickets.module';
 import { EmailModule } from './email/email.module';
 import { DiscountModule } from './discount/discount.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { DiscountModule } from './discount/discount.module';
     TicketsModule,
     EmailModule,
     DiscountModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
