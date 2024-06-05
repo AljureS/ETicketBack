@@ -22,6 +22,9 @@ export class OrdersService {
             const ticketInDB = await this.ticketRepository.findOne({where:{id:ticket.id}})
             if(ticketInDB.stock < ticket.quantity){
                 throw new BadRequestException("No Hay disponibles esa cantidad de tickets")
+            }else{
+                ticketInDB.stock -=1
+                this.ticketRepository.save(ticketInDB)
             }
         }
         const preference = await this.paymentsRepository.createPreference(order);
