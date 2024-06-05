@@ -66,10 +66,7 @@ export class OrdersRepository {
             const nuevosTickets = await this.crearTicketsParaEnviarPorMail(ticketBuscado, ticket.quantity);
             ticketsParaEnviarPorMail.push(...nuevosTickets);
 
-            // Actualiza el stock y el total
-            ticketBuscado.stock -= ticket.quantity;
             total += Number(ticket.price * ticket.quantity);
-            await this.descontarStock(ticketBuscado);
 
             // Verifica si el ticket ya está en la lista
             if (ticketsParaEnviarPorMail.some(tic => tic.id === ticketBuscado.id)) {
