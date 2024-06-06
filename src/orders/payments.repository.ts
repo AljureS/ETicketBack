@@ -5,15 +5,18 @@ import { PreferenceResponse } from 'mercadopago/dist/clients/preference/commonTy
 import { CreateOrderDto } from 'src/dtos/createOrder.dto';
 import { Ticket } from 'src/entities/ticket.entity';
 import { Repository } from 'typeorm';
+import { OrdersService } from './orders.service';
+import { OrdersRepository } from './orders.repository';
 
 @Injectable()
 export class PaymentsRepository {
   private readonly client: MercadoPagoConfig;
   private readonly preference: Preference;
-
   constructor(
     @InjectRepository(Ticket)
-    private readonly ticketRepository: Repository<Ticket>
+    private readonly ticketRepository: Repository<Ticket>,
+    private readonly orderRepository:OrdersRepository
+    
   ) {
     this.client = new MercadoPagoConfig({
       accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
@@ -37,7 +40,7 @@ export class PaymentsRepository {
       const preferenceData = {
         items,
         back_urls: {
-          success: 'http://localhost:3001/orders/success',
+          success: 'https://front-radio-ticket.vercel.app/',
         },
         external_reference: JSON.stringify(order), // Guarda la orden para usarla después del pago
       };
@@ -46,6 +49,7 @@ export class PaymentsRepository {
         body: preferenceData,
       });
       
+      await this.orderRepository.addOrder(order)
       return preferenceResponse;
     } catch (error) {
       console.error(error);

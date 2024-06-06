@@ -23,7 +23,7 @@ export class OrdersService {
             if(ticketInDB.stock < ticket.quantity){
                 throw new BadRequestException("No Hay disponibles esa cantidad de tickets")
             }else{
-                ticketInDB.stock -=1
+                ticketInDB.stock -= ticket.quantity
                 this.ticketRepository.save(ticketInDB)
             }
         }
