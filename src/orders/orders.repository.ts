@@ -58,10 +58,6 @@ export class OrdersRepository {
         const ticketBuscado = listaDeTicketsEnDB.find(ticketEnDB => ticketEnDB.id === ticket.id);
 
         if (ticketBuscado) {
-            if (ticketBuscado.stock < ticket.quantity) {
-                throw new BadRequestException("El ticket tiene stock insuficiente");
-            }
-
             // Crea y guarda los tickets vendidos
             const nuevosTickets = await this.crearTicketsParaEnviarPorMail(ticketBuscado, ticket.quantity);
             ticketsParaEnviarPorMail.push(...nuevosTickets);
