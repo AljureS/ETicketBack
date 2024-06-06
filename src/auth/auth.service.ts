@@ -62,14 +62,20 @@ export class AuthService {
     const userCreated = this.usersRepository.create({
       ...userDetail,
       phone: '', 
-      password: 'This is a super safe password',
-      isEmailConfirmed: true
+      password: 'This is a super safe password'
     });
 
     const savedUser = await this.usersRepository.save(userCreated);
     if (!savedUser) {
       throw new InternalServerErrorException('Error saving user');
     }
+
+    const confirmationToken = await this.generateConfirmationToken(userDetail);
+
+    await this.emailService.sendConfirmationEmail(
+      user.email,
+      confirmationToken,
+    );
 
     const payload = {
       ...userCreated, //! no es "obligatorio"
@@ -79,7 +85,7 @@ export class AuthService {
     return {
       message: 'Auth 0 User created successfully',
       token,
-      // userCreated
+      userCreated
     };
 
   }
