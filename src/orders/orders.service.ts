@@ -1,16 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { OrdersRepository } from './orders.repository';
 import { CreateOrderDto } from 'src/dtos/createOrder.dto'; // Importa el servicio de pagos
-import { PaymentsRepository } from './payments.repository';
+import { PaymentsRepository } from './mercadoPago.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from 'src/entities/ticket.entity';
 import { Repository } from 'typeorm';
+import { PaypalRepository } from './paypal.repository';
 
 @Injectable()
 export class OrdersService {
     constructor(
         private orderRepository: OrdersRepository,
         private paymentsRepository: PaymentsRepository,
+        private paypalRepository:PaypalRepository,
         @InjectRepository(Ticket)
     private readonly ticketRepository: Repository<Ticket>, // Inyecta el servicio de pagos
     ) {}
@@ -27,12 +29,20 @@ export class OrdersService {
                 this.ticketRepository.save(ticketInDB)
             }
         }
-        const preference = await this.paymentsRepository.createPreference(order);
+        if(order.paymentMethod === 'mercadopago'){
+            const preference = await this.paymentsRepository.createPreference(order);
         return preference; // Devuelve la preferencia al cliente para redirigirlo a MercadoPago
+        }
+        if(order.paymentMethod === 'paypal'){
+            return await this.paypalRepository.createPayment(order)
+        }else{
+            throw new BadRequestException("No se especificó un metodo de pago")
+        }
+        
     }
 
-    async processOrder(order: CreateOrderDto) {
-        return this.orderRepository.addOrder(order);
+    async executePayment(token:string) {
+        return await this.paypalRepository.executePayment(token);
     }
 
     getOrder(id: string) {

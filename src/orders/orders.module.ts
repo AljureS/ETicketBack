@@ -9,7 +9,8 @@ import { User } from 'src/entities/user.entity';
 import { Ticket } from 'src/entities/ticket.entity';
 import { EmailService } from 'src/email/email.service';
 import { TicketVendido } from 'src/entities/ticketVendido.entity';
-import { PaymentsRepository } from './payments.repository';
+import { PaymentsRepository } from './mercadoPago.repository';
+import { PaypalRepository } from './paypal.repository';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import { PaymentsRepository } from './payments.repository';
   TypeOrmModule.forFeature([TicketVendido]),
 ],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersRepository,PaymentsRepository,EmailService]
+  providers: [OrdersService, OrdersRepository,PaymentsRepository,EmailService, PaypalRepository]
 })
 export class OrdersModule {}
