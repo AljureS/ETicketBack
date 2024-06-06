@@ -31,9 +31,14 @@ export class OrdersController {
     @Get('/success')
     async paymentSuccess(@Query('external_reference') externalReference: string) {
       const order: CreateOrderDto = JSON.parse(externalReference); // Recupera la orden desde la referencia externa
-      await this.orderService.processOrder(order); // Procesa la orden después del pago
+    //   await this.orderService.processOrder(order); // Procesa la orden después del pago
     }
-
+    @Get('/execute')
+    async paymentExecutte(@Query('token') token: string) {
+        
+         // Recupera la orden desde la referencia externa
+        return await this.orderService.executePayment(token); // Procesa la orden después del pago
+      }
     @Get(':id')
     getOrder(@Param('id') id: string) {
         return this.orderService.getOrder(id);
