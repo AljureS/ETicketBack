@@ -36,7 +36,7 @@ export class PaypalRepository {
         user_action: 'PAY_NOW', // Accion para que en paypal muestre el monto del pago
 
 
-        
+
         //aca cambie por la url deployada recordar cambiarla en produccion
 
         return_url: `https://radioticket.onrender.com/orders/execute`, // Url despues de realizar el pago
@@ -83,7 +83,7 @@ export class PaypalRepository {
         config,
       );
       // Responde con los datos del cuerpo de la respuesta de PayPal
-      return res.redirect("http://localhost:3000/?success=true")
+      return res.redirect("https://front-radio-ticket.vercel.app/?success=true")
     } catch (error) {
       // Maneja errores y responde con el mensaje de error
       console.error(error.response ? error.response.data : error.message);
