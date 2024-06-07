@@ -55,5 +55,8 @@ export class createUserDto {
     confirmPassword: string
 
     @IsEmpty()
-    idAdmin?: boolean
+    isAdmin?: boolean
+    
+    @IsEmpty()
+    isPremium?: boolean
 }

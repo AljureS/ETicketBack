@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from 'src/entities/ticket.entity';
 import { Repository } from 'typeorm';
 import { PaypalRepository } from './paypal.repository';
+import { createUserDto } from 'src/dtos/user.dto';
 
 @Injectable()
 export class OrdersService {
@@ -51,5 +52,22 @@ export class OrdersService {
 
     getAllOrder() {
         return this.orderRepository.getAllOrder();
+    }
+
+    createProductForPaypalSubscription(){
+        return this.paypalRepository.createProduct()
+    }
+    createPlanForPaypalSubscription(product_id:string){
+        return this.paypalRepository.createPlan(product_id)
+    }
+
+    generateSubscription(plan_id:string,user:Partial<createUserDto>){
+        return this.paypalRepository.generateSubscription(plan_id, user)
+    }
+    executeSubscription(req,res){
+        return this.paypalRepository.executeSubscription(req,res)
+    }
+    cancelSubscription(req,res){
+        return this.paypalRepository.cancelSubscription(req,res)
     }
 }

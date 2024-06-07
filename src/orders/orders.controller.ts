@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateOrderDto } from 'src/dtos/createOrder.dto';
@@ -23,10 +23,48 @@ export class OrdersController {
         order.userId = req.user.id
         return this.orderService.addOrder(order);
     }
+    @ApiBearerAuth()
+    @Roles(Role.SUPERADMIN)
+    @UseGuards(AuthGuards, RoleGuard)
+    @Post('/createProduct')
+    async createProductForPaypalSubscription(){
+      return this.orderService.createProductForPaypalSubscription()
+    }
+    @ApiBearerAuth()
+    @Roles(Role.SUPERADMIN)
+    @UseGuards(AuthGuards, RoleGuard)
+    @Post('/createPlan')
+    async createPlanForPaypalSubscription(@Body('product_id')product_id:string){
+      return this.orderService.createPlanForPaypalSubscription(product_id)
+    }
+    @ApiBearerAuth()
+    @Roles(Role.USER,Role.ADMIN, Role.SUPERADMIN)
+    @UseGuards(AuthGuards, RoleGuard)
+    @Post('/generatesubscripcion')
+    async generateSubscripcion(@Req() req:Request & {user:User}){
+      const { plan_id } = req.body
+      
+      
+      const user = {
+        name:req.user.name,
+        lastName: req.user.lastName,
+        email:req.user.email
+      }
+      console.log(user);
+      return await this.orderService.generateSubscription(plan_id,user)
+    }
 
+    @Get('/execute-subscription')
+    async executeSubscription(@Req() req, @Res() res){
+      return await this.orderService.executeSubscription(req,res)
+    }
+    @Get('/cancel-subscription')
+    async cancelSubscription(@Req() req, @Res() res){
+      return this.orderService.cancelSubscription(req,res)
+    }
     @Get()
-    getAllOrder() {
-        return this.orderService.getAllOrder();
+    async getAllOrder() {
+        return await this.orderService.getAllOrder();
     }
     @Get('/success')
     async paymentSuccess(@Query('external_reference') externalReference: string) {
@@ -35,7 +73,6 @@ export class OrdersController {
     }
     @Get('/execute')
     async paymentExecutte(@Query('token') token: string) {
-        
          // Recupera la orden desde la referencia externa
         return await this.orderService.executePayment(token); // Procesa la orden después del pago
       }
