@@ -18,6 +18,7 @@ const config = {
 
   //synchronize: true,
   //dropSchema: true, 
+
 };
 
 export default registerAs('typeorm', () => config);

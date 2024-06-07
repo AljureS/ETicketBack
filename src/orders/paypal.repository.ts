@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from 'src/dtos/createOrder.dto';
 import axios from 'axios';
 import { OrdersRepository } from './orders.repository';
@@ -6,6 +6,7 @@ import { createUserDto } from 'src/dtos/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
+import { Response } from 'express';
 @Injectable()
 export class PaypalRepository {
   private auth = {
@@ -33,7 +34,12 @@ export class PaypalRepository {
         brand_name: `Raioticket`,
         landing_page: 'NO_PREFERENCE', // Default, para mas informacion https://developer.paypal.com/docs/api/orders/v2/#definition-order_application_context
         user_action: 'PAY_NOW', // Accion para que en paypal muestre el monto del pago
-        return_url: `http://localhost:3001/orders/execute`, // Url despues de realizar el pago
+
+
+        
+        //aca cambie por la url deployada recordar cambiarla en produccion
+
+        return_url: `https://radioticket.onrender.com/orders/execute`, // Url despues de realizar el pago
         cancel_url: `https://front-radio-ticket.vercel.app/`, // Url despues de realizar el pago
       },
     };
@@ -58,20 +64,17 @@ export class PaypalRepository {
       return response.data.links[1];
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
-      throw new Error('Error al crear la orden de pago en PayPal');
+      throw new BadGatewayException('Error al crear la orden de pago en PayPal, El error que buscabamos');
     }
   }
 
-  async executePayment(token:string) {
+  async executePayment(token:string,res:Response) {
     const config = {
       auth: this.auth,
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    console.log(token);
-    
-    console.log('llegue a paypal repository execute payment');
     
     try {
       // Envía la solicitud GET usando axios para capturar el pago
@@ -80,7 +83,7 @@ export class PaypalRepository {
         config,
       );
       // Responde con los datos del cuerpo de la respuesta de PayPal
-      return "Pago completado con exito";
+      return res.redirect("http://localhost:3000/?success=true")
     } catch (error) {
       // Maneja errores y responde con el mensaje de error
       console.error(error.response ? error.response.data : error.message);
