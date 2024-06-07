@@ -18,6 +18,11 @@ export class DiscountController {
         return  isValid ; 
     }
 
+    @Get(':id')
+    getDiscounts(@Param('id', ParseUUIDPipe) eventId: string) {
+        return this.discountService.getDiscounts(eventId);
+    }
+
     @Post('create/:id')
     creteDiscount(
         @Param('id', ParseUUIDPipe) eventId: string,

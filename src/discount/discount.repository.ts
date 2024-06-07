@@ -22,6 +22,13 @@ export class DiscountRepository {
         return await this.discountRepository.save(newDiscount);
     }
 
+    async getDiscounts(eventId: string) {
+        return await this.discountRepository.find({ 
+            where: { event: { id: eventId } },
+            // relations: ['event'],
+        });
+    }
+
     async findByCode(code: string){
         return await this.discountRepository.findOne({ 
             where: { code } , 
