@@ -6,7 +6,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/user/role.enum';
 import { AuthGuards } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/roles.guard';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { User } from 'src/entities/user.entity';
 
 @ApiTags('Orders')
@@ -72,9 +72,9 @@ export class OrdersController {
     //   await this.orderService.processOrder(order); // Procesa la orden después del pago
     }
     @Get('/execute')
-    async paymentExecutte(@Query('token') token: string) {
+    async paymentExecutte(@Query('token') token: string,@Res() res:Response) {
          // Recupera la orden desde la referencia externa
-        return await this.orderService.executePayment(token); // Procesa la orden después del pago
+        return await this.orderService.executePayment(token,res); // Procesa la orden después del pago
       }
     @Get(':id')
     getOrder(@Param('id') id: string) {
