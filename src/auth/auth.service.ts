@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -46,33 +47,47 @@ export class AuthService {
   async Auth0 (userDetail: any) {
     const { email } = userDetail;
     const user = await this.userRepository.getUserByEmail(email);
+
     if (user) {
-      throw new BadRequestException('Email already registered');
+      const payload = {
+        ...user
+      }
+      const token = await this.jwtService.sign(payload);
+      return {
+        message: 'Auth 0 User logged in successfully',
+        token,
+      };
     }
 
     const userCreated = this.usersRepository.create({
       ...userDetail,
       phone: '', 
-      password: 'This is a super safe password',
+      password: 'This is a super safe password'
     });
-    await this.usersRepository.save(userCreated);
+
+    const savedUser = await this.usersRepository.save(userCreated);
+    if (!savedUser) {
+      throw new InternalServerErrorException('Error saving user');
+    }
+
+    const confirmationToken = await this.generateConfirmationToken(userDetail);
+
+    await this.emailService.sendConfirmationEmail(
+      user.email,
+      confirmationToken,
+    );
 
     const payload = {
-      id: user.id,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      isSuperAdmin: user.isSuperAdmin,
-      name: user.name,
-      phone: user.phone, //! no es "obligatorio"
+      ...userCreated, //! no es "obligatorio"
     };
     const token = await this.jwtService.sign(payload);
-    //Retornar mensaje de ingreso y token
+    //Retornar mensaje de ingreso y token 
     return {
-      message: 'Logged user',
+      message: 'Auth 0 User created successfully',
       token,
+      userCreated
     };
 
-    return userCreated;
   }
 
   async signUp(user: any) {
@@ -152,6 +167,7 @@ export class AuthService {
       isSuperAdmin: user.isSuperAdmin,
       name: user.name,
       phone: user.phone,
+      lastName:user.lastName
     };
     const token = await this.jwtService.sign(payload);
     //Retornar mensaje de ingreso y token
