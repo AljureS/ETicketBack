@@ -6,6 +6,7 @@ import { createUserDto } from 'src/dtos/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
+import { Response } from 'express';
 @Injectable()
 export class PaypalRepository {
   private auth = {
@@ -62,16 +63,13 @@ export class PaypalRepository {
     }
   }
 
-  async executePayment(token:string) {
+  async executePayment(token:string,res:Response) {
     const config = {
       auth: this.auth,
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    console.log(token);
-    
-    console.log('llegue a paypal repository execute payment');
     
     try {
       // Envía la solicitud GET usando axios para capturar el pago
@@ -80,7 +78,7 @@ export class PaypalRepository {
         config,
       );
       // Responde con los datos del cuerpo de la respuesta de PayPal
-      return "Pago completado con exito";
+      return res.redirect("http://localhost:3000/?success=true")
     } catch (error) {
       // Maneja errores y responde con el mensaje de error
       console.error(error.response ? error.response.data : error.message);
