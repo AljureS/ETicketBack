@@ -12,6 +12,10 @@ export class DiscountService {
         return this.discountRepository.createDiscount(eventId, discount);
     } 
 
+    getDiscounts(eventId: string) {
+        return this.discountRepository.getDiscounts(eventId);
+    }
+
     findByCode(code: string) {
         return this.discountRepository.findByCode(code);
     }
