@@ -24,6 +24,9 @@ export class User{
     password: string
 
     @Column({default:false})
+    isPremium:boolean
+    
+    @Column({default:false})
     isAdmin:boolean
 
     @Column({default:false})
