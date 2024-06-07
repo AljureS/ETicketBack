@@ -9,7 +9,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:3000', // URL de tu frontend
+    origin: ['http://localhost:3000',"https://front-radio-ticket.vercel.app/","https://radioticket.onrender.com"], // URL de tu frontend
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -24,7 +24,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      forbidNonWhitelisted: true,
+      // forbidNonWhitelisted: true, //?comentar al registrar usuario 
     }),
   );
   app.use(morgan('dev'));
