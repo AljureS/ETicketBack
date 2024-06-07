@@ -28,6 +28,26 @@ export class AuthService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
+  async refreshtoken(email: string) {
+    const user = await this.userRepository.getUserByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const payload = {
+      id: user.id,
+      email: user.email,
+      isAdmin: user.isAdmin, 
+      isSuperAdmin: user.isSuperAdmin,
+      name: user.name,
+      phone: user.phone,
+    };
+    const token = await this.jwtService.sign(payload);
+    return {
+      message: 'refreshed token for user',
+      token,
+    };
+  }
+
   async getAuth0UserDetails(token: string) {
     try {
         const response = await axios.get(`https://${process.env.AUTH0_BASE_URL}/userinfo`, {
