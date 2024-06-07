@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from 'src/dtos/createOrder.dto';
 import axios from 'axios';
 import { OrdersRepository } from './orders.repository';
@@ -58,7 +58,7 @@ export class PaypalRepository {
       return response.data.links[1];
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
-      throw new Error('Error al crear la orden de pago en PayPal');
+      throw new BadGatewayException('Error al crear la orden de pago en PayPal, El error que buscabamos');
     }
   }
 
