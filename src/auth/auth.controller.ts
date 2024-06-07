@@ -24,7 +24,7 @@ export class AuthController {
         private readonly authService: AuthService
     ){}
 
-    @Post()
+    @Post('refresh')
     refreshtoken(@Body() emailUser : any) {
         const {email}= emailUser
         return this.authService.refreshtoken(email);
