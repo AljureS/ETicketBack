@@ -23,6 +23,12 @@ export class AuthController {
     constructor (
         private readonly authService: AuthService
     ){}
+
+    @Post()
+    refreshtoken(@Body() emailUser : any) {
+        const {email}= emailUser
+        return this.authService.refreshtoken(email);
+    }
     
     @Post('auth0')
     async redirectToAuth0Login(@Body() auth0: any) {
