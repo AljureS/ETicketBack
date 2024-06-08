@@ -7,6 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
 import { Response } from 'express';
+import { TablaIntermediaOrder } from 'src/entities/tablaintermediaOrder.entity';
+import { TablaIntermediaTicket } from 'src/entities/TablaIntermediaTicket.entity';
 @Injectable()
 export class PaypalRepository {
   private auth = {
@@ -16,54 +18,79 @@ export class PaypalRepository {
   constructor(
     private readonly orderRepository: OrdersRepository,
     @InjectRepository(User) 
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(TablaIntermediaOrder) 
+        private readonly tablaIntermediaOrderRepository: Repository<TablaIntermediaOrder>,
+        @InjectRepository(TablaIntermediaTicket) 
+        private readonly tablaIntermediaTicketRepository: Repository<TablaIntermediaTicket>
     ) {}
 
-  async createPayment(order: CreateOrderDto) {
-    const body = {
-      intent: 'CAPTURE',
-      purchase_units: order.tickets.map((ticket) => {
-        return {
-          amount: {
-            currency_code: 'USD',
-            value: String(ticket.price * ticket.quantity),
-          },
-        };
-      }),
-      application_context: {
-        brand_name: `Raioticket`,
-        landing_page: 'NO_PREFERENCE', // Default, para mas informacion https://developer.paypal.com/docs/api/orders/v2/#definition-order_application_context
-        user_action: 'PAY_NOW', // Accion para que en paypal muestre el monto del pago
-        return_url: `http://localhost:3001/orders/execute`, // Url despues de realizar el pago
-        cancel_url: `https://front-radio-ticket.vercel.app/`, // Url despues de realizar el pago
-      },
-    };
-    //https://api-m.sandbox.paypal.com/v2/checkout/orders [POST]
-
-    const config = {
-      auth: this.auth,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    // Envía la solicitud POST usando axios
-    try {
-      const response = await axios.post(
-        `${process.env.PAYPAL_API}/v2/checkout/orders`,
-        body,
-        config,
-      );
-      await this.orderRepository.addOrder(order);
-
-      return response.data.links[1];
-    } catch (error) {
-      console.error(error.response ? error.response.data : error.message);
-      throw new BadGatewayException('Error al crear la orden de pago en PayPal, El error que buscabamos');
-    }
+    async createPayment(order: CreateOrderDto) {
+      const orderIntermedia = this.tablaIntermediaOrderRepository.create({
+        paymentMethod: order.paymentMethod,
+        user: order.userId,
+        tablaIntermediaTicket: []
+      });
+  
+      const ticketPromises = order.tickets.map(async (ticketIntermedio) => {
+        const newTicketIntermedio = this.tablaIntermediaTicketRepository.create({
+          id: ticketIntermedio.id,
+          price: ticketIntermedio.price,
+          quantity: ticketIntermedio.quantity
+        });
+  
+        console.log('Creando ticket intermedio');
+  
+        await this.tablaIntermediaTicketRepository.save(newTicketIntermedio);
+        orderIntermedia.tablaIntermediaTicket.push(newTicketIntermedio);
+      });
+  
+      await Promise.all(ticketPromises);
+  
+      const OrdenIntermediaGuardada = await this.tablaIntermediaOrderRepository.save(orderIntermedia);
+  
+      const body = {
+        intent: 'CAPTURE',
+        purchase_units: order.tickets.map((ticket) => {
+          return {
+            amount: {
+              currency_code: 'USD',
+              value: String(ticket.price * ticket.quantity),
+            },
+          };
+        }),
+        application_context: {
+          brand_name: `Raioticket`,
+          landing_page: 'NO_PREFERENCE',
+          user_action: 'PAY_NOW',
+          return_url: `http://localhost:3001/orders/execute?order=${OrdenIntermediaGuardada.id}`,
+          cancel_url: `https://front-radio-ticket.vercel.app/`,
+        },
+      };
+  
+      const config = {
+        auth: this.auth,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+  
+      try {
+        const response = await axios.post(
+          `${process.env.PAYPAL_API}/v2/checkout/orders`,
+          body,
+          config,
+        );
+  
+        return response.data.links[1];
+      } catch (error) {
+        console.error(error.response ? error.response.data : error.message);
+        throw new BadGatewayException('Error al crear la orden de pago en PayPal.');
+      }
   }
+  
 
-  async executePayment(token:string,res:Response) {
+  async executePayment(token:string,res:Response,order) {
     const config = {
       auth: this.auth,
       headers: {
@@ -77,8 +104,19 @@ export class PaypalRepository {
         `${process.env.PAYPAL_API}/v2/checkout/orders/${token}/capture`,{},
         config,
       );
+
+      const orderIntermedia = await this.tablaIntermediaOrderRepository.findOne({where:{id:order},relations:{tablaIntermediaTicket:true}})
+      console.log(orderIntermedia.tablaIntermediaTicket);
+      
+      const OrderAGuardar = { 
+        userId: orderIntermedia.user,
+        paymentMethod: orderIntermedia.paymentMethod,
+        tickets: orderIntermedia.tablaIntermediaTicket
+      }
+      await this.orderRepository.addOrder(OrderAGuardar);
+      
       // Responde con los datos del cuerpo de la respuesta de PayPal
-      return res.redirect("http://localhost:3000/?success=true")
+      return res.redirect("https://front-radio-ticket.vercel.app/?success=true")
     } catch (error) {
       // Maneja errores y responde con el mensaje de error
       console.error(error.response ? error.response.data : error.message);

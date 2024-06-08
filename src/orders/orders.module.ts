@@ -11,6 +11,8 @@ import { EmailService } from 'src/email/email.service';
 import { TicketVendido } from 'src/entities/ticketVendido.entity';
 import { PaymentsRepository } from './mercadoPago.repository';
 import { PaypalRepository } from './paypal.repository';
+import { TablaIntermediaOrder } from 'src/entities/tablaintermediaOrder.entity';
+import { TablaIntermediaTicket } from 'src/entities/TablaIntermediaTicket.entity';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { PaypalRepository } from './paypal.repository';
   TypeOrmModule.forFeature([Event]),
   TypeOrmModule.forFeature([Ticket]),
   TypeOrmModule.forFeature([TicketVendido]),
+  TypeOrmModule.forFeature([TablaIntermediaTicket]),
+  TypeOrmModule.forFeature([TablaIntermediaOrder]),
 ],
   controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository,PaymentsRepository,EmailService, PaypalRepository]
