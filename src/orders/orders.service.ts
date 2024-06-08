@@ -42,8 +42,8 @@ export class OrdersService {
         
     }
 
-    async executePayment(token:string,res) {
-        return await this.paypalRepository.executePayment(token,res);
+    async executePayment(token:string,res,order) {
+        return await this.paypalRepository.executePayment(token,res,order);
     }
 
     getOrder(id: string) {

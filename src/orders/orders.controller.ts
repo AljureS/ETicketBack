@@ -72,9 +72,11 @@ export class OrdersController {
     //   await this.orderService.processOrder(order); // Procesa la orden después del pago
     }
     @Get('/execute')
-    async paymentExecutte(@Query('token') token: string,@Res() res:Response) {
+    async paymentExecutte(@Query('token') token: string,@Res() res:Response,@Query('order') order:any) {
          // Recupera la orden desde la referencia externa
-        return await this.orderService.executePayment(token,res); // Procesa la orden después del pago
+         console.log(order);
+         
+        return await this.orderService.executePayment(token,res,order); // Procesa la orden después del pago
       }
     @Get(':id')
     getOrder(@Param('id') id: string) {
