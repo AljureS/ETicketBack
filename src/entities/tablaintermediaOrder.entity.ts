@@ -25,6 +25,9 @@ export class TablaIntermediaOrder {
   @Column()
   paymentMethod: string;
 
+  @Column({default:false})
+  isUsed:boolean
+
   @OneToMany(
     () => TablaIntermediaTicket,
     (ticket) => ticket.tablaIntermediaOrder,

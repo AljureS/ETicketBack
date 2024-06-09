@@ -50,7 +50,6 @@ export class OrdersController {
         lastName: req.user.lastName,
         email:req.user.email
       }
-      console.log(user);
       return await this.orderService.generateSubscription(plan_id,user)
     }
 
@@ -66,15 +65,14 @@ export class OrdersController {
     async getAllOrder() {
         return await this.orderService.getAllOrder();
     }
-    @Get('/success')
-    async paymentSuccess(@Query('external_reference') externalReference: string) {
-      const order: CreateOrderDto = JSON.parse(externalReference); // Recupera la orden desde la referencia externa
-    //   await this.orderService.processOrder(order); // Procesa la orden después del pago
+    @Post('/notificar')
+    async paymentSuccess(@Query() query,@Res()res) {
+      
+    return this.orderService.notificar(query,res)
     }
     @Get('/execute')
     async paymentExecutte(@Query('token') token: string,@Res() res:Response,@Query('order') order:any) {
          // Recupera la orden desde la referencia externa
-         console.log(order);
          
         return await this.orderService.executePayment(token,res,order); // Procesa la orden después del pago
       }

@@ -19,8 +19,6 @@ export class OrdersService {
     ) {}
 
     async addOrder(order: CreateOrderDto) {
-        // Llama al servicio de pagos para crear una preferencia de pago
-        console.log(order);
         for(const ticket of order.tickets){
             const ticketInDB = await this.ticketRepository.findOne({where:{id:ticket.id}})
             if(ticketInDB.stock < ticket.quantity){
@@ -44,6 +42,9 @@ export class OrdersService {
 
     async executePayment(token:string,res,order) {
         return await this.paypalRepository.executePayment(token,res,order);
+    }
+    async notificar(query,res){
+        return await this.paymentsRepository.notificar(query,res)
     }
 
     getOrder(id: string) {
