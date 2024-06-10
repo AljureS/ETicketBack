@@ -25,6 +25,7 @@ export class AuthController {
     ){}
 
     @Post('refresh')
+    @UseGuards(AuthGuard('jwt'), RoleGuard)
     refreshtoken(@Body() emailUser : any) {
         const {email}= emailUser
         return this.authService.refreshtoken(email);
@@ -76,6 +77,6 @@ export class AuthController {
     @Get('logout')
     logout(@Req() req, @Res() res: Response) {
         req.logout();
-        res.redirect('https://YOUR_AUTH0_DOMAIN/v2/logout?returnTo=http://localhost:3000');
+        res.redirect(`https://YOUR_AUTH0_DOMAIN/v2/logout?returnTo=${process.env.FRONT_URL}`);
     }
 }

@@ -54,11 +54,19 @@ export class PostEventDto {
 
   @ApiProperty({
     description:"Debe ser un string",
-    example:"Movistar Arena"
+    example:"10.123123"
   })
   @IsString()
   @IsNotEmpty()
-  location: string;
+  latitude: string;
+
+  @ApiProperty({
+    description:"Debe ser un string",
+    example:"-10.123123"
+  })
+  @IsString()
+  @IsNotEmpty()
+  longitude: string;
 
   
   @ApiProperty({
