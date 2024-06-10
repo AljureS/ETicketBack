@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   MercadoPagoConfig,
@@ -14,6 +14,7 @@ import { OrdersService } from './orders.service';
 import { OrdersRepository } from './orders.repository';
 import { TablaIntermediaOrder } from 'src/entities/tablaintermediaOrder.entity';
 import { TablaIntermediaTicket } from 'src/entities/TablaIntermediaTicket.entity';
+import axios from 'axios';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 @Injectable()
 export class PaymentsRepository {
@@ -42,6 +43,12 @@ export class PaymentsRepository {
 
   async createPreference(order: CreateOrderDto) {
     try {
+      const valorDeDolar = await axios.get('https://dolarapi.com/v1/dolares/oficial')
+      console.log(valorDeDolar.data.venta);
+      
+      order.tickets.forEach(ticket => {
+        ticket.price = ticket.price * valorDeDolar.data.venta
+      })
       const items = await Promise.all(
         order.tickets.map(async (ticket) => {
           const ticketInDB = await this.ticketRepository.findOne({
@@ -87,7 +94,7 @@ export class PaymentsRepository {
         back_urls: {
           success: 'http://localhost:3000/',
         },
-        notification_url: `https://07ab-181-12-8-9.ngrok-free.app/orders/notificar?order=${ordenIntermediaGuardada.id}`,
+        notification_url: `https://8321-181-12-8-9.ngrok-free.app/orders/notificar?order=${ordenIntermediaGuardada.id}`,
       };
 
       const preferenceResponse = await this.preference.create({
@@ -97,7 +104,7 @@ export class PaymentsRepository {
       return preferenceResponse;
     } catch (error) {
       console.error(error);
-      throw error;
+      throw new BadGatewayException('Error en mercadoPago');
     }
   }
 
@@ -146,9 +153,14 @@ export class PaymentsRepository {
     });
     if (paidAmount >= merchantOrderSearched.total_amount) {
       await this.orderRepository.addOrder(OrderAGuardar);
+      for(const ticket of orderIntermedia.tablaIntermediaTicket){
+        const ticketInDB = await this.ticketRepository.findOne({where:{id:ticket.id}})
+        ticketInDB.stock -= ticket.quantity
+        await this.ticketRepository.save(ticketInDB)
+      }
       // Responde con los datos del cuerpo de la respuesta de PayPal
       return res.redirect(
-        'https://front-radio-ticket.vercel.app/?success=true',
+        'http://localhost:3000?success=true',
       );
     }
   }
