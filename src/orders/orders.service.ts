@@ -23,10 +23,11 @@ export class OrdersService {
             const ticketInDB = await this.ticketRepository.findOne({where:{id:ticket.id}})
             if(ticketInDB.stock < ticket.quantity){
                 throw new BadRequestException("No Hay disponibles esa cantidad de tickets")
-            }else{
-                ticketInDB.stock -= ticket.quantity
-                this.ticketRepository.save(ticketInDB)
             }
+            // else{
+            //     ticketInDB.stock -= ticket.quantity
+            //     this.ticketRepository.save(ticketInDB)
+            // }
         }
         if(order.paymentMethod === 'mercadopago'){
             const preference = await this.paymentsRepository.createPreference(order);
