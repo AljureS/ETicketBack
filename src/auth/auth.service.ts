@@ -82,6 +82,7 @@ export class AuthService {
     const userCreated = this.usersRepository.create({
       ...userDetail,
       phone: '', 
+      isEmailConfirmed: true, //=> Por defecto el email es confirmado
       password: 'This is a super safe password'
     });
 

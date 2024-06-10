@@ -25,6 +25,7 @@ export class AuthController {
     ){}
 
     @Post('refresh')
+    @UseGuards(AuthGuard('jwt'), RoleGuard)
     refreshtoken(@Body() emailUser : any) {
         const {email}= emailUser
         return this.authService.refreshtoken(email);
