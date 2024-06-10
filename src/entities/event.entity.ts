@@ -39,7 +39,10 @@ export class Event {
   date: Date;
 
   @Column()
-  location: string; 
+  latitude: string; 
+
+  @Column()
+  longitude: string;
 
   @Column({nullable:true})
   userEmail?:string

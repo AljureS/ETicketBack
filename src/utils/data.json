@@ -3,9 +3,10 @@
         "name": "J Balvin",
         "description": "A leading figure in reggaeton music globally.",
         "category": "REGGAETON",
-        "imgUrl": "https://example.com/jbalvin.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20jblavin%20&imgurl=https%3A%2F%2Fwww.billboard.com%2Fwp-content%2Fuploads%2F2023%2F01%2Fj-balvin-poster-billboard-1548.jpg&imgrefurl=https%3A%2F%2Fwww.billboard.com%2Fespanol%2Fmusica%2Fj-balvin-concierto-realidad-virtual-1235205979%2F&docid=54HiODmXyJ31sM&tbnid=5A1WYTJIqngrXM&vet=12ahUKEwjIvo7B6s-GAxUdSjABHVVbDToQM3oECBUQAA..i&w=1548&h=1024&hcb=2&ved=2ahUKEwjIvo7B6s-GAxUdSjABHVVbDToQM3oECBUQAA",
         "date": "2025-02-15",
-        "location": "Arena Ciudad de México",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 120,
@@ -23,9 +24,10 @@
         "name": "Karol G",
         "description": "The queen of reggaeton in a spectacular night.",
         "category": "REGGAETON",
-        "imgUrl": "https://example.com/karolg.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20karol%20g&imgurl=https%3A%2F%2Ftuboleta.com%2Fimagenes%2F652ed58b04d53.jpg&imgrefurl=https%3A%2F%2Ftuboleta.com%2Feventos%2Fdetalle%2Fkarol-g-ma%25C3%2591ana-sera-bonito---bogot%25C3%2581%2F796569635271&docid=9h7zJFrdQKAeRM&tbnid=b0xoeKbXR6rnSM&vet=12ahUKEwjs-6CM68-GAxX-RTABHekpAS0QM3oECDcQAA..i&w=900&h=800&hcb=2&ved=2ahUKEwjs-6CM68-GAxX-RTABHekpAS0QM3oECDcQAA",
         "date": "2025-03-05",
-        "location": "Madison Square Garden",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 130,
@@ -43,9 +45,10 @@
         "name": "Maluma",
         "description": "Experience the charm of Maluma live.",
         "category": "REGGAETON",
-        "imgUrl": "https://example.com/maluma.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20maluma%20&imgurl=https%3A%2F%2Fconcertmusicfestival.com%2Fwp-content%2Fuploads%2F2021%2F11%2FMaluma_2022.jpeg&imgrefurl=https%3A%2F%2Fconcertmusicfestival.com%2Fevents%2Fmaluma%2F&docid=TcRvopnxu8wBWM&tbnid=9UJOb4elssCPSM&vet=12ahUKEwi53N7I68-GAxWGk4QIHUoZB_0QM3oECF8QAA..i&w=1000&h=1001&hcb=2&ved=2ahUKEwi53N7I68-GAxWGk4QIHUoZB_0QM3oECF8QAA",
         "date": "2025-04-10",
-        "location": "Staples Center",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 110,
@@ -63,9 +66,10 @@
         "name": "Ozuna",
         "description": "Join Ozuna for an unforgettable night of music.",
         "category": "REGGAETON",
-        "imgUrl": "https://example.com/ozuna.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20ozuna&imgurl=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D1894346067294018&imgrefurl=https%3A%2F%2Fes-la.facebook.com%2FStageEventos%2Fphotos%2Fcali-llega-%25C3%25A9l-odisea-world-tour-de-ozuna-este-07-de-julio-en-el-diamante-de-b%25C3%25A9is%2F1894346067294018%2F&docid=lIVACB3tV6efxM&tbnid=M84HGHtCks7cWM&vet=12ahUKEwiz9LPk68-GAxVkRTABHY2zAXQQM3oECBYQAA..i&w=960&h=960&hcb=2&ved=2ahUKEwiz9LPk68-GAxVkRTABHY2zAXQQM3oECBYQAA",
         "date": "2025-05-20",
-        "location": "The O2 Arena",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 125,
@@ -83,9 +87,10 @@
         "name": "Daddy Yankee",
         "description": "Don't miss the legend of reggaeton live in concert.",
         "category": "REGGAETON",
-        "imgUrl": "https://example.com/daddyyankee.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20daddy%20yankee&imgurl=https%3A%2F%2Fwhere.com.co%2Fwp-content%2Fuploads%2F2022%2F07%2FDaddy-yankee.jpg&imgrefurl=https%3A%2F%2Fwhere.com.co%2Feventos%2Fla-ultima-vuelta-world-tour-daddy-yankee-2022-medellin%2F&docid=J7WbDdaJkF37bM&tbnid=xl0SzHw42BBxuM&vet=12ahUKEwjYmpLu68-GAxXgfjABHbwzDNIQM3oECBUQAA..i&w=561&h=575&hcb=2&ved=2ahUKEwjYmpLu68-GAxXgfjABHbwzDNIQM3oECBUQAA",
         "date": "2025-06-30",
-        "location": "American Airlines Arena",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 140,
@@ -96,16 +101,17 @@
                 "price": 75,
                 "stock": 15,
                 "zone": "General"
-            }
+            } 
         ]
     },
     {
         "name": "Coldplay",
         "description": "Experience an electrifying night with Coldplay's unique sound.",
         "category": "ROCK",
-        "imgUrl": "https://example.com/coldplay.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20caoldplay&imgurl=https%3A%2F%2Fcdn.eticket.co%2Fimagenes%2Fartistas%2F211205112855819_performer_img2_cat2Cold.jpg&imgrefurl=https%3A%2F%2Fwww.eticket.co%2Feventos.aspx%3Fidartista%3D570&docid=Qd0qbADDceEbkM&tbnid=y1ed01iuUMlf4M&vet=12ahUKEwj84-iB7M-GAxU3RTABHXRBDhkQM3oECH0QAA..i&w=550&h=385&hcb=2&ved=2ahUKEwj84-iB7M-GAxU3RTABHXRBDhkQM3oECH0QAA",
         "date": "2025-07-10",
-        "location": "Wembley Stadium",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 150,
@@ -123,9 +129,10 @@
         "name": "Beyoncé",
         "description": "Join Beyoncé for a night of powerhouse vocals and stunning visuals.",
         "category": "POP",
-        "imgUrl": "https://example.com/beyonce.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20bayonce&imgurl=https%3A%2F%2Fmedia.vogue.es%2Fphotos%2F645c98a34541a298defed420%2F2%3A3%2Fw_2560%252Cc_limit%2FGettyImages-1488928291.jpg&imgrefurl=https%3A%2F%2Fwww.vogue.es%2Farticulos%2Fbeyonce-looks-renaissance-concierto-estocolmo&docid=wrwLb9j6RcNV6M&tbnid=8wj-ZeuKIj3F2M&vet=12ahUKEwiRtIaJ7M-GAxV-RjABHc2eBAQQM3oECGEQAA..i&w=2560&h=3840&hcb=2&ved=2ahUKEwiRtIaJ7M-GAxV-RjABHc2eBAQQM3oECGEQAA",
         "date": "2025-08-15",
-        "location": "Rose Bowl",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 180,
@@ -143,9 +150,10 @@
         "name": "Ed Sheeran",
         "description": "Get up close with Ed Sheeran's heartfelt lyrics and acoustic performance.",
         "category": "ACOUSTIC",
-        "imgUrl": "https://example.com/edsheeran.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20Ed%20sherran&imgurl=https%3A%2F%2Fincultura.net%2Fwp-content%2Fuploads%2F2023%2F12%2FEd-Sheeran-O-Gozo-Festival-2024.png&imgrefurl=https%3A%2F%2Fincultura.net%2Fed-sheeran-primera-confirmacion-de-o-gozo-festival-2024&docid=EyclyDO8StBOgM&tbnid=uTgnM_8oflMecM&vet=12ahUKEwiGrp2S7M-GAxW-tYQIHQ9lAfIQM3oECDgQAA..i&w=1986&h=2836&hcb=2&ved=2ahUKEwiGrp2S7M-GAxW-tYQIHQ9lAfIQM3oECDgQAA",
         "date": "2025-09-05",
-        "location": "Gillette Stadium",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 120,
@@ -163,9 +171,10 @@
         "name": "Kendrick Lamar",
         "description": "Witness the lyrical genius of Kendrick Lamar in his prime.",
         "category": "HIP-HOP",
-        "imgUrl": "https://example.com/kendricklamar.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20K%20lamar&imgurl=https%3A%2F%2Feditorial.aristeguinoticias.com%2Fwp-content%2Fuploads%2F2023%2F10%2Fkendrick-lamar-cdmx-axe-ceremonia-31102023.jpeg&imgrefurl=https%3A%2F%2Faristeguinoticias.com%2F3110%2Fkiosko%2Fkendrick-lamar-estara-en-cdmx-encabeza-el-festival-axe-ceremonia-video%2F&docid=96rfDihrjF6NkM&tbnid=T6dUAgehmHyFeM&vet=12ahUKEwjCl9Sd7M-GAxWhgYQIHdujACYQM3oECBoQAA..i&w=1080&h=1081&hcb=2&ved=2ahUKEwjCl9Sd7M-GAxWhgYQIHdujACYQM3oECBoQAA",
         "date": "2025-10-20",
-        "location": "Madison Square Garden",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 160,
@@ -183,9 +192,10 @@
         "name": "Billie Eilish",
         "description": "Dive into the moody and atmospheric soundscapes of Billie Eilish.",
         "category": "ALTERNATIVE",
-        "imgUrl": "https://example.com/billieeilish.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20billie%20eilish&imgurl=https%3A%2F%2Fi.ytimg.com%2Fvi%2FMjGKtdo8jaY%2Fsddefault.jpg&imgrefurl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DMjGKtdo8jaY&docid=EAoFVxChm5efaM&tbnid=S5l8pZtZ0-J-hM&vet=12ahUKEwj40tHC7M-GAxVeVTABHWX3AfMQM3oECFcQAA..i&w=640&h=480&hcb=2&ved=2ahUKEwj40tHC7M-GAxVeVTABHWX3AfMQM3oECFcQAA",
         "date": "2025-11-30",
-        "location": "Staples Center",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 135,
@@ -203,9 +213,10 @@
         "name": "Taylor Swift",
         "description": "Sing along with Taylor Swift's greatest hits in this stunning concert series.",
         "category": "COUNTRY",
-        "imgUrl": "https://example.com/taylorswift.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20Taylor&imgurl=https%3A%2F%2Fcl2.buscafs.com%2Fwww.tomatazos.com%2Fpublic%2Fuploads%2Fimages%2F417209%2F417209.jpg&imgrefurl=https%3A%2F%2Fwww.tomatazos.com%2Farticulos%2F872118%2FTaylor-Swift-The-Eras-Tour-ya-tiene-calificacion-de-la-critica&docid=_auDzxvpggHmjM&tbnid=iSJuG8lXKCkHRM&vet=12ahUKEwiAkJbd7M-GAxXWmIQIHWDdBIYQM3oECBgQAA..i&w=1000&h=1171&hcb=2&ved=2ahUKEwiAkJbd7M-GAxXWmIQIHWDdBIYQM3oECBgQAA",
         "date": "2026-01-10",
-        "location": "AT&T Stadium",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 170,
@@ -223,9 +234,10 @@
         "name": "Andrea Bocelli",
         "description": "Experience the timeless voice of Andrea Bocelli in a breathtaking performance.",
         "category": "CLASSICAL",
-        "imgUrl": "https://example.com/andreabocelli.jpg",
+        "imgUrl": "https://www.google.com/imgres?q=evento%20andrea%20bocelli&imgurl=https%3A%2F%2Fwww.entradas.com%2Fobj%2Fmedia%2FES-eventim%2Fgalery%2F222x222%2Fa%2Fandrea-bochelli-222x222.jpg&imgrefurl=https%3A%2F%2Fwww.entradas.com%2Fartist%2Fandrea-bocelli%2F&docid=O82TnKu-9471YM&tbnid=Poc7df82VRWu0M&vet=12ahUKEwjtoJHm7M-GAxXKRjABHfZjBOkQM3oECBMQAA..i&w=222&h=222&hcb=2&ved=2ahUKEwjtoJHm7M-GAxXKRjABHfZjBOkQM3oECBMQAA",
         "date": "2026-02-25",
-        "location": "Carnegie Hall",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 200,
