@@ -77,6 +77,6 @@ export class AuthController {
     @Get('logout')
     logout(@Req() req, @Res() res: Response) {
         req.logout();
-        res.redirect('https://YOUR_AUTH0_DOMAIN/v2/logout?returnTo=http://localhost:3000');
+        res.redirect(`https://YOUR_AUTH0_DOMAIN/v2/logout?returnTo=${process.env.FRONT_URL}`);
     }
 }
