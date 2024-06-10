@@ -58,15 +58,16 @@ export class PostEventDto {
   })
   @IsString()
   @IsNotEmpty()
-  longitude: string;
+  latitude: string;
 
   @ApiProperty({
     description:"Debe ser un string",
-    example:"10.123123"
+    example:"-10.123123"
   })
   @IsString()
   @IsNotEmpty()
-  altitude: string;
+  longitude: string;
+
   
   @ApiProperty({
     description: 'Lista de boletos',

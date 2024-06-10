@@ -5,7 +5,8 @@
         "category": "REGGAETON",
         "imgUrl": "https://example.com/jbalvin.jpg",
         "date": "2025-02-15",
-        "location": "Arena Ciudad de México",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 120,
@@ -25,7 +26,8 @@
         "category": "REGGAETON",
         "imgUrl": "https://example.com/karolg.jpg",
         "date": "2025-03-05",
-        "location": "Madison Square Garden",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 130,
@@ -45,7 +47,8 @@
         "category": "REGGAETON",
         "imgUrl": "https://example.com/maluma.jpg",
         "date": "2025-04-10",
-        "location": "Staples Center",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 110,
@@ -65,7 +68,8 @@
         "category": "REGGAETON",
         "imgUrl": "https://example.com/ozuna.jpg",
         "date": "2025-05-20",
-        "location": "The O2 Arena",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 125,
@@ -85,7 +89,8 @@
         "category": "REGGAETON",
         "imgUrl": "https://example.com/daddyyankee.jpg",
         "date": "2025-06-30",
-        "location": "American Airlines Arena",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 140,
@@ -96,7 +101,7 @@
                 "price": 75,
                 "stock": 15,
                 "zone": "General"
-            }
+            } 
         ]
     },
     {
@@ -105,7 +110,8 @@
         "category": "ROCK",
         "imgUrl": "https://example.com/coldplay.jpg",
         "date": "2025-07-10",
-        "location": "Wembley Stadium",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 150,
@@ -125,7 +131,8 @@
         "category": "POP",
         "imgUrl": "https://example.com/beyonce.jpg",
         "date": "2025-08-15",
-        "location": "Rose Bowl",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 180,
@@ -145,7 +152,8 @@
         "category": "ACOUSTIC",
         "imgUrl": "https://example.com/edsheeran.jpg",
         "date": "2025-09-05",
-        "location": "Gillette Stadium",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 120,
@@ -165,7 +173,8 @@
         "category": "HIP-HOP",
         "imgUrl": "https://example.com/kendricklamar.jpg",
         "date": "2025-10-20",
-        "location": "Madison Square Garden",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 160,
@@ -185,7 +194,8 @@
         "category": "ALTERNATIVE",
         "imgUrl": "https://example.com/billieeilish.jpg",
         "date": "2025-11-30",
-        "location": "Staples Center",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 135,
@@ -205,7 +215,8 @@
         "category": "COUNTRY",
         "imgUrl": "https://example.com/taylorswift.jpg",
         "date": "2026-01-10",
-        "location": "AT&T Stadium",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 170,
@@ -225,7 +236,8 @@
         "category": "CLASSICAL",
         "imgUrl": "https://example.com/andreabocelli.jpg",
         "date": "2026-02-25",
-        "location": "Carnegie Hall",
+        "latitude": "10.123123",
+        "longitude": "-10.123123",
         "tickets": [
             {
                 "price": 200,

@@ -39,7 +39,7 @@ export class Event {
   date: Date;
 
   @Column()
-  altitude: string; 
+  latitude: string; 
 
   @Column()
   longitude: string;

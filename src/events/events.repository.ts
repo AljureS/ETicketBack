@@ -222,7 +222,8 @@ export class EventsRepository {
       description: event.description,
       category: categorySearched,
       date: event.date,
-      location: event.location,
+      latitude: event.latitude,
+      longitude: event.longitude,
       tickets: [],
       userEmail: email,
       imgUrl: event.imgUrl,
@@ -290,7 +291,8 @@ export class EventsRepository {
         category,
         imgUrl: element.imgUrl,
         date: new Date(element.date),
-        location: element.location,
+        latitude: element.latitude,
+        longitude: element.longitude,
         tickets: [],
       });
 

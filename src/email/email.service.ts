@@ -68,12 +68,12 @@ export class EmailService {
       <body>
           <div class="container">
               <div class="header">
-                  <h1>Bienvenido a Radioticket</h1>
+                  <h1>Welcome to Radioticket</h1>
               </div>
-              <p>Hola, {{token}}!</p>
-              <p>Gracias por registrarte en Radioticket. Estamos emocionados de tenerte con nosotros.</p>
-              <a href="${url}" class="button">Verificar mi cuenta</a>
-              <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+              <p>Hi, {{token}}!</p>
+              <p>Thanks for signing up. We are happy to have you here.</p>
+              <a href="${url}" class="button">Verify Email</a>
+              <p>If you have any questions, please don't hesitate to contact us.</p>
           </div>
       </body>
       </html>
@@ -87,12 +87,13 @@ export class EmailService {
       const qrCodeDataURL = await QRCode.toDataURL(ticket.id);
       return `
         <div style="border-bottom: 1px solid #ccc; padding-bottom: 20px;">
-          <p>Evento: ${ticket.event.name}</p>
-          <p>Fecha: ${ticket.event.date}</p>
-          <p>Lugar: ${ticket.event.location}</p>
+          <p>Event: ${ticket.event.name}</p>
+          <p>Date: ${ticket.event.date}</p>
+          <p>Latitude: ${ticket.event.latitude}</p>
+          <p>Longitude: ${ticket.event.longitude}</p>
           <p>ID del Ticket: ${ticket.id}</p>
-          <p>Zona: ${ticket.zone}</p>
-          <p>Código QR:</p>
+          <p>Ticket Tipe: ${ticket.zone}</p>
+          <p> QR Code :</p>
           <img src="${qrCodeDataURL}" alt="Código QR" />
         </div>
       `;
@@ -129,14 +130,13 @@ export class EmailService {
               <div class="header">
                   <h1>Tus Tickets de Radioticket</h1>
               </div>
-              <p>Hola,</p>
-              <p>¡Gracias por tu compra! A continuación, encontrarás los detalles de tus tickets:</p>
+              <p>Hi,</p>
+              <p>¡Thanks for your purchase! Following more information about your tickets:</p>
               ${ticketDetails.join('')}
-              <p>Por favor, presenta estos códigos QR al ingresar al evento. Puedes mostrarlos desde tu dispositivo móvil o imprimirlos.</p>
-              <p>Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos a [Email de Soporte] o llamarnos al [Número de Teléfono].</p>
-              <p>¡Nos vemos en el evento!</p>
-              <p>Saludos,</p>
-              <p>[Nombre de tu Empresa]</p>
+              <p>Please present these QR codes upon entering the event. You can display them from your mobile device or print them out.</p>
+              <p>If you have any questions or need assistance, please do not hesitate to contact us at [Support Email] or call us at [Phone Number].</p>
+              <p>¡See you ate the event!</p>
+              <p>[Name of the company]</p>
           </div>
       </body>
       </html>
@@ -154,7 +154,7 @@ export class EmailService {
   await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
       to,
-      subject: 'Estos son tus tickets',
+      subject: 'Here are your tickets',
       html: emailContent,
       attachments: attachments,
   });
