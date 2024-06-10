@@ -11,7 +11,7 @@
 //         domain: process.env.YOUR_AUTH0_DOMAIN,
 //         clientID: process.env.YOUR_AUTH0_CLIENT_ID, // 'YOUR_AUTH0_CLIENT_ID',
 //         clientSecret: process.env.YOUR_AUTH0_CLIENT_SECRET, // 'YOUR_AUTH0_CLIENT_SECRET',
-//         callbackURL: 'http://localhost:3000/callback',
+//         callbackURL: 'process.env.FRONT_URL/callback',
 //         });
 //     }
 

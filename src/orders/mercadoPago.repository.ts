@@ -92,9 +92,9 @@ export class PaymentsRepository {
       const preferenceData = {
         items,
         back_urls: {
-          success: 'http://localhost:3000/',
+          success: `${process.env.FRONT_URL}/`,
         },
-        notification_url: `https://8321-181-12-8-9.ngrok-free.app/orders/notificar?order=${ordenIntermediaGuardada.id}`,
+        notification_url: `https://7e61-181-12-8-9.ngrok-free.app/orders/notificar?order=${ordenIntermediaGuardada.id}`,
       };
 
       const preferenceResponse = await this.preference.create({
@@ -160,7 +160,7 @@ export class PaymentsRepository {
       }
       // Responde con los datos del cuerpo de la respuesta de PayPal
       return res.redirect(
-        'http://localhost:3000?success=true',
+        `${process.env.FRONT_URL}?success=true`,
       );
     }
   }

@@ -73,7 +73,7 @@ export class PaypalRepository {
         landing_page: 'NO_PREFERENCE',
         user_action: 'PAY_NOW',
         return_url: `http://localhost:3001/orders/execute?order=${OrdenIntermediaGuardada.id}`,
-        cancel_url: `http://localhost:3000/`,
+        cancel_url: `${process.env.FRONT_URL}`,
       },
     };
 
@@ -133,7 +133,7 @@ export class PaypalRepository {
         await this.ticketRepository.save(ticketInDB)
       }
       // Responde con los datos del cuerpo de la respuesta de PayPal
-      return res.redirect('http://localhost:3000/?success=true');
+      return res.redirect(`${process.env.FRONT_URL}/?success=true`);
     } catch (error) {
       // Maneja errores y responde con el mensaje de error
       console.error(error.response ? error.response.data : error.message);
