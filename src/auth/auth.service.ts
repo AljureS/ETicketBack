@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,6 +16,7 @@ import * as bcrypt from 'bcrypt';
 import { EmailService } from 'src/email/email.service';
 import axios from 'axios';
 import { config as dotenvConfig } from 'dotenv';
+import * as jwt from 'jsonwebtoken';
 
 dotenvConfig({ path: '.env.development' });
 @Injectable()
@@ -28,11 +30,25 @@ export class AuthService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async refreshtoken(email: string) {
+  async refreshtoken(email, token) {
+
+    // Verificar y desestructurar el token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET); // Usa la misma clave secreta
+    } catch (err) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    // Verificar que el email en el payload del token sea el mismo que se pasa por body
+    if (decoded.email !== email) {
+      throw new UnauthorizedException('Email in token does not match the provided email');
+    }
     const user = await this.userRepository.getUserByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
     const payload = {
       id: user.id,
       email: user.email,
@@ -41,7 +57,7 @@ export class AuthService {
       name: user.name,
       phone: user.phone,
     };
-    const token = await this.jwtService.sign(payload);
+    const newToken = await this.jwtService.sign(payload);
     return {
       message: 'refreshed token for user',
       token,

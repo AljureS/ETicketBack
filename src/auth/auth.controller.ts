@@ -13,6 +13,7 @@ import { Request, Response } from 'express';
 import { OIDCRequestFunction } from 'typeorm';
 import { Auth0LoginDto } from 'src/dtos/auth0.dto';
 import { config as dotenvConfig } from 'dotenv';
+import { RefreshUserDto } from 'src/dtos/refreshUser.dto';
 
 dotenvConfig({ path: '.env.development' });
 
@@ -25,10 +26,9 @@ export class AuthController {
     ){}
 
     @Post('refresh')
-    @UseGuards(AuthGuard('jwt'), RoleGuard)
-    refreshtoken(@Body() emailUser : any) {
-        const {email}= emailUser
-        return this.authService.refreshtoken(email);
+    refreshtoken(@Body() currentUser : RefreshUserDto) {
+        const {email, token} = currentUser
+        return this.authService.refreshtoken(email, token);
     }
     
     @Post('auth0')
