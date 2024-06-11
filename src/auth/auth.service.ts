@@ -50,12 +50,7 @@ export class AuthService {
     }
 
     const payload = {
-      id: user.id,
-      email: user.email,
-      isAdmin: user.isAdmin, 
-      isSuperAdmin: user.isSuperAdmin,
-      name: user.name,
-      phone: user.phone,
+      ...user
     };
     const newToken = await this.jwtService.sign(payload);
     return {
