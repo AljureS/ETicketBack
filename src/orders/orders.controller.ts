@@ -33,24 +33,21 @@ export class OrdersController {
     @ApiBearerAuth()
     @Roles(Role.SUPERADMIN)
     @UseGuards(AuthGuards, RoleGuard)
-    @Post('/createPlan')
-    async createPlanForPaypalSubscription(@Body('product_id')product_id:string){
+    @Post('/createPlan/:productid')
+    async createPlanForPaypalSubscription(@Param('productid')product_id:string){
       return this.orderService.createPlanForPaypalSubscription(product_id)
     }
     @ApiBearerAuth()
     @Roles(Role.USER,Role.ADMIN, Role.SUPERADMIN)
     @UseGuards(AuthGuards, RoleGuard)
-    @Post('/generatesubscripcion')
-    async generateSubscripcion(@Req() req:Request & {user:User}){
-      const { plan_name } = req.body
-      
-      
+    @Post('/generatesubscription/:name')
+    async generateSubscripcion(@Req() req:Request & {user:User}, @Param('name') name: string){
       const user = {
         name:req.user.name,
         lastName: req.user.lastName,
         email:req.user.email
       }
-      return await this.orderService.generateSubscription(plan_name,user)
+      return await this.orderService.generateSubscription(name,user)
     }
 
     @Get('/execute-subscription')
