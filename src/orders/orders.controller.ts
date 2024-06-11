@@ -42,7 +42,7 @@ export class OrdersController {
     @UseGuards(AuthGuards, RoleGuard)
     @Post('/generatesubscripcion')
     async generateSubscripcion(@Req() req:Request & {user:User}){
-      const { plan_id } = req.body
+      const { plan_name } = req.body
       
       
       const user = {
@@ -50,7 +50,7 @@ export class OrdersController {
         lastName: req.user.lastName,
         email:req.user.email
       }
-      return await this.orderService.generateSubscription(plan_id,user)
+      return await this.orderService.generateSubscription(plan_name,user)
     }
 
     @Get('/execute-subscription')

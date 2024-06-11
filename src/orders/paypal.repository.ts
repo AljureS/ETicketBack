@@ -14,6 +14,7 @@ import { Response } from 'express';
 import { TablaIntermediaOrder } from 'src/entities/tablaintermediaOrder.entity';
 import { TablaIntermediaTicket } from 'src/entities/TablaIntermediaTicket.entity';
 import { Ticket } from 'src/entities/ticket.entity';
+import { Planes } from 'src/entities/planes.entity';
 @Injectable()
 export class PaypalRepository {
   private auth = {
@@ -29,7 +30,9 @@ export class PaypalRepository {
     @InjectRepository(TablaIntermediaTicket)
     private readonly tablaIntermediaTicketRepository: Repository<TablaIntermediaTicket>,
     @InjectRepository(Ticket)
-    private readonly ticketRepository: Repository<Ticket>
+    private readonly ticketRepository: Repository<Ticket>,
+    @InjectRepository(Planes)
+    private readonly planesRepository: Repository<Planes>
   ) {}
 
   async createPayment(order: CreateOrderDto) {
@@ -172,7 +175,7 @@ export class PaypalRepository {
 
   async createPlan(product_id: string) {
     const plan = {
-      name: 'PLAN mensual',
+      name: 'PLAN MENSUAL',
       product_id: product_id,
       status: 'ACTIVE',
       billing_cycles: [
@@ -220,6 +223,12 @@ export class PaypalRepository {
         plan,
         config,
       );
+
+      const newPLan = await this.planesRepository.create({
+        code:response.data.id,
+        name:response.data.name
+      })
+      await this.planesRepository.save(newPLan)
       return response.data;
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
@@ -227,14 +236,17 @@ export class PaypalRepository {
     }
   }
 
-  async generateSubscription(plan_id: string, user: Partial<createUserDto>) {
+  async generateSubscription(plan_name: string, user: Partial<createUserDto>) {
     const futureDate = new Date();
     futureDate.setMinutes(futureDate.getMinutes() + 5);
-
+    const planBuscado = await this.planesRepository.findOne({where:{name:plan_name}})
+    if(!planBuscado){
+      throw new BadRequestException('No existe ese Plan en la Base de datos')
+    }
     // Convertir la fecha a formato ISO string
     const startTime = futureDate.toISOString();
     const subscription = {
-      plan_id: plan_id, // P-3HK92642FR4448515MBQHCYQ
+      plan_id: planBuscado.code, // P-3HK92642FR4448515MBQHCYQ
       start_time: startTime,
       quantity: 1,
       subscriber: {
@@ -268,7 +280,7 @@ export class PaypalRepository {
         { isPremium: true },
       );
 
-      return response.data;
+      return response.data.links[0];
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
       throw new BadRequestException(
