@@ -8,11 +8,13 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors({
-    origin: ['process.env.FRONT_URL',"https://front-radio-ticket.vercel.app/","https://radioticket.onrender.com"], // URL de tu frontend
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
+  app.enableCors(
+  //   {
+  //   origin: ['process.env.FRONT_URL',"https://front-radio-ticket.vercel.app/","https://radioticket.onrender.com"], // URL de tu frontend
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   credentials: true,
+  // }
+  );
   const options = new DocumentBuilder()
     .setTitle('NestJs API // RADIOTICKET')
     .setDescription('Proyecto Final // RADIOTICKET')
