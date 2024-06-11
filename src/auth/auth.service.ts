@@ -172,6 +172,9 @@ export class AuthService {
       email: user.email,
       isAdmin: user.isAdmin,
       isSuperAdmin: user.isSuperAdmin,
+      name: user.name,
+      phone: user.phone,
+      lastName:user.lastName
     };
     const token = await this.jwtService.sign(payload);
     return token;
