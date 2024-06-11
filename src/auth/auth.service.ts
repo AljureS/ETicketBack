@@ -56,7 +56,7 @@ export class AuthService {
     const newToken = await this.jwtService.sign(payload, { expiresIn: '1h' } );
     return {
       message: 'refreshed token for user',
-      token,
+      newToken,
     };
   }
 
