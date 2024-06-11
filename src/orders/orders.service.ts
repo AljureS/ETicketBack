@@ -63,8 +63,8 @@ export class OrdersService {
         return this.paypalRepository.createPlan(product_id)
     }
 
-    generateSubscription(plan_id:string,user:Partial<createUserDto>){
-        return this.paypalRepository.generateSubscription(plan_id, user)
+    generateSubscription(plan_name:string,user:Partial<createUserDto>){
+        return this.paypalRepository.generateSubscription(plan_name, user)
     }
     executeSubscription(req,res){
         return this.paypalRepository.executeSubscription(req,res)
