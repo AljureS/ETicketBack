@@ -15,6 +15,9 @@ import { TicketsModule } from './tickets/tickets.module';
 import { EmailModule } from './email/email.module';
 import { DiscountModule } from './discount/discount.module';
 
+// import { HttpModule } from '@nestjs/axios';
+// import * as https from 'https';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,6 +44,11 @@ import { DiscountModule } from './discount/discount.module';
     TicketsModule,
     EmailModule,
     DiscountModule,
+    // HttpModule.register({
+    //   httpsAgent: new https.Agent({  
+    //     rejectUnauthorized: true
+    //   }),
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],
