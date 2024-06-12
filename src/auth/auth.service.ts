@@ -50,10 +50,8 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    const payload = {
-      ...user,
-      email: user.email
-    };
+    const { password, ...payload } = user;
+
     
     const newToken = await this.jwtService.sign(payload, { expiresIn: '1h' } );
     return {
@@ -79,13 +77,14 @@ export class AuthService {
 }
 
   async Auth0 (userDetail: any) {
+    console.log(userDetail);
+    
     const { email } = userDetail;
     const user = await this.userRepository.getUserByEmail(email);
 
     if (user) {
-      const payload = {
-        ...user
-      }
+      const { password, ...payload } = user;
+
       const token = await this.jwtService.sign(payload);
       return {
         message: 'Auth 0 User logged in successfully',
@@ -93,11 +92,13 @@ export class AuthService {
       };
     }
 
-    const userCreated = this.usersRepository.create({
-      ...userDetail,
+    const userCreated = await this.usersRepository.create({
+      name:userDetail.name,
+      lastName:userDetail.lastName,
+      email:userDetail.email,
       phone: '', 
       isEmailConfirmed: true, //=> Por defecto el email es confirmado
-      password: 'This is a super safe password'
+      password: 'This is a super safe password',
     });
 
     const savedUser = await this.usersRepository.save(userCreated);
@@ -107,20 +108,19 @@ export class AuthService {
 
     const confirmationToken = await this.generateConfirmationToken(userDetail);
 
-    await this.emailService.sendConfirmationEmail(
-      user.email,
+    await this.confirmEmail(
       confirmationToken,
     );
+      console.log(savedUser);
+      
+      const { password, ...payload } = userCreated;
 
-    const payload = {
-      ...userCreated, //! no es "obligatorio"
-    };
     const token = await this.jwtService.sign(payload);
     //Retornar mensaje de ingreso y token 
     return {
       message: 'Auth 0 User created successfully',
       token,
-      userCreated
+      savedUser
     };
 
   }
@@ -168,29 +168,24 @@ export class AuthService {
     const user = await this.jwtService.verify(token, { secret });
     return await this.usersRepository.findOne({ where: { email: user.email } });
   }
-  private async generateConfirmationToken(user) {
+  private async generateConfirmationToken(user:User) {
     // Implementa tu lógica para generar un token de confirmación
     const payload = {
-      id: user.id,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      isSuperAdmin: user.isSuperAdmin,
-      name: user.name,
-      phone: user.phone,
-      lastName:user.lastName
+      ...user
     };
     const token = await this.jwtService.sign(payload);
     return token;
   }
 
   async logIn(credentials: LoginUserDto) {
-    const { email, password } = credentials;
+    const { email } = credentials;
+    const passwordDeParametro = credentials.password
     const user = await this.userRepository.getUserByEmail(email);
     if (!user) {
       throw new BadRequestException('Invalid credentials');
     }
     // Comparacion de passwords
-    const validPassword = await bcrypt.compare(password, user.password);
+    const validPassword = await bcrypt.compare(passwordDeParametro, user.password);
     if (!validPassword) {
       throw new BadRequestException('Invalid credentials');
     }
@@ -198,15 +193,8 @@ export class AuthService {
       throw new BadRequestException('La cuenta no está confirmada');
     }
     //envio de token //* forma token
-    const payload = {
-      id: user.id,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      isSuperAdmin: user.isSuperAdmin,
-      name: user.name,
-      phone: user.phone,
-      lastName:user.lastName
-    };
+    const { password, ...payload } = user;
+
     const token = await this.jwtService.sign(payload);
     //Retornar mensaje de ingreso y token
     return {
