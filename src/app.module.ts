@@ -16,6 +16,7 @@ import { EmailModule } from './email/email.module';
 import { DiscountModule } from './discount/discount.module';
 
 // import { HttpModule } from '@nestjs/axios';
+import { WebsocketModule } from './websocket/websocket.module';
 // import * as https from 'https';
 
 @Module({
@@ -44,6 +45,7 @@ import { DiscountModule } from './discount/discount.module';
     TicketsModule,
     EmailModule,
     DiscountModule,
+    WebsocketModule,
     // HttpModule.register({
     //   httpsAgent: new https.Agent({  
     //     rejectUnauthorized: true

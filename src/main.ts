@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { auth } from 'express-openid-connect'
 // import { config as auth0Config} from './config/auth0.config'//? PORFA NO ELIMNAR ESTA LINEA
 import { ValidationPipe } from '@nestjs/common';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,7 @@ async function bootstrap() {
   //   credentials: true,
   // }
   );
+  
   const options = new DocumentBuilder()
     .setTitle('NestJs API // RADIOTICKET')
     .setDescription('Proyecto Final // RADIOTICKET')
@@ -32,6 +34,7 @@ async function bootstrap() {
   app.use(morgan('dev'));
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/', app, document);
+  
   await app.listen(3001);
 
   console.log(`Application is running on: ${await app.getUrl()}`);
