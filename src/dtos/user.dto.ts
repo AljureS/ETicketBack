@@ -1,3 +1,4 @@
+import { ApiHideProperty } from "@nestjs/swagger"
 import { IsEmail, IsEmpty, IsNotEmpty, IsNumber, IsString, Length, Matches, Validate } from "class-validator"
 import { MatchingPassword } from "src/decorators/matchingPassword.decorator"
 
@@ -54,9 +55,11 @@ export class createUserDto {
     @Validate(MatchingPassword, ['password'])
     confirmPassword: string
 
+    @ApiHideProperty()
     @IsEmpty()
     isAdmin?: boolean
     
+    @ApiHideProperty()
     @IsEmpty()
     isPremium?: boolean
 }
