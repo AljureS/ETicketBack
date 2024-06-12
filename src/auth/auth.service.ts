@@ -91,14 +91,15 @@ export class AuthService {
         token,
       };
     }
-
+    const numero = Math.floor(100000000 + Math.random() * 900000000);
+    const hash = await bcrypt.hash(numero.toString(), 10);
     const userCreated = await this.usersRepository.create({
       name:userDetail.name,
       lastName:userDetail.lastName,
       email:userDetail.email,
       phone: '', 
       isEmailConfirmed: true, //=> Por defecto el email es confirmado
-      password: 'This is a super safe password',
+      password: hash,
     });
 
     const savedUser = await this.usersRepository.save(userCreated);
