@@ -20,7 +20,9 @@ export class EmailService {
   }
 
   async sendConfirmationEmail(to: string, token: string) {
+
     const url = `${process.env.BACK_URL}/auth/confirm?token=${token}`;
+
 
     await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
