@@ -10,13 +10,19 @@ export class WebhookController {
         private readonly userRepository: Repository<User>
   ) {}
 
-  @Post('paypal')
+  @Post('/paypal')
   async handlePayPalWebhook(@Req() req, @Res() res) {
     const event = req.body;
-
+    console.log(event.resource.links);
+    
     try {
       switch (event.event_type) {
         case 'BILLING.SUBSCRIPTION.CREATED':
+          // Lógica para manejar la creación de una suscripción
+          await this.userRepository.update({email:event.resource.subscriber.email_address}, {isPremium:true});
+
+          break;
+          case 'BILLING.SUBSCRIPTION.ACTIVATED':
           // Lógica para manejar la creación de una suscripción
           await this.userRepository.update({email:event.resource.subscriber.email_address}, {isPremium:true});
 
@@ -43,7 +49,7 @@ export class WebhookController {
       res.status(200).send('Event received');
     } catch (error) {
       console.error('Error handling PayPal webhook:', error);
-      res.status(500).send('Error handling event');
+      res.status(400).send('Error handling event');
     }
   }
 }
