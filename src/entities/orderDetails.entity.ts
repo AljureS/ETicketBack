@@ -15,9 +15,10 @@ export class OrderDetails{
     @Column('decimal', { precision: 10, scale: 2, nullable: false })
     price: number
 
-    @OneToOne(() => Order)
-    @JoinColumn()
-    order: Order
+    @OneToOne(() => Order, (order) => order.orderDetails)
+@JoinColumn()
+order: Order;
+
 
     @ManyToMany(()=> Event, (event)=> event.orderDetails)
     events: Event[]

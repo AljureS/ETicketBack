@@ -227,6 +227,7 @@ export class EventsRepository {
       tickets: [],
       userEmail: email,
       imgUrl: event.imgUrl,
+      address:event.address
     });
     console.log('llegue aqui');
 
@@ -278,6 +279,10 @@ export class EventsRepository {
   }
 
   async preLoadData(): Promise<string> {
+    const count = await this.eventsRepository.count()
+    if(count > 0){
+      throw new BadRequestException('Ya existen eventos en la tabla')
+    }
     const categories = await this.categoryRepository.find();
 
     for (const element of data) {
@@ -294,6 +299,8 @@ export class EventsRepository {
         latitude: element.latitude,
         longitude: element.longitude,
         tickets: [],
+        address:element.address
+
       });
 
       await this.eventsRepository.save(newEvent);
