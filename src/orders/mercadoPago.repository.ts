@@ -94,7 +94,9 @@ export class PaymentsRepository {
         back_urls: {
           success: `${process.env.FRONT_URL}/`,
         },
-        notification_url: `https://radioticket.onrender.com/orders/notificar?order=${ordenIntermediaGuardada.id}`,
+
+        notification_url: `${process.env.BACK_URL}/orders/notificar?order=${ordenIntermediaGuardada.id}`,
+
       };
 
       const preferenceResponse = await this.preference.create({
