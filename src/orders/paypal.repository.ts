@@ -41,36 +41,54 @@ export class PaypalRepository {
       user: order.userId,
       tablaIntermediaTicket: [],
     });
-
+  
     const ticketPromises = order.tickets.map(async (ticketIntermedio) => {
       const newTicketIntermedio = this.tablaIntermediaTicketRepository.create({
         id: ticketIntermedio.id,
         price: ticketIntermedio.price,
         quantity: ticketIntermedio.quantity,
       });
-
+  
       console.log('Creando ticket intermedio');
-
+  
       await this.tablaIntermediaTicketRepository.save(newTicketIntermedio);
       orderIntermedia.tablaIntermediaTicket.push(newTicketIntermedio);
-      
     });
-
+  
     await Promise.all(ticketPromises);
-
-    const OrdenIntermediaGuardada =
-      await this.tablaIntermediaOrderRepository.save(orderIntermedia);
-
+  
+    const OrdenIntermediaGuardada = await this.tablaIntermediaOrderRepository.save(orderIntermedia);
+  
+    // Calcular el valor total de los tickets
+    const totalValue = order.tickets.reduce((acc, ticket) => acc + (ticket.price * ticket.quantity), 0);
+  
+    // Crear un detalle de cada artículo
+    const items = order.tickets.map(ticket => ({
+      name: `Ticket ${ticket.id}`,
+      unit_amount: {
+        currency_code: 'USD',
+        value: String(ticket.price),
+      },
+      quantity: String(ticket.quantity),
+    }));
+  
     const body = {
       intent: 'CAPTURE',
-      purchase_units: order.tickets.map((ticket) => {
-        return {
+      purchase_units: [
+        {
           amount: {
             currency_code: 'USD',
-            value: String(ticket.price * ticket.quantity),
+            value: String(totalValue),
+            breakdown: {
+              item_total: {
+                currency_code: 'USD',
+                value: String(totalValue),
+              },
+            },
           },
-        };
-      }),
+          items: items,
+        },
+      ],
       application_context: {
         brand_name: `Raioticket`,
         landing_page: 'NO_PREFERENCE',
@@ -79,29 +97,32 @@ export class PaypalRepository {
         cancel_url: `${process.env.FRONT_URL}`,
       },
     };
-
+  
     const config = {
       auth: this.auth,
       headers: {
         'Content-Type': 'application/json',
       },
     };
-
+  
+    console.log(JSON.stringify(body, null, 2)); // Para depuración
+  
     try {
       const response = await axios.post(
         `${process.env.PAYPAL_API}/v2/checkout/orders`,
         body,
         config,
       );
-
+  
       return response.data.links[1];
     } catch (error) {
-      console.error(error.response ? error.response.data : error.message);
+      console.error('PayPal API error:', error.response ? error.response.data : error.message);
       throw new BadGatewayException(
         'Error al crear la orden de pago en PayPal.',
       );
     }
   }
+  
 
   async executePayment(token: string, res: Response, order) {
     const config = {
