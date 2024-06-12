@@ -75,7 +75,7 @@ export class PaypalRepository {
         brand_name: `Raioticket`,
         landing_page: 'NO_PREFERENCE',
         user_action: 'PAY_NOW',
-        return_url: `http://localhost:3001/orders/execute?order=${OrdenIntermediaGuardada.id}`,
+        return_url: `${process.env.BACK_URL}/orders/execute?order=${OrdenIntermediaGuardada.id}`,
         cancel_url: `${process.env.FRONT_URL}`,
       },
     };
@@ -256,8 +256,8 @@ export class PaypalRepository {
         },
         email_address: user.email,
       },
-      return_url: 'http://localhost/orders/execute-subscription',
-      cancel_url: 'http://localhost/orders/cancel-subscription',
+      return_url: `${process.env.BACK_URL}/orders/execute-subscription`,
+      cancel_url: `${process.env.BACK_URL}/orders/cancel-subscription`,
     };
 
     const config = {
@@ -274,11 +274,6 @@ export class PaypalRepository {
         config,
       );
       console.log(response.data);
-
-      await this.userRepository.update(
-        { email: user.email },
-        { isPremium: true },
-      );
 
       return response.data.links[0];
     } catch (error) {
