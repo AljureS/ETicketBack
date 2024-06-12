@@ -59,7 +59,7 @@ export class OrdersRepository {
 
         if (ticketBuscado) {
             // Crea y guarda los tickets vendidos
-            const nuevosTickets = await this.crearTicketsParaEnviarPorMail(ticketBuscado, ticket.quantity);
+            const nuevosTickets = await this.crearTicketsParaEnviarPorMail(ticketBuscado, ticket.quantity,order.userId);
             ticketsParaEnviarPorMail.push(...nuevosTickets);
 
             total += Number(ticket.price * ticket.quantity);
@@ -90,7 +90,7 @@ export class OrdersRepository {
     await this.ticketRepository.save(ticket);
   }
 
-  async crearTicketsParaEnviarPorMail(ticket:Ticket, quantity:number):Promise<TicketVendido[]>{
+  async crearTicketsParaEnviarPorMail(ticket:Ticket, quantity:number,userId):Promise<TicketVendido[]>{
     
     let tickets = []
     for(let i = 0; i < quantity ; i++){
@@ -99,6 +99,7 @@ export class OrdersRepository {
         event: ticket.event,
         zone:ticket.zone,
         isUsed:false,
+        userId
       })
       const ticketVendidoEnDB = await this.ticketVendidoRepository.save(newTicketAVender)
       tickets = [...tickets, ticketVendidoEnDB]
@@ -129,6 +130,12 @@ export class OrdersRepository {
       console.error('Error al obtener la orden:', error);
       throw error; // Puedes manejar el error según tu caso
     }
+  }
+
+  async ofUser(userEmail){
+    const user = await this.userRepository.findOne({where:{email:userEmail}})
+    const orderSearched = await this.ticketVendidoRepository.find({where:{userId:user.id},relations:{event:true}})
+    return orderSearched;
   }
 
   async getAllOrder() {

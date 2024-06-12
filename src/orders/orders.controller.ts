@@ -50,6 +50,15 @@ export class OrdersController {
       return await this.orderService.generateSubscription(name,user)
     }
 
+    @ApiBearerAuth()
+    @Roles(Role.USER,Role.ADMIN,Role.SUPERADMIN)
+    @UseGuards(AuthGuards, RoleGuard)
+    @Get('/ofUser')
+    async ofUser(@Req() req:Request & {user:User}){
+      const userEmail = req.user.email
+      return await this.orderService.ofUser(userEmail)
+    }
+
     @Get('/execute-subscription')
     async executeSubscription(@Req() req, @Res() res){
       return await this.orderService.executeSubscription(req,res)
