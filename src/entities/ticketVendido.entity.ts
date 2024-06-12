@@ -24,4 +24,6 @@ export class TicketVendido {
   @ManyToOne(() => Event, (event) => event.ticketsVendidos)
   @JoinColumn()
   event: Event;
+  @Column()
+  userId:string
 }
