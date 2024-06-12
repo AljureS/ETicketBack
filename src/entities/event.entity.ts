@@ -44,6 +44,9 @@ export class Event {
   @Column()
   longitude: string;
 
+  @Column()
+  address:string;
+
   @Column({nullable:true})
   userEmail?:string
 
