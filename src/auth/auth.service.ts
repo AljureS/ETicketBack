@@ -44,6 +44,7 @@ export class AuthService {
     if (decoded.email !== email) {
       throw new UnauthorizedException('Email in token does not match the provided email');
     }
+
     const user = await this.userRepository.getUserByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -53,6 +54,7 @@ export class AuthService {
       ...user,
       email: user.email
     };
+    
     const newToken = await this.jwtService.sign(payload, { expiresIn: '1h' } );
     return {
       message: 'refreshed token for user',

@@ -16,6 +16,9 @@ export class EmailService {
         user: process.env.NODEMAILER_EMAIL, // Tu email
         pass: process.env.NODEMAILER_PASSWORD, // Tu contraseña
       },
+      tls: {
+        rejectUnauthorized: false // Estaba pidiendo conexion segura (Ya no es necesario)
+      }
     });
   }
 
