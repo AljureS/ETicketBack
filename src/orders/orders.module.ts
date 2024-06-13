@@ -14,6 +14,7 @@ import { PaypalRepository } from './paypal.repository';
 import { TablaIntermediaOrder } from 'src/entities/tablaintermediaOrder.entity';
 import { TablaIntermediaTicket } from 'src/entities/TablaIntermediaTicket.entity';
 import { Planes } from 'src/entities/planes.entity';
+import { WebhookController } from './webhookPaypal.controller';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { Planes } from 'src/entities/planes.entity';
   TypeOrmModule.forFeature([TablaIntermediaOrder]),
   TypeOrmModule.forFeature([Planes]),
 ],
-  controllers: [OrdersController],
+  controllers: [OrdersController,WebhookController],
   providers: [OrdersService, OrdersRepository,PaymentsRepository,EmailService, PaypalRepository]
 })
 export class OrdersModule {}

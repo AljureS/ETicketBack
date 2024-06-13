@@ -72,4 +72,7 @@ export class OrdersService {
     cancelSubscription(req,res){
         return this.paypalRepository.cancelSubscription(req,res)
     }
+    ofUser(userEmail:string){
+        return this.orderRepository.ofUser(userEmail)
+    }
 }

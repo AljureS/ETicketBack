@@ -7,6 +7,7 @@
         "date": "2025-02-15",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "123 Reggaeton Ave, Music City",
         "tickets": [
             {
                 "price": 120,
@@ -28,6 +29,7 @@
         "date": "2025-03-05",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "124 Reggaeton Ave, Music City",
         "tickets": [
             {
                 "price": 130,
@@ -49,6 +51,7 @@
         "date": "2025-04-10",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "125 Reggaeton Ave, Music City",
         "tickets": [
             {
                 "price": 110,
@@ -70,6 +73,7 @@
         "date": "2025-05-20",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "126 Reggaeton Ave, Music City",
         "tickets": [
             {
                 "price": 125,
@@ -91,6 +95,7 @@
         "date": "2025-06-30",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "127 Reggaeton Ave, Music City",
         "tickets": [
             {
                 "price": 140,
@@ -112,6 +117,7 @@
         "date": "2025-07-10",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "200 Rock Blvd, Music City",
         "tickets": [
             {
                 "price": 150,
@@ -133,6 +139,7 @@
         "date": "2025-08-15",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "300 Pop Ln, Music City",
         "tickets": [
             {
                 "price": 180,
@@ -154,6 +161,7 @@
         "date": "2025-09-05",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "400 Acoustic St, Music City",
         "tickets": [
             {
                 "price": 120,
@@ -175,6 +183,7 @@
         "date": "2025-10-20",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "500 Hip-Hop Ave, Music City",
         "tickets": [
             {
                 "price": 160,
@@ -196,6 +205,7 @@
         "date": "2025-11-30",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "600 Alternative Ln, Music City",
         "tickets": [
             {
                 "price": 135,
@@ -217,6 +227,7 @@
         "date": "2026-01-10",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "700 Country Rd, Music City",
         "tickets": [
             {
                 "price": 170,
@@ -238,6 +249,7 @@
         "date": "2026-02-25",
         "latitude": "10.123123",
         "longitude": "-10.123123",
+        "address": "800 Classical Blvd, Music City",
         "tickets": [
             {
                 "price": 200,

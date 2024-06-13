@@ -23,5 +23,13 @@ export class ModifyEventDto {
 
   @IsString()
   @IsOptional()
-  location: string;
+  latitude: string;
+
+  @IsOptional()
+  @IsString()
+  longitude: string;
+
+  @IsOptional()
+  @IsString()
+  address: string;
 }

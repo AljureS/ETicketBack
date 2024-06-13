@@ -33,9 +33,8 @@ export class AuthController {
     
     @Post('auth0')
     async redirectToAuth0Login(@Body() auth0: any) {
-        const { given_name: name, family_name: lastName, email } = auth0
-        const userDetail = { name, lastName, email }
-        return this.authService.Auth0(userDetail); 
+        const {given_name,family_name,email } = auth0
+        return this.authService.Auth0({name:given_name,lastName:family_name,email}); 
     }
 
     // @Post('signup/auth0')
