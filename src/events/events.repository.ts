@@ -227,7 +227,8 @@ export class EventsRepository {
       tickets: [],
       userEmail: email,
       imgUrl: event.imgUrl,
-      address:event.address
+      address:event.address,
+      launchdate:event.launchdate
     });
     console.log('llegue aqui');
 
@@ -299,7 +300,8 @@ export class EventsRepository {
         latitude: element.latitude,
         longitude: element.longitude,
         tickets: [],
-        address:element.address
+        address:element.address,
+        launchdate: element.launchdate
 
       });
 
