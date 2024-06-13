@@ -22,7 +22,7 @@ export class TablaIntermediaTicket {
   @Column({ type: 'int', nullable: false })
   quantity: number;
 
-  @Column()
+  @Column('decimal', { precision: 10, scale: 2, nullable: false })
   price: number;
 
   @ManyToOne(() => TablaIntermediaOrder, (order) => order.tablaIntermediaTicket)
