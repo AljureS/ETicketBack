@@ -23,6 +23,7 @@ import { RoleGuard } from 'src/guards/roles/roles.guard';
 import { User } from 'src/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { categoryInterceptor } from 'src/interceptors/categoryAMayuscula';
+import { searchInterceptor } from 'src/interceptors/searchValido';
 
 @ApiTags('Events')
 @Controller('events')
@@ -90,6 +91,12 @@ export class EventsController {
   @Get('ofadmin')
   getEventOfUser(@Req() req:Request & {user:User}){
     return this.eventsService.getEventOfUser(req.user.email)
+  }
+
+  @UseInterceptors(searchInterceptor)
+  @Get('search')
+  buscar(@Query('keyword')keyword: string){
+    return this.eventsService.buscar(keyword)
   }
 
   @Get(':id')
