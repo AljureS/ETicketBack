@@ -96,7 +96,9 @@ export class PaymentsRepository {
           success: `${process.env.FRONT_URL}/`,
         },
 
+
         notification_url: `${process.env.BACK_URL}/orders/notificar?order=${ordenIntermediaGuardada.id}`,
+
       };
 
       const preferenceResponse = await this.preference.create({
