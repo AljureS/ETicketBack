@@ -199,6 +199,13 @@ export class EventsRepository {
     }
 
 
+    async buscar(keyword: string): Promise<Event[]> {
+      return await this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.tickets', 'tickets')
+      .where('event.name ILIKE :keyword', { keyword: `%${keyword}%` })
+      .getMany();
+    }
   async postEvent(event: PostEventDto, email: string) {
     const { category } = event;
     const categorySearched = await this.categoryRepository.findOne({
