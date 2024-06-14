@@ -43,12 +43,14 @@ export class PaymentsRepository {
 
   async createPreference(order: CreateOrderDto) {
     try {
-      const valorDeDolar = await axios.get('https://dolarapi.com/v1/dolares/oficial')
+      const valorDeDolar = await axios.get(
+        'https://dolarapi.com/v1/dolares/oficial',
+      );
       console.log(valorDeDolar.data.venta);
-      
-      order.tickets.forEach(ticket => {
-        ticket.price = ticket.price * valorDeDolar.data.venta
-      })
+
+      order.tickets.forEach((ticket) => {
+        ticket.price = ticket.price * valorDeDolar.data.venta;
+      });
       const items = await Promise.all(
         order.tickets.map(async (ticket) => {
           const ticketInDB = await this.ticketRepository.findOne({
@@ -79,7 +81,6 @@ export class PaymentsRepository {
           },
         );
 
-
         await this.tablaIntermediaTicketRepository.save(newTicketIntermedio);
         orderIntermedia.tablaIntermediaTicket.push(newTicketIntermedio);
       });
@@ -95,7 +96,8 @@ export class PaymentsRepository {
           success: `${process.env.FRONT_URL}/`,
         },
 
-        notification_url: `https://radioticket.onrender.com/orders/notificar?order=${ordenIntermediaGuardada.id}`,
+
+        notification_url: `${process.env.BACK_URL}/orders/notificar?order=${ordenIntermediaGuardada.id}`,
 
       };
 
@@ -114,85 +116,82 @@ export class PaymentsRepository {
     console.log('Inicio de notificar');
     let merchantOrderSearched;
     const { order } = query;
-    console.log('query:', query);
-    console.log('order:', order);
 
     const orderIntermedia = await this.tablaIntermediaOrderRepository.findOne({
+      where: { id: order },
+      relations: { tablaIntermediaTicket: true },
+    });
+
+    if (orderIntermedia.isUsed) {
+      return;
+    }
+
+    // Bloqueo para evitar condiciones de carrera
+    await this.tablaIntermediaOrderRepository.manager.transaction(async transactionalEntityManager => {
+      // Obtener y bloquear la orden intermedia sin hacer el LEFT JOIN
+      const lockedOrderIntermedia = await transactionalEntityManager.findOne(TablaIntermediaOrder, {
         where: { id: order },
-        relations: { tablaIntermediaTicket: true },
-    });
-    console.log('orderIntermedia:', orderIntermedia);
+        lock: { mode: "pessimistic_write" }
+      });
 
-    if (orderIntermedia.isUsed === true || orderIntermedia.isUsed === null) {
-        console.log('Order is already used or is null, returning.');
+      // Hacer el LEFT JOIN después de haber bloqueado la orden
+      const lockedOrderIntermediaWithTickets = await transactionalEntityManager.findOne(TablaIntermediaOrder, {
+        where: { id: order },
+        relations: { tablaIntermediaTicket: true }
+      });
+
+      if (lockedOrderIntermedia.isUsed) {
         return;
-    }
+      }
 
-    switch (query.topic) {
+      switch (query.topic) {
         case 'payment':
-            const paymentId = query.id;
-            console.log('Payment topic with paymentId:', paymentId);
-
-            const payment = await this.payment.get({ id: paymentId });
-            console.log('payment:', payment);
-
-            merchantOrderSearched = await this.merchantOrder.get({
-                merchantOrderId: payment.order.id,
-            });
-            console.log('merchantOrderSearched (payment):', merchantOrderSearched);
-            break;
+          const paymentId = query.id;
+          const payment = await this.payment.get({ id: paymentId });
+          merchantOrderSearched = await this.merchantOrder.get({
+            merchantOrderId: payment.order.id,
+          });
+          break;
         case 'merchant_order':
-            const orderId = query.id;
-            console.log('Merchant_order topic with orderId:', orderId);
-
-            merchantOrderSearched = await this.merchantOrder.get({
-                merchantOrderId: orderId,
-            });
-            console.log('merchantOrderSearched (merchant_order):', merchantOrderSearched);
-            break;
+          const orderId = query.id;
+          merchantOrderSearched = await this.merchantOrder.get({
+            merchantOrderId: orderId,
+          });
+          break;
         default:
-            console.log('Unknown topic, returning.');
-            return;
-    }
+          return;
+      }
 
-    const OrderAGuardar = {
-        userId: orderIntermedia.user,
-        paymentMethod: orderIntermedia.paymentMethod,
-        tickets: orderIntermedia.tablaIntermediaTicket,
-    };
-    console.log('OrderAGuardar:', OrderAGuardar);
-
-    orderIntermedia.isUsed = true;
-    await this.tablaIntermediaOrderRepository.save(orderIntermedia);
-    console.log('orderIntermedia marked as used and saved.');
-
-    let paidAmount = 0;
-    merchantOrderSearched.payments.forEach((payment) => {
+      let paidAmount = 0;
+      for (const payment of merchantOrderSearched.payments) {
         if (payment.status === 'approved') {
-            paidAmount += payment.transaction_amount;
+          paidAmount += payment.transaction_amount;
         }
-        console.log('Processed payment:', payment);
-    });
-    console.log('Total paidAmount:', paidAmount);
+      }
 
-    if (paidAmount >= merchantOrderSearched.total_amount) {
-        console.log('Paid amount is sufficient, adding new order.');
+      if (paidAmount >= merchantOrderSearched.total_amount) {
+        lockedOrderIntermedia.isUsed = true;
+        await transactionalEntityManager.save(lockedOrderIntermedia);
+
+        const OrderAGuardar = {
+          userId: lockedOrderIntermedia.user,
+          paymentMethod: lockedOrderIntermedia.paymentMethod,
+          tickets: lockedOrderIntermediaWithTickets.tablaIntermediaTicket,
+        };
+
         await this.orderRepository.addOrder(OrderAGuardar);
 
-        for(const ticket of orderIntermedia.tablaIntermediaTicket){
-            const ticketInDB = await this.ticketRepository.findOne({where:{id:ticket.id}});
-            console.log('ticketInDB before update:', ticketInDB);
-            
-            ticketInDB.stock -= ticket.quantity;
-            await this.ticketRepository.save(ticketInDB);
-            console.log('ticketInDB after update:', ticketInDB);
+        for (const ticket of lockedOrderIntermediaWithTickets.tablaIntermediaTicket) {
+          const ticketInDB = await this.ticketRepository.findOne({
+            where: { id: ticket.id },
+          });
+          ticketInDB.stock -= ticket.quantity;
+          await this.ticketRepository.save(ticketInDB);
         }
 
-        console.log('Order and tickets updated successfully. Redirecting...');
         return res.redirect(`${process.env.FRONT_URL}?success=true`);
-    } else {
-        console.log('Paid amount is not sufficient.');
-    }
-}
+      }
+    });
+  }
 
 }
