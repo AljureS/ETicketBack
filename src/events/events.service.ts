@@ -45,6 +45,9 @@ export class EventsService {
     return this.eventsRepository.getEventsByPrice(order, page, limit, category);
   }
 
+  buscar(keyword: string){
+    return this.eventsRepository.buscar(keyword)
+  }
 
   preLoadData() {
     return this.eventsRepository.preLoadData(); 

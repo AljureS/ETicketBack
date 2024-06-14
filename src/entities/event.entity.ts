@@ -47,6 +47,9 @@ export class Event {
   @Column()
   address:string;
 
+  @Column({ nullable: false, type: 'date' })
+  launchdate: Date;
+
   @Column({nullable:true})
   userEmail?:string
 
@@ -60,7 +63,6 @@ export class Event {
   @OneToMany(() => Ticket, (ticket) => ticket.event)
   @JoinColumn({ name: 'ticket_id' })
   ticketsVendidos: TicketVendido[];
-
 
   @OneToMany(() => Discount, (discount) => discount.event)
   @JoinColumn({ name: 'discount_id' })

@@ -75,6 +75,14 @@ export class PostEventDto {
   @IsString()
   @IsNotEmpty()
   address: string;
+
+  @ApiProperty({
+    description:"Debe ser un Date",
+    example:"2025/01/20"
+  })
+  @IsNotEmpty()
+  @IsDateString()
+  launchdate: Date;
   
   @ApiProperty({
     description: 'Lista de boletos',

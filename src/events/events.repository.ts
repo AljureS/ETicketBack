@@ -199,6 +199,13 @@ export class EventsRepository {
     }
 
 
+    async buscar(keyword: string): Promise<Event[]> {
+      return await this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.tickets', 'tickets')
+      .where('event.name ILIKE :keyword', { keyword: `%${keyword}%` })
+      .getMany();
+    }
   async postEvent(event: PostEventDto, email: string) {
     const { category } = event;
     const categorySearched = await this.categoryRepository.findOne({
@@ -227,7 +234,8 @@ export class EventsRepository {
       tickets: [],
       userEmail: email,
       imgUrl: event.imgUrl,
-      address:event.address
+      address:event.address,
+      launchdate:event.launchdate
     });
     console.log('llegue aqui');
 
@@ -299,7 +307,8 @@ export class EventsRepository {
         latitude: element.latitude,
         longitude: element.longitude,
         tickets: [],
-        address:element.address
+        address:element.address,
+        launchdate: element.launchdate
 
       });
 
