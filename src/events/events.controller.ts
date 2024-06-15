@@ -1,6 +1,6 @@
 import {
   Controller,
-  Param, 
+  Param,
   Query,
   Get,
   Post,
@@ -31,50 +31,89 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
-  getEvents(@Query('page') page: string, @Query('limit') limit: string, @Query('category') category:string) {
-    if (!page || !limit) return this.eventsService.getEvents(1, 5,category);
+  getEvents(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('category') category: string,
+  ) {
+    if (!page || !limit) return this.eventsService.getEvents(1, 5, category);
     return this.eventsService.getEvents(Number(page), Number(limit), category);
   }
 
   @Get('date')
-  getEventsByDate(@Query('page') page: string, @Query('limit') limit: string, @Query('category') category:string, @Query('order') order:'ascending' | 'descending') {
-    if (!page || !limit) return this.eventsService.getEventsByDate(1, 5, category, order);
-    return this.eventsService.getEventsByDate(Number(page), Number(limit), category, order);
+  getEventsByDate(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('category') category: string,
+    @Query('order') order: 'ascending' | 'descending',
+  ) {
+    if (!page || !limit)
+      return this.eventsService.getEventsByDate(1, 5, category, order);
+    return this.eventsService.getEventsByDate(
+      Number(page),
+      Number(limit),
+      category,
+      order,
+    );
   }
 
   @Get('all')
-  getAllEvents(){
+  getAllEvents() {
     return this.eventsService.getAllEvents();
   }
 
   @Get('alphabetical')
   getEventsAZ(
-      @Query('order') order: 'ascending' | 'descending',
-      @Query('page') page: string, 
-      @Query('limit') limit: string,
-      @Query('category') category:string
-    ) {
-    if (!page || !limit) return this.eventsService.getEventsAZ(order, 1, 5, category);
-    return this.eventsService.getEventsAZ(order, Number(page), Number(limit),category);
+    @Query('order') order: 'ascending' | 'descending',
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('category') category: string,
+  ) {
+    if (!page || !limit)
+      return this.eventsService.getEventsAZ(order, 1, 5, category);
+    return this.eventsService.getEventsAZ(
+      order,
+      Number(page),
+      Number(limit),
+      category,
+    );
   }
   @Get('bycategory')
-  getEventsByCategory(@Query('page') page: string, @Query('limit') limit: string, @Query('category') category:string) {
+  getEventsByCategory(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('category') category: string,
+  ) {
     console.log(category.toUpperCase());
-    
-    if (!page || !limit) return this.eventsService.getEventsByCategory(String(1), String(5), category.toUpperCase());
-    return this.eventsService.getEventsByCategory(page, limit,category.toUpperCase());
+
+    if (!page || !limit)
+      return this.eventsService.getEventsByCategory(
+        String(1),
+        String(5),
+        category.toUpperCase(),
+      );
+    return this.eventsService.getEventsByCategory(
+      page,
+      limit,
+      category.toUpperCase(),
+    );
   }
 
   @Get('price')
   getEventsByPrice(
     @Query('order') order: 'ascending' | 'descending',
-    @Query('page') page: string, 
+    @Query('page') page: string,
     @Query('limit') limit: string,
-    @Query('category') category: string
+    @Query('category') category: string,
   ) {
-    
-    if (!page || !limit) return this.eventsService.getEventsByPrice(order, 1, 5, category);
-    return this.eventsService.getEventsByPrice(order, Number(page), Number(limit), category);
+    if (!page || !limit)
+      return this.eventsService.getEventsByPrice(order, 1, 5, category);
+    return this.eventsService.getEventsByPrice(
+      order,
+      Number(page),
+      Number(limit),
+      category,
+    );
   }
 
   @ApiBearerAuth()
@@ -89,14 +128,14 @@ export class EventsController {
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuards, RoleGuard)
   @Get('ofadmin')
-  getEventOfUser(@Req() req:Request & {user:User}){
-    return this.eventsService.getEventOfUser(req.user.email)
+  getEventOfUser(@Req() req: Request & { user: User }) {
+    return this.eventsService.getEventOfUser(req.user.email);
   }
 
   @UseInterceptors(searchInterceptor)
   @Get('search')
-  buscar(@Query('keyword')keyword: string){
-    return this.eventsService.buscar(keyword)
+  buscar(@Query('keyword') keyword: string) {
+    return this.eventsService.buscar(keyword);
   }
 
   @Get(':id')
@@ -110,8 +149,8 @@ export class EventsController {
   @UseGuards(AuthGuards, RoleGuard)
   @Post()
   postEvent(@Body() event: PostEventDto, @Req() req: Request & { user: User }) {
-    console.log("llego hasta aca");
-    
+    console.log('llego hasta aca');
+
     const { email } = req.user;
     return this.eventsService.postEvent(event, email);
   }

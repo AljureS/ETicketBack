@@ -5,15 +5,15 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
-    constructor (private categoriesService: CategoriesService) {}
+  constructor(private categoriesService: CategoriesService) {}
 
-    @Get()
-    getCategories(){
-    return this.categoriesService.getCategories()
-    }
+  @Get()
+  getCategories() {
+    return this.categoriesService.getCategories();
+  }
 
-    @Get('seeder') 
-    addCategories(){
-        return this.categoriesService.addCategories()
-    }
+  @Get('seeder')
+  addCategories() {
+    return this.categoriesService.addCategories();
+  }
 }

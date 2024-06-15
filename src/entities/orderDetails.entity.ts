@@ -1,29 +1,32 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, JoinColumn } from "typeorm"
-import { v4 as uuid } from 'uuid'
-import { Order } from "./order.entity"
-import { Event } from "./event.entity"
-import { Ticket } from "./ticket.entity"
-
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  ManyToMany,
+  JoinColumn,
+} from 'typeorm';
+import { v4 as uuid } from 'uuid';
+import { Order } from './order.entity';
+import { Event } from './event.entity';
 
 @Entity({
-    name:"ordersDetails"
+  name: 'ordersDetails',
 })
-export class OrderDetails{
-    @PrimaryGeneratedColumn('uuid')
-    id: string = uuid()
+export class OrderDetails {
+  @PrimaryGeneratedColumn('uuid')
+  id: string = uuid();
 
-    @Column('decimal', { precision: 10, scale: 2, nullable: false })
-    price: number
+  @Column('decimal', { precision: 10, scale: 2, nullable: false })
+  price: number;
 
-    @OneToOne(() => Order, (order) => order.orderDetails)
-@JoinColumn()
-order: Order;
+  @OneToOne(() => Order, (order) => order.orderDetails)
+  @JoinColumn()
+  order: Order;
 
+  @ManyToMany(() => Event, (event) => event.orderDetails)
+  events: Event[];
 
-    @ManyToMany(()=> Event, (event)=> event.orderDetails)
-    events: Event[]
-
-    // @Column()
-    // tickets: Ticket[]
+  // @Column()
+  // tickets: Ticket[]
 }
-

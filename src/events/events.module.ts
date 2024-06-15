@@ -9,9 +9,9 @@ import { Ticket } from 'src/entities/ticket.entity';
 import { CloudinaryRepository } from 'src/cloudinary/cloudinary.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, Category, Ticket]) ],
+  imports: [TypeOrmModule.forFeature([Event, Category, Ticket])],
   controllers: [EventsController],
-  providers: [EventsService, EventsRepository,CloudinaryRepository],
+  providers: [EventsService, EventsRepository, CloudinaryRepository],
   exports: [TypeOrmModule], // Exporta TypeOrmModule para que otros módulos puedan usar EventRepository
 })
 export class EventsModule {}

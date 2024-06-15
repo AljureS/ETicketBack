@@ -3,13 +3,13 @@ import { CategoriesRepository } from './categories.respository';
 
 @Injectable()
 export class CategoriesService {
-    constructor(private categoriesRepository: CategoriesRepository) {}
+  constructor(private categoriesRepository: CategoriesRepository) {}
 
-    getCategories(){
-        return this.categoriesRepository.getCategories();
-    }
+  getCategories() {
+    return this.categoriesRepository.getCategories();
+  }
 
-    addCategories() {
-        return this.categoriesRepository.addCategories();
-    }
+  addCategories() {
+    return this.categoriesRepository.addCategories();
+  }
 }

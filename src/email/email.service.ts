@@ -19,15 +19,13 @@ export class EmailService {
         pass: process.env.NODEMAILER_PASSWORD, // Tu contraseña
       },
       tls: {
-        rejectUnauthorized: false // Estaba pidiendo conexion segura (Ya no es necesario)
-      }
+        rejectUnauthorized: false, // Estaba pidiendo conexion segura (Ya no es necesario)
+      },
     });
   }
 
   async sendConfirmationEmail(to: string, token: string) {
-
     const url = `${process.env.BACK_URL}/auth/confirm?token=${token}`;
-
 
     await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
@@ -163,30 +161,33 @@ export class EmailService {
     const pdfOptions = { format: 'Letter' }; // Puedes ajustar el formato según tus necesidades
 
     // Generar PDF desde HTML
-    pdf.create(htmlContent, pdfOptions).toFile(pdfPath, async function(err, res) {
-      if (err) return console.log(err);
+    pdf.create(htmlContent, pdfOptions).toFile(
+      pdfPath,
+      async function (err, res) {
+        if (err) return console.log(err);
 
-      const mailOptions = {
-        from: '"RadioTicket" <radioticket@gmail.com>',
-        to,
-        subject: 'Here are your tickets',
-        text: '"Carefully keep the following tickets and enjoy your event!".',
-        attachments: [
-          {
-            filename: 'tickets.pdf',
-            path: pdfPath,
-            contentType: 'application/pdf'
-          }
-        ]
-      };
+        const mailOptions = {
+          from: '"RadioTicket" <radioticket@gmail.com>',
+          to,
+          subject: 'Here are your tickets',
+          text: '"Carefully keep the following tickets and enjoy your event!".',
+          attachments: [
+            {
+              filename: 'tickets.pdf',
+              path: pdfPath,
+              contentType: 'application/pdf',
+            },
+          ],
+        };
 
-      // Enviar correo con los tickets adjuntos
-      await this.sendMail(mailOptions);
+        // Enviar correo con los tickets adjuntos
+        await this.sendMail(mailOptions);
 
-      // Limpiar directorio de códigos QR y archivo PDF después de enviar el correo
-      fs.rmdirSync(qrCodeDir, { recursive: true });
-      fs.unlinkSync(pdfPath);
-    }.bind(this));
+        // Limpiar directorio de códigos QR y archivo PDF después de enviar el correo
+        fs.rmdirSync(qrCodeDir, { recursive: true });
+        fs.unlinkSync(pdfPath);
+      }.bind(this),
+    );
   }
 
   // Función para enviar correo
@@ -197,5 +198,3 @@ export class EmailService {
 }
 
 // Uso: sendTickets('destinatario@example.com', tickets);
-
-

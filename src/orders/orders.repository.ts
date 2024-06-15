@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order.entity';
 import { OrderDetails } from 'src/entities/orderDetails.entity';
@@ -30,19 +34,19 @@ export class OrdersRepository {
 
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
-    
+
     private readonly emailService: EmailService,
   ) {}
 
   async addOrder(order: CreateOrderDto) {
     console.log(order);
-    
+
     const user = await this.userRepository.findOne({
       where: { id: order.userId },
     });
-    
+
     if (!user) {
-        throw new NotFoundException("Usuario No Encontrado");
+      throw new NotFoundException('Usuario No Encontrado');
     }
 
     const newOrder = new Order();
@@ -52,25 +56,37 @@ export class OrdersRepository {
 
     const ticketsParaEnviarPorMail: TicketVendido[] = [];
     let total = 0;
-    const listaDeTicketsEnDB = await this.ticketRepository.find({relations:{event:true}});
+    const listaDeTicketsEnDB = await this.ticketRepository.find({
+      relations: { event: true },
+    });
 
     for (const ticket of order.tickets) {
-        const ticketBuscado = listaDeTicketsEnDB.find(ticketEnDB => ticketEnDB.id === ticket.id);
+      const ticketBuscado = listaDeTicketsEnDB.find(
+        (ticketEnDB) => ticketEnDB.id === ticket.id,
+      );
 
-        if (ticketBuscado) {
-            // Crea y guarda los tickets vendidos
-            const nuevosTickets = await this.crearTicketsParaEnviarPorMail(ticketBuscado, ticket.quantity,order.userId);
-            ticketsParaEnviarPorMail.push(...nuevosTickets);
+      if (ticketBuscado) {
+        // Crea y guarda los tickets vendidos
+        const nuevosTickets = await this.crearTicketsParaEnviarPorMail(
+          ticketBuscado,
+          ticket.quantity,
+          order.userId,
+        );
+        ticketsParaEnviarPorMail.push(...nuevosTickets);
 
-            total += Number(ticket.price * ticket.quantity);
+        total += Number(ticket.price * ticket.quantity);
 
-            // Verifica si el ticket ya está en la lista
-            if (ticketsParaEnviarPorMail.some(tic => tic.id === ticketBuscado.id)) {
-                throw new BadRequestException("No se puede mandar dos veces el mismo ticket");
-            }
-        } else {
-            throw new BadRequestException("No existe ese tipo de ticket");
+        // Verifica si el ticket ya está en la lista
+        if (
+          ticketsParaEnviarPorMail.some((tic) => tic.id === ticketBuscado.id)
+        ) {
+          throw new BadRequestException(
+            'No se puede mandar dos veces el mismo ticket',
+          );
         }
+      } else {
+        throw new BadRequestException('No existe ese tipo de ticket');
+      }
     }
 
     // Guarda los detalles de la compra
@@ -82,31 +98,32 @@ export class OrdersRepository {
     // Envía los tickets por correo electrónico
     await this.emailService.sendTickets(user.email, ticketsParaEnviarPorMail);
 
-    return "Gracias por comprar en radioticket, por mail le llegaran los tickets que compró, revise el spam"
-}
+    return 'Gracias por comprar en radioticket, por mail le llegaran los tickets que compró, revise el spam';
+  }
 
-
-  async descontarStock(ticket:Ticket) {
+  async descontarStock(ticket: Ticket) {
     await this.ticketRepository.save(ticket);
   }
 
-  async crearTicketsParaEnviarPorMail(ticket:Ticket, quantity:number,userId):Promise<TicketVendido[]>{
-    
-    let tickets = []
-    for(let i = 0; i < quantity ; i++){
-      
+  async crearTicketsParaEnviarPorMail(
+    ticket: Ticket,
+    quantity: number,
+    userId,
+  ): Promise<TicketVendido[]> {
+    let tickets = [];
+    for (let i = 0; i < quantity; i++) {
       const newTicketAVender = this.ticketVendidoRepository.create({
         event: ticket.event,
-        zone:ticket.zone,
-        isUsed:false,
-        userId
-      })
-      const ticketVendidoEnDB = await this.ticketVendidoRepository.save(newTicketAVender)
-      tickets = [...tickets, ticketVendidoEnDB]
-      
+        zone: ticket.zone,
+        isUsed: false,
+        userId,
+      });
+      const ticketVendidoEnDB =
+        await this.ticketVendidoRepository.save(newTicketAVender);
+      tickets = [...tickets, ticketVendidoEnDB];
     }
-    
-    return tickets
+
+    return tickets;
   }
 
   async getOrder(id: string) {
@@ -132,9 +149,14 @@ export class OrdersRepository {
     }
   }
 
-  async ofUser(userEmail){
-    const user = await this.userRepository.findOne({where:{email:userEmail}})
-    const orderSearched = await this.ticketVendidoRepository.find({where:{userId:user.id},relations:{event:true}})
+  async ofUser(userEmail) {
+    const user = await this.userRepository.findOne({
+      where: { email: userEmail },
+    });
+    const orderSearched = await this.ticketVendidoRepository.find({
+      where: { userId: user.id },
+      relations: { event: true },
+    });
     return orderSearched;
   }
 
