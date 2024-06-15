@@ -9,6 +9,6 @@ import { TicketsRepository } from './tickets.repository';
 @Module({
   imports: [TypeOrmModule.forFeature([Event, Ticket])],
   providers: [TicketsService, TicketsRepository],
-  controllers: [TicketsController]
+  controllers: [TicketsController],
 })
 export class TicketsModule {}

@@ -47,7 +47,7 @@ import { WebsocketModule } from './websocket/websocket.module';
     DiscountModule,
     WebsocketModule,
     // HttpModule.register({
-    //   httpsAgent: new https.Agent({  
+    //   httpsAgent: new https.Agent({
     //     rejectUnauthorized: true
     //   }),
     // }),

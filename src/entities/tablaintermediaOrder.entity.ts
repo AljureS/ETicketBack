@@ -2,14 +2,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  OneToOne,
   OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { User } from './user.entity';
-import { OrderDetails } from './orderDetails.entity';
 import { TablaIntermediaTicket } from './TablaIntermediaTicket.entity';
 
 @Entity({
@@ -25,8 +21,8 @@ export class TablaIntermediaOrder {
   @Column()
   paymentMethod: string;
 
-  @Column({default:false})
-  isUsed:boolean
+  @Column({ default: false })
+  isUsed: boolean;
 
   @OneToMany(
     () => TablaIntermediaTicket,

@@ -1,7 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { Repository } from 'typeorm';
 import { Event } from 'src/entities/event.entity';
 import { CloudinaryRepository } from './cloudinary.repository';
@@ -39,8 +37,8 @@ export class CloudinaryService {
     return foundEvent;
   }
 
-  async uploadImage(file:Express.Multer.File){
+  async uploadImage(file: Express.Multer.File) {
     const response = await this.cloudinaryRepository.uploadImage(file);
-    return response
+    return response;
   }
 }

@@ -19,9 +19,10 @@ export class TicketsRepository {
   async getTicketById(id: string) {
     return await this.ticketRepository.findOne({ where: { id } });
   }
-  async getTicketsByEventName(name:string){
-    const evento = await this.eventRepository.findOne({where:{name}})
-    if(!evento) throw new NotFoundException("No se encontró el evento en cuestion")
-    return evento.tickets
+  async getTicketsByEventName(name: string) {
+    const evento = await this.eventRepository.findOne({ where: { name } });
+    if (!evento)
+      throw new NotFoundException('No se encontró el evento en cuestion');
+    return evento.tickets;
   }
 }

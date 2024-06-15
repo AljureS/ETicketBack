@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Tickets')
 @Controller('tickets')
@@ -21,6 +21,4 @@ export class TicketsController {
   getTicketsByEventId(@Body('name') name: string) {
     return this.ticketsService.getTicketsByEventName(name);
   }
-
-  
 }
