@@ -8,10 +8,8 @@ import {
   IsNumber,
   IsOptional,
 } from 'class-validator';
-import { isFloat } from 'validator';
 
 export class CreateOrderDto {
-  
   @IsOptional()
   @IsString()
   @IsUUID('4')
@@ -22,7 +20,7 @@ export class CreateOrderDto {
    * @example paypal
    */
   @IsString()
-  paymentMethod: string
+  paymentMethod: string;
 
   /**
    * Los productos deben ser un array de objetos que contengan únicamente el id del producto
@@ -44,5 +42,5 @@ class TicketDto {
   quantity: number;
 
   @IsNumber()
-  price:number
+  price: number;
 }

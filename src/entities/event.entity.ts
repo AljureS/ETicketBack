@@ -1,7 +1,7 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column, 
+  Column,
   ManyToOne,
   ManyToMany,
   OneToMany,
@@ -33,22 +33,25 @@ export class Event {
   imgUrl: string;
 
   @ManyToOne(() => Category, (category) => category.event)
-  category: Category; 
+  category: Category;
 
   @Column({ nullable: false, type: 'date' })
   date: Date;
 
   @Column()
-  latitude: string; 
+  latitude: string;
 
   @Column()
   longitude: string;
 
   @Column()
-  address:string;
+  address: string;
 
-  @Column({nullable:true})
-  userEmail?:string
+  @Column({ nullable: false, type: 'date' })
+  launchdate: Date;
+
+  @Column({ nullable: true })
+  userEmail?: string;
 
   @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.events)
   orderDetails: OrderDetails[];
@@ -60,7 +63,6 @@ export class Event {
   @OneToMany(() => Ticket, (ticket) => ticket.event)
   @JoinColumn({ name: 'ticket_id' })
   ticketsVendidos: TicketVendido[];
-
 
   @OneToMany(() => Discount, (discount) => discount.event)
   @JoinColumn({ name: 'discount_id' })

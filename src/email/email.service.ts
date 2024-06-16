@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import * as QRCode from 'qrcode';
-import { TicketVendido } from 'src/entities/ticketVendido.entity';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as pdf from 'html-pdf';
 
 @Injectable()
 export class EmailService {
@@ -17,15 +19,13 @@ export class EmailService {
         pass: process.env.NODEMAILER_PASSWORD, // Tu contraseña
       },
       tls: {
-        rejectUnauthorized: false // Estaba pidiendo conexion segura (Ya no es necesario)
-      }
+        rejectUnauthorized: false, // Estaba pidiendo conexion segura (Ya no es necesario)
+      },
     });
   }
 
   async sendConfirmationEmail(to: string, token: string) {
-
     const url = `${process.env.BACK_URL}/auth/confirm?token=${token}`;
-
 
     await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
@@ -86,83 +86,115 @@ export class EmailService {
     });
   }
 
-  async sendTickets(to: string, tickets: TicketVendido[]) {
-    // Genera los códigos QR para cada ticket
-    const ticketDetails = await Promise.all(tickets.map(async (ticket) => {
-      const qrCodeDataURL = await QRCode.toDataURL(ticket.id);
-      return `
-        <div style="border-bottom: 1px solid #ccc; padding-bottom: 20px;">
-          <p>Event: ${ticket.event.name}</p>
-          <p>Date: ${ticket.event.date}</p>
-          <p>Latitude: ${ticket.event.latitude}</p>
-          <p>Longitude: ${ticket.event.longitude}</p>
-          <p>ID del Ticket: ${ticket.id}</p>
-          <p>Ticket Tipe: ${ticket.zone}</p>
-          <p> QR Code :</p>
-          <img src="${qrCodeDataURL}" alt="Código QR" />
-        </div>
-      `;
-    }));
-    
-    const emailContent = `
+  async sendTickets(to: string, tickets: any[]) {
+    const qrCodeDir = './qrcodes';
+    if (!fs.existsSync(qrCodeDir)) {
+      fs.mkdirSync(qrCodeDir);
+    }
+
+    const pdfPath = 'tickets.pdf';
+    let htmlContent = `
       <!DOCTYPE html>
       <html lang="en">
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-              body {
-                  font-family: Arial, sans-serif;
+              .ticket {
+                  margin-bottom: 20px;
+                  padding: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  overflow: auto; /* Clearfix */
+                  position:relative;
               }
-              .container {
-                  padding: 20px;
-                  background-color: #f4f4f4;
-                  border-radius: 10px;
-                  max-width: 600px;
-                  margin: auto;
+              .ticket-info {
+                  float: left;
+                  width: calc(100% - 120px); /* Ancho del texto menos el ancho del QR */
               }
-              .header {
-                  background-color: #4CAF50;
-                  color: white;
-                  padding: 10px 0;
-                  border-radius: 10px 10px 0 0;
-                  text-align: center;
+              .qr-code {
+                  position:absolute;
+                  right:0;
+                  top:0;
+                  width: 200px;
+                  height: 200px;
+              }
+              .logo{
+                width:170px;
+                margin-left:calc(50% - 85px);
+                margin-bottom:20px;
               }
           </style>
       </head>
       <body>
-          <div class="container">
-              <div class="header">
-                  <h1>Tus Tickets de Radioticket</h1>
-              </div>
-              <p>Hi,</p>
-              <p>¡Thanks for your purchase! Following more information about your tickets:</p>
-              ${ticketDetails.join('')}
-              <p>Please present these QR codes upon entering the event. You can display them from your mobile device or print them out.</p>
-              <p>If you have any questions or need assistance, please do not hesitate to contact us at [Support Email] or call us at [Phone Number].</p>
-              <p>¡See you ate the event!</p>
-              <p>[Name of the company]</p>
+          <div style="margin: 50px;">
+          <img class="logo" alt="Logo Radioticket" src="https://res.cloudinary.com/dqowrhckh/image/upload/v1718308196/Imagen_de_WhatsApp_2024-05-21_a_las_15.56.47_f7685e5b_zrtsjw.jpg">
+          <p>Equipo Radioticket</p>
+          `; // Contenedor principal
+
+    for (const ticket of tickets) {
+      const qrCodeData = await QRCode.toDataURL(ticket.id);
+      const qrCodeFileName = `qr_code_${ticket.id}.png`;
+
+      fs.writeFileSync(path.join(qrCodeDir, qrCodeFileName), qrCodeData);
+
+      htmlContent += `
+        <div class="ticket">
+          <div class="ticket-info">
+              <p><strong>Event:</strong> ${ticket.event.name}</p>
+              <p><strong>Date:</strong> ${ticket.event.date}</p>
+              <p><strong>Latitude:</strong> ${ticket.event.latitude}</p>
+              <p><strong>Longitude:</strong> ${ticket.event.longitude}</p>
+              <p><strong>ID del Ticket:</strong> ${ticket.id}</p>
+              <p><strong>Ticket Type:</strong> ${ticket.zone}</p>
           </div>
+          <img class="qr-code" src="${qrCodeData}" alt="QR Code">
+        </div>`;
+    }
+
+    htmlContent += `
+          </img>
       </body>
-      </html>
-    `;
+      </html>`;
 
-    const attachments = await Promise.all(tickets.map(async (ticket) => {
-      const qrCodeBuffer = await QRCode.toBuffer(ticket.id);
-      return {
-          filename: `qr_code_${ticket.id}.png`,
-          content: qrCodeBuffer,
-          encoding: 'base64',
-      };
-  }));
-  
-  await this.transporter.sendMail({
-      from: '"RadioTicket" <radioticket@gmail.com>',
-      to,
-      subject: 'Here are your tickets',
-      html: emailContent,
-      attachments: attachments,
-  });
+    // Opciones para el PDF
+    const pdfOptions = { format: 'Letter' }; // Puedes ajustar el formato según tus necesidades
+
+    // Generar PDF desde HTML
+    pdf.create(htmlContent, pdfOptions).toFile(
+      pdfPath,
+      async function (err, res) {
+        if (err) return console.log(err);
+
+        const mailOptions = {
+          from: '"RadioTicket" <radioticket@gmail.com>',
+          to,
+          subject: 'Here are your tickets',
+          text: '"Carefully keep the following tickets and enjoy your event!".',
+          attachments: [
+            {
+              filename: 'tickets.pdf',
+              path: pdfPath,
+              contentType: 'application/pdf',
+            },
+          ],
+        };
+
+        // Enviar correo con los tickets adjuntos
+        await this.sendMail(mailOptions);
+
+        // Limpiar directorio de códigos QR y archivo PDF después de enviar el correo
+        fs.rmdirSync(qrCodeDir, { recursive: true });
+        fs.unlinkSync(pdfPath);
+      }.bind(this),
+    );
+  }
+
+  // Función para enviar correo
+  async sendMail(mailOptions) {
+    // Enviar correo
+    await this.transporter.sendMail(mailOptions);
+  }
 }
 
-}
+// Uso: sendTickets('destinatario@example.com', tickets);

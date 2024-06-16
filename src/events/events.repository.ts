@@ -155,7 +155,8 @@ export class EventsRepository {
 
     let categoryFilter = {}; // Objeto vacío para filtrar todas las categorías si no se proporciona una
 
-    if (category) { // Si se proporciona una categoría, filtrar por ella
+    if (category) {
+      // Si se proporciona una categoría, filtrar por ella
       const categoryEntity = await this.categoryRepository.findOne({
         where: { name: category.toUpperCase() },
       });
@@ -193,12 +194,21 @@ export class EventsRepository {
       .getMany();
 
     return events;
-}
-    async getEventOfUser(email:string){
-      return await this.eventsRepository.find({where:{userEmail:email},relations:{tickets:true, category:true}})
-    }
+  }
+  async getEventOfUser(email: string) {
+    return await this.eventsRepository.find({
+      where: { userEmail: email },
+      relations: { tickets: true, category: true },
+    });
+  }
 
-
+  async buscar(keyword: string): Promise<Event[]> {
+    return await this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.tickets', 'tickets')
+      .where('event.name ILIKE :keyword', { keyword: `%${keyword}%` })
+      .getMany();
+  }
   async postEvent(event: PostEventDto, email: string) {
     const { category } = event;
     const categorySearched = await this.categoryRepository.findOne({
@@ -227,7 +237,8 @@ export class EventsRepository {
       tickets: [],
       userEmail: email,
       imgUrl: event.imgUrl,
-      address:event.address
+      address: event.address,
+      launchdate: event.launchdate,
     });
     console.log('llegue aqui');
 
@@ -279,9 +290,9 @@ export class EventsRepository {
   }
 
   async preLoadData(): Promise<string> {
-    const count = await this.eventsRepository.count()
-    if(count > 0){
-      throw new BadRequestException('Ya existen eventos en la tabla')
+    const count = await this.eventsRepository.count();
+    if (count > 0) {
+      throw new BadRequestException('Ya existen eventos en la tabla');
     }
     const categories = await this.categoryRepository.find();
 
@@ -299,8 +310,8 @@ export class EventsRepository {
         latitude: element.latitude,
         longitude: element.longitude,
         tickets: [],
-        address:element.address
-
+        address: element.address,
+        launchdate: element.launchdate,
       });
 
       await this.eventsRepository.save(newEvent);

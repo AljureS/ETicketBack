@@ -9,20 +9,17 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
-export class EmailInterceptor implements NestInterceptor {
+export class searchInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const { email } = context.switchToHttp().getRequest().body;
+    const { keyword } = context.switchToHttp().getRequest().query;
 
-    if (!email)
+    if (!keyword || typeof keyword !== 'string')
       return next
         .handle()
         .pipe(catchError(() => throwError(() => new BadGatewayException())));
 
-    const emailMinuscula = email.toLowerCase();
-    context.switchToHttp().getRequest().body.email = emailMinuscula;
-    const now = Date.now();
-    return next
-      .handle()
-      .pipe(tap(() => console.log(`After... ${Date.now() - now}ms`)));
+    const keywordMinuscula = keyword.toLowerCase();
+    context.switchToHttp().getRequest().body.keyword = keywordMinuscula;
+    return next.handle().pipe(tap(() => console.log(`After... ms`)));
   }
 }

@@ -6,11 +6,9 @@ import {
   Preference,
   MerchantOrder,
 } from 'mercadopago';
-import { PreferenceResponse } from 'mercadopago/dist/clients/preference/commonTypes';
 import { CreateOrderDto } from 'src/dtos/createOrder.dto';
 import { Ticket } from 'src/entities/ticket.entity';
 import { Repository } from 'typeorm';
-import { OrdersService } from './orders.service';
 import { OrdersRepository } from './orders.repository';
 import { TablaIntermediaOrder } from 'src/entities/tablaintermediaOrder.entity';
 import { TablaIntermediaTicket } from 'src/entities/TablaIntermediaTicket.entity';
@@ -43,12 +41,14 @@ export class PaymentsRepository {
 
   async createPreference(order: CreateOrderDto) {
     try {
-      const valorDeDolar = await axios.get('https://dolarapi.com/v1/dolares/oficial')
+      const valorDeDolar = await axios.get(
+        'https://dolarapi.com/v1/dolares/oficial',
+      );
       console.log(valorDeDolar.data.venta);
-      
-      order.tickets.forEach(ticket => {
-        ticket.price = ticket.price * valorDeDolar.data.venta
-      })
+
+      order.tickets.forEach((ticket) => {
+        ticket.price = ticket.price * valorDeDolar.data.venta;
+      });
       const items = await Promise.all(
         order.tickets.map(async (ticket) => {
           const ticketInDB = await this.ticketRepository.findOne({
@@ -79,7 +79,6 @@ export class PaymentsRepository {
           },
         );
 
-
         await this.tablaIntermediaTicketRepository.save(newTicketIntermedio);
         orderIntermedia.tablaIntermediaTicket.push(newTicketIntermedio);
       });
@@ -96,7 +95,6 @@ export class PaymentsRepository {
         },
 
         notification_url: `${process.env.BACK_URL}/orders/notificar?order=${ordenIntermediaGuardada.id}`,
-
       };
 
       const preferenceResponse = await this.preference.create({
@@ -111,59 +109,90 @@ export class PaymentsRepository {
   }
 
   async notificar(query, res) {
+    console.log('Inicio de notificar');
     let merchantOrderSearched;
     const { order } = query;
+
     const orderIntermedia = await this.tablaIntermediaOrderRepository.findOne({
       where: { id: order },
       relations: { tablaIntermediaTicket: true },
     });
-    if (orderIntermedia.isUsed === true || orderIntermedia.isUsed === null) {
+
+    if (orderIntermedia.isUsed) {
       return;
     }
-    switch (query.topic) {
-      case 'payment':
-        const paymentId = query.id;
 
-        const payment = await this.payment.get({ id: paymentId });
-        merchantOrderSearched = await this.merchantOrder.get({
-          merchantOrderId: payment.order.id,
-        });
-        break;
-      case 'merchant_order':
-        const orderId = query.id;
-        merchantOrderSearched = await this.merchantOrder.get({
-          merchantOrderId: orderId,
-        });
-        break;
-      default:
-        return;
-    }
-    
-    const OrderAGuardar = {
-      userId: orderIntermedia.user,
-      paymentMethod: orderIntermedia.paymentMethod,
-      tickets: orderIntermedia.tablaIntermediaTicket,
-    };
-    
-    orderIntermedia.isUsed = true
-    await this.tablaIntermediaOrderRepository.save(orderIntermedia)
-    let paidAmount = 0;
-    merchantOrderSearched.payments.forEach((payment) => {
-      if (payment.status === 'approved') {
-        paidAmount += payment.transaction_amount;
-      }
-    });
-    if (paidAmount >= merchantOrderSearched.total_amount) {
-      await this.orderRepository.addOrder(OrderAGuardar);
-      for(const ticket of orderIntermedia.tablaIntermediaTicket){
-        const ticketInDB = await this.ticketRepository.findOne({where:{id:ticket.id}})
-        ticketInDB.stock -= ticket.quantity
-        await this.ticketRepository.save(ticketInDB)
-      }
-      // Responde con los datos del cuerpo de la respuesta de PayPal
-      return res.redirect(
-        `${process.env.FRONT_URL}?success=true`,
-      );
-    }
+    // Bloqueo para evitar condiciones de carrera
+    await this.tablaIntermediaOrderRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        // Obtener y bloquear la orden intermedia sin hacer el LEFT JOIN
+        const lockedOrderIntermedia = await transactionalEntityManager.findOne(
+          TablaIntermediaOrder,
+          {
+            where: { id: order },
+            lock: { mode: 'pessimistic_write' },
+          },
+        );
+
+        // Hacer el LEFT JOIN después de haber bloqueado la orden
+        const lockedOrderIntermediaWithTickets =
+          await transactionalEntityManager.findOne(TablaIntermediaOrder, {
+            where: { id: order },
+            relations: { tablaIntermediaTicket: true },
+          });
+
+        if (lockedOrderIntermedia.isUsed) {
+          return;
+        }
+
+        switch (query.topic) {
+          case 'payment':
+            const paymentId = query.id;
+            const payment = await this.payment.get({ id: paymentId });
+            merchantOrderSearched = await this.merchantOrder.get({
+              merchantOrderId: payment.order.id,
+            });
+            break;
+          case 'merchant_order':
+            const orderId = query.id;
+            merchantOrderSearched = await this.merchantOrder.get({
+              merchantOrderId: orderId,
+            });
+            break;
+          default:
+            return;
+        }
+
+        let paidAmount = 0;
+        for (const payment of merchantOrderSearched.payments) {
+          if (payment.status === 'approved') {
+            paidAmount += payment.transaction_amount;
+          }
+        }
+
+        if (paidAmount >= merchantOrderSearched.total_amount) {
+          lockedOrderIntermedia.isUsed = true;
+          await transactionalEntityManager.save(lockedOrderIntermedia);
+
+          const OrderAGuardar = {
+            userId: lockedOrderIntermedia.user,
+            paymentMethod: lockedOrderIntermedia.paymentMethod,
+            tickets: lockedOrderIntermediaWithTickets.tablaIntermediaTicket,
+          };
+
+          await this.orderRepository.addOrder(OrderAGuardar);
+
+          for (const ticket of lockedOrderIntermediaWithTickets.tablaIntermediaTicket) {
+            const ticketInDB = await this.ticketRepository.findOne({
+              where: { id: ticket.id },
+            });
+            ticketInDB.stock -= ticket.quantity;
+            await this.ticketRepository.save(ticketInDB);
+          }
+
+          return res.redirect(`${process.env.FRONT_URL}?success=true`);
+        }
+      },
+    );
   }
 }

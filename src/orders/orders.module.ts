@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
-import { OrdersRepository } from './orders.repository';// Importa EntitiesModule
+import { OrdersRepository } from './orders.repository'; // Importa EntitiesModule
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from 'src/entities/order.entity';
 import { OrderDetails } from 'src/entities/orderDetails.entity';
@@ -18,17 +18,23 @@ import { WebhookController } from './webhookPaypal.controller';
 
 @Module({
   imports: [
-  TypeOrmModule.forFeature([Order]),
-  TypeOrmModule.forFeature([OrderDetails]),
-  TypeOrmModule.forFeature([User]),
-  TypeOrmModule.forFeature([Event]),
-  TypeOrmModule.forFeature([Ticket]),
-  TypeOrmModule.forFeature([TicketVendido]),
-  TypeOrmModule.forFeature([TablaIntermediaTicket]),
-  TypeOrmModule.forFeature([TablaIntermediaOrder]),
-  TypeOrmModule.forFeature([Planes]),
-],
-  controllers: [OrdersController,WebhookController],
-  providers: [OrdersService, OrdersRepository,PaymentsRepository,EmailService, PaypalRepository]
+    TypeOrmModule.forFeature([Order]),
+    TypeOrmModule.forFeature([OrderDetails]),
+    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Event]),
+    TypeOrmModule.forFeature([Ticket]),
+    TypeOrmModule.forFeature([TicketVendido]),
+    TypeOrmModule.forFeature([TablaIntermediaTicket]),
+    TypeOrmModule.forFeature([TablaIntermediaOrder]),
+    TypeOrmModule.forFeature([Planes]),
+  ],
+  controllers: [OrdersController, WebhookController],
+  providers: [
+    OrdersService,
+    OrdersRepository,
+    PaymentsRepository,
+    EmailService,
+    PaypalRepository,
+  ],
 })
 export class OrdersModule {}

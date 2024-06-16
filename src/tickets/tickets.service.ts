@@ -11,6 +11,6 @@ export class TicketsService {
     return this.ticketsRepository.getTicketById(id);
   }
   getTicketsByEventName(name: string) {
-    return this.ticketsRepository.getTicketsByEventName(name)
+    return this.ticketsRepository.getTicketsByEventName(name);
   }
 }

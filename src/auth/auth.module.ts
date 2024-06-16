@@ -10,17 +10,20 @@ import { PassportModule } from '@nestjs/passport';
 // import { Auth0Strategy } from './auth0.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { config as dotenvConfig } from 'dotenv';
-import { requiresAuth } from 'express-openid-connect';
 dotenvConfig({ path: '.env.development' });
+
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), UserModule, PassportModule,
-  JwtModule.register({
-    secret: process.env.JWT_SECRET, // 'YOUR_JWT_SECRET',
-    signOptions: { expiresIn: '60m' },
-  }),
-], 
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    UserModule,
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET, // 'YOUR_JWT_SECRET',
+      signOptions: { expiresIn: '60m' },
+    }),
+  ],
   controllers: [AuthController],
-  providers: [AuthService, UserRepository, EmailService/*, Auth0Strategy*/ ],
+  providers: [AuthService, UserRepository, EmailService /*, Auth0Strategy*/],
   exports: [AuthService],
 })
 export class AuthModule implements NestModule {
