@@ -6,39 +6,54 @@ import { Repository } from 'typeorm';
 @Controller('webhook')
 export class WebhookController {
   constructor(
-    @InjectRepository(User) 
-        private readonly userRepository: Repository<User>
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   @Post('/paypal')
   async handlePayPalWebhook(@Req() req, @Res() res) {
     const event = req.body;
     console.log(event.resource.links);
-    
+
     try {
       switch (event.event_type) {
         case 'BILLING.SUBSCRIPTION.CREATED':
           // Lógica para manejar la creación de una suscripción
-          await this.userRepository.update({email:event.resource.subscriber.email_address}, {isPremium:true});
+          await this.userRepository.update(
+            { email: event.resource.subscriber.email_address },
+            { isPremium: true },
+          );
 
           break;
-          case 'BILLING.SUBSCRIPTION.ACTIVATED':
+        case 'BILLING.SUBSCRIPTION.ACTIVATED':
           // Lógica para manejar la creación de una suscripción
-          await this.userRepository.update({email:event.resource.subscriber.email_address}, {isPremium:true});
+          await this.userRepository.update(
+            { email: event.resource.subscriber.email_address },
+            { isPremium: true },
+          );
 
           break;
         case 'BILLING.SUBSCRIPTION.CANCELLED':
           // Lógica para manejar la cancelación de una suscripción
-          await this.userRepository.update({email:event.resource.subscriber.email_address}, {isPremium:false});
+          await this.userRepository.update(
+            { email: event.resource.subscriber.email_address },
+            { isPremium: false },
+          );
           break;
         case 'PAYMENT.SALE.COMPLETED':
           // Lógica para manejar un pago completado
-          await this.userRepository.update({email:event.resource.subscriber.email_address}, {isPremium:true});
+          await this.userRepository.update(
+            { email: event.resource.subscriber.email_address },
+            { isPremium: true },
+          );
 
           break;
         case 'PAYMENT.SALE.DENIED':
           // Lógica para manejar un pago fallido
-          await this.userRepository.update({email:event.resource.subscriber.email_address}, {isPremium:false});
+          await this.userRepository.update(
+            { email: event.resource.subscriber.email_address },
+            { isPremium: false },
+          );
 
           break;
         // Agrega más casos según los eventos que hayas configurado

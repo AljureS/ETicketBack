@@ -8,7 +8,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { EmailModule } from 'src/email/email.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]),EmailModule],
+  imports: [TypeOrmModule.forFeature([User]), EmailModule],
   controllers: [UserController],
   providers: [UserService, UserRepository, AuthService],
   exports: [UserService, UserRepository],

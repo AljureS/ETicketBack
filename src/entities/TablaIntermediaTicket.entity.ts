@@ -5,8 +5,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
-import { Event } from './event.entity';
 import { TablaIntermediaOrder } from './tablaintermediaOrder.entity';
 
 @Entity({
@@ -15,7 +13,7 @@ import { TablaIntermediaOrder } from './tablaintermediaOrder.entity';
 export class TablaIntermediaTicket {
   @PrimaryGeneratedColumn()
   idFicticio: string;
-  
+
   @Column()
   id: string;
 

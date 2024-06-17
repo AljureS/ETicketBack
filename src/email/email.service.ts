@@ -19,15 +19,13 @@ export class EmailService {
         pass: process.env.NODEMAILER_PASSWORD, // Tu contraseña
       },
       tls: {
-        rejectUnauthorized: false // Estaba pidiendo conexion segura (Ya no es necesario)
-      }
+        rejectUnauthorized: false, // Estaba pidiendo conexion segura (Ya no es necesario)
+      },
     });
   }
 
   async sendConfirmationEmail(to: string, token: string) {
-
     const url = `${process.env.BACK_URL}/auth/confirm?token=${token}`;
-
 
     await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
@@ -85,6 +83,60 @@ export class EmailService {
       </body>
       </html>
       `,
+    });
+  }
+
+  async sendResetPasswordEmail(to: string, resetUrl: string) {
+    await this.transporter.sendMail({
+      from: '"RadioTicket" <radioticket@gmail.com>',
+      to,
+      subject: 'Restablecimiento de contraseña',
+      text: `Haga clic en el siguiente enlace para restablecer su contraseña: ${resetUrl}`,
+      html: `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+              }
+              .container {
+                  padding: 20px;
+                  text-align: center;
+                  background-color: #f4f4f4;
+                  border-radius: 10px;
+                  max-width: 600px;
+                  margin: auto;
+              }
+              .header {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 10px 0;
+                  border-radius: 10px 10px 0 0;
+              }
+              .button {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 15px 25px;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  margin-top: 20px;
+                  display: inline-block;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>Restablecimiento de contraseña</h1>
+              </div>
+              <p>Haga clic en el siguiente enlace para restablecer su contraseña:</p>
+              <a href="${resetUrl}" class="button">Restablecer contraseña</a>
+              <p>Si no solicitó un restablecimiento de contraseña, por favor ignore este correo.</p>
+          </div>
+      </body>
+      </html>`,
     });
   }
 
@@ -163,30 +215,33 @@ export class EmailService {
     const pdfOptions = { format: 'Letter' }; // Puedes ajustar el formato según tus necesidades
 
     // Generar PDF desde HTML
-    pdf.create(htmlContent, pdfOptions).toFile(pdfPath, async function(err, res) {
-      if (err) return console.log(err);
+    pdf.create(htmlContent, pdfOptions).toFile(
+      pdfPath,
+      async function (err, res) {
+        if (err) return console.log(err);
 
-      const mailOptions = {
-        from: '"RadioTicket" <radioticket@gmail.com>',
-        to,
-        subject: 'Here are your tickets',
-        text: '"Carefully keep the following tickets and enjoy your event!".',
-        attachments: [
-          {
-            filename: 'tickets.pdf',
-            path: pdfPath,
-            contentType: 'application/pdf'
-          }
-        ]
-      };
+        const mailOptions = {
+          from: '"RadioTicket" <radioticket@gmail.com>',
+          to,
+          subject: 'Here are your tickets',
+          text: '"Carefully keep the following tickets and enjoy your event!".',
+          attachments: [
+            {
+              filename: 'tickets.pdf',
+              path: pdfPath,
+              contentType: 'application/pdf',
+            },
+          ],
+        };
 
-      // Enviar correo con los tickets adjuntos
-      await this.sendMail(mailOptions);
+        // Enviar correo con los tickets adjuntos
+        await this.sendMail(mailOptions);
 
-      // Limpiar directorio de códigos QR y archivo PDF después de enviar el correo
-      fs.rmdirSync(qrCodeDir, { recursive: true });
-      fs.unlinkSync(pdfPath);
-    }.bind(this));
+        // Limpiar directorio de códigos QR y archivo PDF después de enviar el correo
+        fs.rmdirSync(qrCodeDir, { recursive: true });
+        fs.unlinkSync(pdfPath);
+      }.bind(this),
+    );
   }
 
   // Función para enviar correo
@@ -197,5 +252,3 @@ export class EmailService {
 }
 
 // Uso: sendTickets('destinatario@example.com', tickets);
-
-

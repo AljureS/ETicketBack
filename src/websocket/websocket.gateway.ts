@@ -6,17 +6,25 @@ interface ClientData {
     id: string;
 }
 
+interface UserAssignment { // estructura del ususario con el asesor asignado
+    userId: string;
+    supportId: string;
+}
+
 @WebSocketGateway({namespace: 'chat'})
 export class WebsocketGateway 
     implements OnGatewayConnection, OnGatewayDisconnect 
 {
     @WebSocketServer()
     server: Server
+
     private clients: ClientData[] = []; // almacena la info de los clientes conectados 
+    private supports: string[] = []; // lista de agentes de soporte
+    private userAssignments: UserAssignment[] = []; // lista de asiganciones 
 
     handleConnection(client: Socket) {
         console.log(`Client connected:  ${client.id}`);
-        
+        client.emit('requestType'); //solicita que se envie el tipo de cliente 
     }
 
     handleDisconnect(client: Socket) {

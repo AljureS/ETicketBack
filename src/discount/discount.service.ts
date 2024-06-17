@@ -1,22 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { DiscountRepository } from './discount.repository';
-import { CreateDiscountDto } from 'src/dtos/discount.dto';
 
 @Injectable()
 export class DiscountService {
-    constructor(
-        private readonly discountRepository: DiscountRepository
-    ) {}
+  constructor(private readonly discountRepository: DiscountRepository) {}
 
-    createDiscount (eventId, discount) {
-        return this.discountRepository.createDiscount(eventId, discount);
-    } 
+  createDiscount(eventId, discount) {
+    return this.discountRepository.createDiscount(eventId, discount);
+  }
 
-    getDiscounts(eventId: string) {
-        return this.discountRepository.getDiscounts(eventId);
-    }
+  getDiscounts(eventId: string) {
+    return this.discountRepository.getDiscounts(eventId);
+  }
 
-    findByCode(code: string) {
-        return this.discountRepository.findByCode(code);
-    }
-} 
+  findByCode(code: string) {
+    return this.discountRepository.findByCode(code);
+  }
+}

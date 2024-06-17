@@ -8,7 +8,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginUserDto } from 'src/dtos/login.dto';
-import { createUserDto } from 'src/dtos/user.dto';
 import { User } from 'src/entities/user.entity';
 import { UserRepository } from 'src/user/user.repository';
 import { Repository } from 'typeorm';
@@ -21,7 +20,7 @@ import * as jwt from 'jsonwebtoken';
 dotenvConfig({ path: '.env.development' });
 @Injectable()
 export class AuthService {
-  constructor( 
+  constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
@@ -31,7 +30,6 @@ export class AuthService {
   ) {}
 
   async refreshtoken(email, token) {
-
     // Verificar y desestructurar el token
     let decoded;
     try {
@@ -42,7 +40,9 @@ export class AuthService {
 
     // Verificar que el email en el payload del token sea el mismo que se pasa por body
     if (decoded.email !== email) {
-      throw new UnauthorizedException('Email in token does not match the provided email');
+      throw new UnauthorizedException(
+        'Email in token does not match the provided email',
+      );
     }
 
     const user = await this.userRepository.getUserByEmail(email);
@@ -52,8 +52,7 @@ export class AuthService {
 
     const { password, ...payload } = user;
 
-    
-    const newToken = await this.jwtService.sign(payload, { expiresIn: '1h' } );
+    const newToken = await this.jwtService.sign(payload, { expiresIn: '1h' });
     return {
       message: 'refreshed token for user',
       newToken,
@@ -62,23 +61,26 @@ export class AuthService {
 
   async getAuth0UserDetails(token: string) {
     try {
-        const response = await axios.get(`https://${process.env.AUTH0_BASE_URL}/userinfo`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+      const response = await axios.get(
+        `https://${process.env.AUTH0_BASE_URL}/userinfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-        // Desestructuración de la información del token
-        const { given_name: name, family_name: lastName, email } = response.data;
-        return { name, lastName, email };
+      // Desestructuración de la información del token
+      const { given_name: name, family_name: lastName, email } = response.data;
+      return { name, lastName, email };
     } catch (error) {
-        throw new BadRequestException('Invalid token');
+      throw new BadRequestException('Invalid token');
     }
-}
+  }
 
-  async Auth0 (userDetail: any) {
+  async Auth0(userDetail: any) {
     console.log(userDetail);
-    
+
     const { email } = userDetail;
     const user = await this.userRepository.getUserByEmail(email);
 
@@ -94,10 +96,10 @@ export class AuthService {
     const numero = Math.floor(100000000 + Math.random() * 900000000);
     const hash = await bcrypt.hash(numero.toString(), 10);
     const userCreated = await this.usersRepository.create({
-      name:userDetail.name,
-      lastName:userDetail.lastName,
-      email:userDetail.email,
-      phone: '', 
+      name: userDetail.name,
+      lastName: userDetail.lastName,
+      email: userDetail.email,
+      phone: '',
       isEmailConfirmed: true, //=> Por defecto el email es confirmado
       password: hash,
     });
@@ -109,21 +111,38 @@ export class AuthService {
 
     const confirmationToken = await this.generateConfirmationToken(userDetail);
 
-    await this.confirmEmail(
-      confirmationToken,
-    );
-      console.log(savedUser);
-      
-      const { password, ...payload } = userCreated;
+    await this.confirmEmail(confirmationToken);
+    console.log(savedUser);
+
+    const { password, ...payload } = userCreated;
 
     const token = await this.jwtService.sign(payload);
-    //Retornar mensaje de ingreso y token 
+    //Retornar mensaje de ingreso y token
     return {
       message: 'Auth 0 User created successfully',
       token,
-      savedUser
+      savedUser,
     };
+  }
 
+  async forgotPassword (email) {
+    const userEmail = await this.userRepository.getUserByEmail(email);
+
+    if (!userEmail) {
+      throw new NotFoundException('User with that email is not registred');
+    }
+
+    const token = this.jwtService.sign({ email }, { secret: process.env.JWT_SECRET, expiresIn: '1h' });
+
+    const resetUrl = `${process.env.FRONT_URL}/reset-password?token=${token}`;
+    await this.emailService.sendResetPasswordEmail(email, resetUrl);
+
+    return { message: 'Password reset email sent' };
+
+  }
+
+  async resetPassword(token, newPassword) {
+    
   }
 
   async signUp(user: any) {
@@ -152,7 +171,7 @@ export class AuthService {
       user.email,
       confirmationToken,
     );
-    return userCreated; 
+    return userCreated;
   }
   async confirmEmail(token: string) {
     // Lógica para verificar el token y confirmar el usuario
@@ -169,10 +188,10 @@ export class AuthService {
     const user = await this.jwtService.verify(token, { secret });
     return await this.usersRepository.findOne({ where: { email: user.email } });
   }
-  private async generateConfirmationToken(user:User) {
+  private async generateConfirmationToken(user: User) {
     // Implementa tu lógica para generar un token de confirmación
     const payload = {
-      ...user
+      ...user,
     };
     const token = await this.jwtService.sign(payload);
     return token;
@@ -180,13 +199,16 @@ export class AuthService {
 
   async logIn(credentials: LoginUserDto) {
     const { email } = credentials;
-    const passwordDeParametro = credentials.password
+    const passwordDeParametro = credentials.password;
     const user = await this.userRepository.getUserByEmail(email);
     if (!user) {
       throw new BadRequestException('Invalid credentials');
     }
     // Comparacion de passwords
-    const validPassword = await bcrypt.compare(passwordDeParametro, user.password);
+    const validPassword = await bcrypt.compare(
+      passwordDeParametro,
+      user.password,
+    );
     if (!validPassword) {
       throw new BadRequestException('Invalid credentials');
     }
