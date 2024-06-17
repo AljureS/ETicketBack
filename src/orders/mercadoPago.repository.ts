@@ -63,6 +63,9 @@ export class PaymentsRepository {
           };
         }),
       );
+      console.log(order.userId);
+      console.log(items);
+console.log(order);
 
       const orderIntermedia = this.tablaIntermediaOrderRepository.create({
         paymentMethod: order.paymentMethod,
