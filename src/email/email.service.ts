@@ -86,6 +86,60 @@ export class EmailService {
     });
   }
 
+  async sendResetPasswordEmail(to: string, resetUrl: string) {
+    await this.transporter.sendMail({
+      from: '"RadioTicket" <radioticket@gmail.com>',
+      to,
+      subject: 'Restablecimiento de contraseña',
+      text: `Haga clic en el siguiente enlace para restablecer su contraseña: ${resetUrl}`,
+      html: `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+              }
+              .container {
+                  padding: 20px;
+                  text-align: center;
+                  background-color: #f4f4f4;
+                  border-radius: 10px;
+                  max-width: 600px;
+                  margin: auto;
+              }
+              .header {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 10px 0;
+                  border-radius: 10px 10px 0 0;
+              }
+              .button {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 15px 25px;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  margin-top: 20px;
+                  display: inline-block;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>Restablecimiento de contraseña</h1>
+              </div>
+              <p>Haga clic en el siguiente enlace para restablecer su contraseña:</p>
+              <a href="${resetUrl}" class="button">Restablecer contraseña</a>
+              <p>Si no solicitó un restablecimiento de contraseña, por favor ignore este correo.</p>
+          </div>
+      </body>
+      </html>`,
+    });
+  }
+
   async sendTickets(to: string, tickets: any[]) {
     const qrCodeDir = './qrcodes';
     if (!fs.existsSync(qrCodeDir)) {

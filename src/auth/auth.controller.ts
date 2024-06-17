@@ -49,10 +49,18 @@ export class AuthController {
     });
   }
 
-  // @Post('signup/auth0')
-  // redirectToAuth0Signup(@Res() res: Response) {
-  //     res.redirect('https://YOUR_AUTH0_DOMAIN/authorize?response_type=code&client_id=YOUR_AUTH0_CLIENT_ID&redirect_uri=http://localhost:3001/auth/callback&screen_hint=signup');
-  // }
+  @Post('forgotPassword')
+  forgotPassword(@Body('email') email: any) {
+    return this.authService.forgotPassword(email);
+  }
+
+  @Post('resetPassword')
+  resetPassword(
+    @Query('token') token: string, 
+    @Body('newPassword') newPassword: string
+  ) {
+    return this.authService.resetPassword(token, newPassword);
+  }
 
   @UseInterceptors(EmailInterceptor)
   @Post('signup')

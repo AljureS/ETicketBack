@@ -125,6 +125,26 @@ export class AuthService {
     };
   }
 
+  async forgotPassword (email) {
+    const userEmail = await this.userRepository.getUserByEmail(email);
+
+    if (!userEmail) {
+      throw new NotFoundException('User with that email is not registred');
+    }
+
+    const token = this.jwtService.sign({ email }, { secret: process.env.JWT_SECRET, expiresIn: '1h' });
+
+    const resetUrl = `${process.env.FRONT_URL}/reset-password?token=${token}`;
+    await this.emailService.sendResetPasswordEmail(email, resetUrl);
+
+    return { message: 'Password reset email sent' };
+
+  }
+
+  async resetPassword(token, newPassword) {
+    
+  }
+
   async signUp(user: any) {
     const { email, password } = user;
     // Verificar si el email esta registrado
