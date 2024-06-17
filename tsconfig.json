@@ -19,6 +19,6 @@
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true, // Que en este proyecto se van a usar archivos json
     "typeRoots": ["./node_modules/@types"],
-    "types": ["multer"] // Que en este proyecto se van a usar tipos de multer 
+    "types": ["multer", "jest"] // Que en este proyecto se van a usar tipos de multer 
   }
 }
