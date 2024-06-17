@@ -249,6 +249,116 @@ export class EmailService {
     // Enviar correo
     await this.transporter.sendMail(mailOptions);
   }
+
+  async sendNewEventEmail(to: string, event: any) {
+    const { name, description, date, address } = event;
+    await this.transporter.sendMail({
+      from: '"RadioTicket" <radioticket@gmail.com>',
+      to,
+      subject: 'Nuevo evento creado: ' + name,
+      html: `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+              }
+              .container {
+                  padding: 20px;
+                  text-align: center;
+                  background-color: #f4f4f4;
+                  border-radius: 10px;
+                  max-width: 600px;
+                  margin: auto;
+              }
+              .header {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 10px 0;
+                  border-radius: 10px 10px 0 0;
+              }
+              .button {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 15px 25px;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  margin-top: 20px;
+                  display: inline-block;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>Nuevo evento creado: ${name}</h1>
+              </div>
+              <p>${description}</p>
+              <p><strong>Fecha:</strong> ${date}</p>
+              <p><strong>Dirección:</strong> ${address}</p>
+              <p>¡No te lo pierdas!</p>
+          </div>
+      </body>
+      </html>`,
+    });
+  }
+
+  async sendNewDiscountEmail(to: string, eventName: string, discountCode: string) {
+    await this.transporter.sendMail({
+      from: '"RadioTicket" <radioticket@gmail.com>',
+      to,
+      subject: '¡Nuevo descuento disponible!',
+      html: `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+              }
+              .container {
+                  padding: 20px;
+                  text-align: center;
+                  background-color: #f4f4f4;
+                  border-radius: 10px;
+                  max-width: 600px;
+                  margin: auto;
+              }
+              .header {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 10px 0;
+                  border-radius: 10px 10px 0 0;
+              }
+              .button {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 15px 25px;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  margin-top: 20px;
+                  display: inline-block;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>¡Nuevo descuento disponible para ${eventName}!</h1>
+              </div>
+              <p>Hemos creado un nuevo descuento para el evento ${eventName}.</p>
+              <p>Usa el siguiente código para obtener tu descuento: <strong>${discountCode}</strong></p>
+              <p>¡No te lo pierdas!</p>
+          </div>
+      </body>
+      </html>`,
+    });
+  }
+  
+
+
 }
 
-// Uso: sendTickets('destinatario@example.com', tickets);
