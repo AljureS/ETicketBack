@@ -12,6 +12,8 @@ import { Ticket } from 'src/entities/ticket.entity';
 import { ModifyEventDto } from 'src/dtos/modifyEvent.dto';
 import * as data from '../utils/data.json';
 import { Status } from './events.enum';
+import { User } from 'src/entities/user.entity';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class EventsRepository {
@@ -22,6 +24,10 @@ export class EventsRepository {
     private categoryRepository: Repository<Category>,
     @InjectRepository(Ticket)
     private ticketRepository: Repository<Ticket>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    private readonly emailService: EmailService,
+
   ) {}
 
   private updateEventStatus(event: Event) {
@@ -285,14 +291,11 @@ export class EventsRepository {
     const existeElEvento = await this.eventsRepository.findOne({
       where: { name: event.name },
     });
-    console.log(existeElEvento);
 
     if (existeElEvento)
       throw new BadRequestException('Ya existe un Evento con ese nombre');
     if (!categorySearched) {
-      throw new NotFoundException(
-        'No existe esa categoria en la base de datos',
-      );
+      throw new NotFoundException('No existe esa categoria en la base de datos');
     }
 
     const eventSinTickets = this.eventsRepository.create({
@@ -308,7 +311,6 @@ export class EventsRepository {
       address: event.address,
       launchdate: event.launchdate,
     });
-    console.log('llegue aqui');
 
     for (const ticket of event.tickets) {
       const newTicket = this.ticketRepository.create({
@@ -316,14 +318,20 @@ export class EventsRepository {
         price: ticket.price,
         zone: ticket.zone,
       });
-      console.log('Estoy en el for de tickets');
 
       const tickerGuardadoEnDB = await this.ticketRepository.save(newTicket);
-
       eventSinTickets.tickets.push(tickerGuardadoEnDB);
     }
 
-    return await this.eventsRepository.save(eventSinTickets);
+    const savedEvent = await this.eventsRepository.save(eventSinTickets);
+
+    // Obtener todos los usuarios y enviarles un correo
+    const users = await this.userRepository.find({where:{isPremium:true}});
+    for (const user of users) {
+      await this.emailService.sendNewEventEmail(user.email, savedEvent);
+    }
+
+    return savedEvent;
   }
 
   async modifyEvent(id: string, event: ModifyEventDto, email: string) {
