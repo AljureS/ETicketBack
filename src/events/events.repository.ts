@@ -11,6 +11,7 @@ import { PostEventDto } from 'src/dtos/postEvent.dto';
 import { Ticket } from 'src/entities/ticket.entity';
 import { ModifyEventDto } from 'src/dtos/modifyEvent.dto';
 import * as data from '../utils/data.json';
+import { Status } from './events.enum';
 
 @Injectable()
 export class EventsRepository {
@@ -23,32 +24,71 @@ export class EventsRepository {
     private ticketRepository: Repository<Ticket>,
   ) {}
 
+  private updateEventStatus(event: Event) {
+    const dateNow = new Date();
+    dateNow.setUTCHours(0, 0, 0, 0); // Establecer horas, minutos, segundos y milisegundos a 0 en UTC
+  
+    const launchDate = new Date(event.launchdate);
+    launchDate.setUTCHours(0, 0, 0, 0); // Establecer horas, minutos, segundos y milisegundos a 0 en UTC
+  
+    const oneDayBeforeLaunch = new Date(launchDate);
+    oneDayBeforeLaunch.setDate(launchDate.getDate() - 1);
+    oneDayBeforeLaunch.setUTCHours(0, 0, 0, 0); // Establecer horas, minutos, segundos y milisegundos a 0 en UTC
+  
+    console.log(dateNow, launchDate, oneDayBeforeLaunch);
+  
+    if (launchDate.getTime() > dateNow.getTime()) {
+      event.status = Status.NOT_AVAILABLE;
+    } else if (launchDate.getTime() <= dateNow.getTime()) {
+      event.status = Status.AVAILABLE;
+    }
+
+    if (oneDayBeforeLaunch.getTime() === dateNow.getTime()) {
+      event.status = Status.AVAILABLE_PREMIUM;
+    }
+    return event;
+}
+
+  
+  
+  
+  
   async getAllEvents() {
-    return await this.eventsRepository.find({
+    const events = await this.eventsRepository.find({
       relations: ['category', 'tickets'],
     });
+    return events.map(event => {
+      return this.updateEventStatus(event);
+    });
   }
+  
+  
+  
 
   async getEvents(page: number, limit: number, category?: string) {
     const startIndex = (page - 1) * limit;
-
+  
     let whereClause = {};
     if (category !== undefined) {
       whereClause = { category: { name: category.toUpperCase() } };
     }
-
+  
     const [events, total] = await this.eventsRepository.findAndCount({
       relations: ['category', 'tickets'],
       where: whereClause,
       skip: startIndex,
       take: limit,
     });
-
+  
+  
     return {
-      events,
+      events: events.map(event => {
+        return this.updateEventStatus(event)
+      }),
       total,
     };
   }
+  
 
   async getEventsByDate(
     page: number,
@@ -57,13 +97,13 @@ export class EventsRepository {
     order?: 'ascending' | 'descending',
   ) {
     const startIndex = (page - 1) * limit;
-
+  
     // Construcción del whereClause
     let whereClause = {};
     if (category !== undefined) {
       whereClause = { category: { name: category.toUpperCase() } };
     }
-
+  
     // Determinar el orden de la fecha
     let orderDirection: 'ASC' | 'DESC' = 'DESC'; // Valor por defecto
     if (order === 'ascending') {
@@ -71,7 +111,7 @@ export class EventsRepository {
     } else if (order === 'descending') {
       orderDirection = 'DESC';
     }
-
+  
     // Construcción del queryBuilder con las condiciones y ordenamiento
     const queryBuilder = this.eventsRepository
       .createQueryBuilder('event')
@@ -81,25 +121,32 @@ export class EventsRepository {
       .orderBy('event.date', orderDirection)
       .skip(startIndex)
       .take(limit);
-
+  
     const [events, total] = await queryBuilder.getManyAndCount();
-
+  
+  
     return {
-      events,
+      events: events.map(event => {
+        return this.updateEventStatus(event)
+      }),
       total,
     };
   }
+  
 
   async getEvent(id: string): Promise<Event> {
     const event = await this.eventsRepository.findOne({
       where: { id },
       relations: ['category', 'tickets'],
     });
+  
     if (!event) {
       throw new NotFoundException(`Evento con ID ${id} no encontrado`);
     }
-    return event;
+  
+    return this.updateEventStatus(event);
   }
+  
 
   async getEventsAZ(
     order: 'ascending' | 'descending',
@@ -109,13 +156,13 @@ export class EventsRepository {
   ): Promise<{ events: Event[]; total: number }> {
     const orderDirection = order === 'ascending' ? 'ASC' : 'DESC';
     const startIndex = (page - 1) * limit;
-
+  
     // Construcción del whereClause
     let whereClause = {};
     if (category !== undefined) {
       whereClause = { category: { name: category.toUpperCase() } };
     }
-
+  
     const queryBuilder = this.eventsRepository
       .createQueryBuilder('event')
       .leftJoinAndSelect('event.tickets', 'ticket')
@@ -124,14 +171,18 @@ export class EventsRepository {
       .orderBy('event.name', orderDirection)
       .skip(startIndex)
       .take(limit);
-
+  
     const [events, total] = await queryBuilder.getManyAndCount();
-
+  
+  
     return {
-      events,
+      events: events.map(event => {
+        return this.updateEventStatus(event)
+      }),
       total,
     };
   }
+  
 
   //ESTA ESTARIA EN DES USO
   async getEventsByCategory(page: string, limit: string, category: string) {
@@ -141,9 +192,13 @@ export class EventsRepository {
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
     });
-
-    return { data, count };
+  
+  
+    return { events: data.map(event => {
+      return this.updateEventStatus(event)
+    }), count };
   }
+  
   async getEventsByPrice(
     order: 'ascending' | 'descending',
     page: number,
@@ -152,20 +207,20 @@ export class EventsRepository {
   ): Promise<Event[]> {
     const orderDirection = order === 'ascending' ? 'ASC' : 'DESC';
     const startIndex = (page - 1) * limit;
-
+  
     let categoryFilter = {}; // Objeto vacío para filtrar todas las categorías si no se proporciona una
-
+  
     if (category) {
       // Si se proporciona una categoría, filtrar por ella
       const categoryEntity = await this.categoryRepository.findOne({
         where: { name: category.toUpperCase() },
       });
-
+  
       if (!categoryEntity) {
         throw new NotFoundException(`Categoría ${category} no encontrada`);
       } else categoryFilter = { category: categoryEntity.id };
     }
-
+  
     // Subconsulta para obtener los IDs de los eventos ordenados por el precio mínimo
     const subQuery = this.eventsRepository
       .createQueryBuilder('event')
@@ -177,11 +232,11 @@ export class EventsRepository {
       .orderBy('"minPrice"', orderDirection)
       .skip(startIndex)
       .take(limit);
-
+  
     // Ejecutar la subconsulta y obtener los resultados crudos
     const rawResults = await subQuery.getRawMany();
     const eventIds = rawResults.map((result) => result.event_id);
-
+  
     // Obtener los eventos completos usando los IDs de la subconsulta
     const events = await this.eventsRepository
       .createQueryBuilder('event')
@@ -192,23 +247,36 @@ export class EventsRepository {
         `CASE event.id ${eventIds.map((id, index) => `WHEN '${id}' THEN ${index}`).join(' ')} END`,
       )
       .getMany();
-
-    return events;
+  
+    return events.map(event => {
+      return this.updateEventStatus(event)
+    });
   }
+  
   async getEventOfUser(email: string) {
-    return await this.eventsRepository.find({
+    const events = await this.eventsRepository.find({
       where: { userEmail: email },
       relations: { tickets: true, category: true },
     });
+  
+    return events.map(event => {
+      return this.updateEventStatus(event)
+    });
   }
+  
 
   async buscar(keyword: string): Promise<Event[]> {
-    return await this.eventsRepository
+    const events = await this.eventsRepository
       .createQueryBuilder('event')
       .leftJoinAndSelect('event.tickets', 'tickets')
       .where('event.name ILIKE :keyword', { keyword: `%${keyword}%` })
       .getMany();
+  
+    return events.map(event => {
+      return this.updateEventStatus(event)
+    });
   }
+  
   async postEvent(event: PostEventDto, email: string) {
     const { category } = event;
     const categorySearched = await this.categoryRepository.findOne({
