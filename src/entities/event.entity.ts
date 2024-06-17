@@ -50,6 +50,9 @@ export class Event {
   @Column({ nullable: false, type: 'date' })
   launchdate: Date;
 
+  @Column({default:"not available"})
+  status: "Available" | "not available" | "available for premium"
+
   @Column({ nullable: true })
   userEmail?: string;
 
