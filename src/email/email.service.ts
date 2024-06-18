@@ -90,8 +90,8 @@ export class EmailService {
     await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
       to,
-      subject: 'Restablecimiento de contraseña',
-      text: `Haga clic en el siguiente enlace para restablecer su contraseña: ${resetUrl}`,
+      subject: 'Forgot Password??',
+      text: `Clic in the next link to reset your password: ${resetUrl}`,
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -129,11 +129,11 @@ export class EmailService {
       <body>
           <div class="container">
               <div class="header">
-                  <h1>Restablecimiento de contraseña</h1>
+                  <h1>Password Reset</h1>
               </div>
-              <p>Haga clic en el siguiente enlace para restablecer su contraseña:</p>
-              <a href="${resetUrl}" class="button">Restablecer contraseña</a>
-              <p>Si no solicitó un restablecimiento de contraseña, por favor ignore este correo.</p>
+              <p>Click in the next link to reset your password:</p>
+              <a href="${resetUrl}" class="button">Change Password</a>
+              <p>If you did not request a password reset, please ignore this email.</p>
           </div>
       </body>
       </html>`,
