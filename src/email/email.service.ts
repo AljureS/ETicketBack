@@ -4,12 +4,16 @@ import * as QRCode from 'qrcode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as pdf from 'html-pdf';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class EmailService {
   private transporter;
 
-  constructor() {
+  constructor(
+    private readonly jwtService: JwtService,
+
+  ) {
     this.transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -26,7 +30,9 @@ export class EmailService {
 
   async sendConfirmationEmail(to: string, token: string) {
     const url = `${process.env.BACK_URL}/auth/confirm?token=${token}`;
-
+    const decoded = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
+    const name = decoded.name
+    const lastName = decoded.lastName
     await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
       to,
@@ -75,7 +81,7 @@ export class EmailService {
               <div class="header">
                   <h1>Welcome to Radioticket</h1>
               </div>
-              <p>Hi, {{token}}!</p>
+              <p>Hello, ${name} ${lastName}!</p>
               <p>Thanks for signing up. We are happy to have you here.</p>
               <a href="${url}" class="button">Verify Email</a>
               <p>If you have any questions, please don't hesitate to contact us.</p>
@@ -90,8 +96,8 @@ export class EmailService {
     await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
       to,
-      subject: 'Restablecimiento de contraseña',
-      text: `Haga clic en el siguiente enlace para restablecer su contraseña: ${resetUrl}`,
+      subject: 'Forgot Password??',
+      text: `Clic in the next link to reset your password: ${resetUrl}`,
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -129,11 +135,11 @@ export class EmailService {
       <body>
           <div class="container">
               <div class="header">
-                  <h1>Restablecimiento de contraseña</h1>
+                  <h1>Password Reset</h1>
               </div>
-              <p>Haga clic en el siguiente enlace para restablecer su contraseña:</p>
-              <a href="${resetUrl}" class="button">Restablecer contraseña</a>
-              <p>Si no solicitó un restablecimiento de contraseña, por favor ignore este correo.</p>
+              <p>Click in the next link to reset your password:</p>
+              <a href="${resetUrl}" class="button">Change Password</a>
+              <p>If you did not request a password reset, please ignore this email.</p>
           </div>
       </body>
       </html>`,
