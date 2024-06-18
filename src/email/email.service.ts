@@ -4,12 +4,16 @@ import * as QRCode from 'qrcode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as pdf from 'html-pdf';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class EmailService {
   private transporter;
 
-  constructor() {
+  constructor(
+    private readonly jwtService: JwtService,
+
+  ) {
     this.transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -26,7 +30,9 @@ export class EmailService {
 
   async sendConfirmationEmail(to: string, token: string) {
     const url = `${process.env.BACK_URL}/auth/confirm?token=${token}`;
-
+    const decoded = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
+    const name = decoded.name
+    const lastName = decoded.lastName
     await this.transporter.sendMail({
       from: '"RadioTicket" <radioticket@gmail.com>',
       to,
@@ -75,7 +81,7 @@ export class EmailService {
               <div class="header">
                   <h1>Welcome to Radioticket</h1>
               </div>
-              <p>Hi, {{token}}!</p>
+              <p>Hello, ${name} ${lastName}!</p>
               <p>Thanks for signing up. We are happy to have you here.</p>
               <a href="${url}" class="button">Verify Email</a>
               <p>If you have any questions, please don't hesitate to contact us.</p>
