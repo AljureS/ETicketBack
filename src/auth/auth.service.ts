@@ -142,7 +142,24 @@ export class AuthService {
   }
 
   async resetPassword(token, newPassword) {
-    
+    let email: string;
+    try {
+      const decoded = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
+      email = decoded.email;
+    } catch (error) {
+      throw new BadRequestException('Invalid or expired token');
+    }
+
+    const user = await this.userRepository.getUserByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await this.usersRepository.save(user);
+
+    return { message: 'Password updated successfully' };
   }
 
   async signUp(user: any) {

@@ -54,7 +54,7 @@ export class AuthController {
     return this.authService.forgotPassword(email);
   }
 
-  @Post('resetPassword')
+  @Post('NewPassword')
   resetPassword(
     @Query('token') token: string, 
     @Body('newPassword') newPassword: string
