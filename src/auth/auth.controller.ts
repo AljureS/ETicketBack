@@ -80,9 +80,9 @@ export class AuthController {
     return this.authService.updateRole(id);
   }
   @Get('confirm')
-  async confirm(@Query('token') token: string) {
+  async confirm(@Query('token') token: string, @Res()res:Response) {
     await this.authService.confirmEmail(token);
-    return 'Cuenta registrada, ya puede ingresar a radioticket con su cuenta oficial';
+    return res.redirect(`${process.env.FRONT_URL}/login`);
   }
 
   @Get('callback')

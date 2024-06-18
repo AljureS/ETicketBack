@@ -33,6 +33,8 @@ export class OrdersController {
     @Req() req: Request & { user: User },
   ) {
     order.userId = req.user.id;
+    console.log(order.userId);
+    
     return this.orderService.addOrder(order);
   }
   @ApiBearerAuth()

@@ -218,7 +218,7 @@ export class PaypalRepository {
           total_cycles: 12,
           pricing_scheme: {
             fixed_price: {
-              value: '3', // PRECIO MENSUAL QUE COBRAS 3.30USD
+              value: '2.71', // PRECIO MENSUAL QUE COBRAS 3.30USD
               currency_code: 'USD',
             },
           },
@@ -227,7 +227,7 @@ export class PaypalRepository {
       payment_preferences: {
         auto_bill_outstanding: true,
         setup_fee: {
-          value: '10',
+          value: '2.71',
           currency_code: 'USD',
         },
         setup_fee_failure_action: 'CONTINUE',
