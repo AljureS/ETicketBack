@@ -94,7 +94,7 @@ console.log(order);
       const preferenceData = {
         items,
         back_urls: {
-          success: `${process.env.FRONT_URL}/`,
+          success: `${process.env.FRONT_URL}/?success=true`,
         },
 
         notification_url: `${process.env.BACK_URL}/orders/notificar?order=${ordenIntermediaGuardada.id}`,
