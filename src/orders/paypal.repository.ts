@@ -336,7 +336,7 @@ export class PaypalRepository {
       console.log('estoy en executeSubscription');
 
       // Actualiza el estado del usuario a premium en tu base de datos
-      await this.userRepository.update(req.user.id, { isPremium: true });
+      // await this.userRepository.update(req.user.id, { isPremium: true });
 
       return { message: 'Suscripción completada con éxito', subscriptionId };
     } catch (error) {
