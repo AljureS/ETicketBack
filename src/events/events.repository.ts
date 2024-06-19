@@ -35,6 +35,7 @@ export class EventsRepository {
     dateNow.setUTCHours(0, 0, 0, 0); // Establecer horas, minutos, segundos y milisegundos a 0 en UTC
   
     const launchDate = new Date(event.launchdate);
+    launchDate.setDate(launchDate.getDate() - 1);
     launchDate.setUTCHours(0, 0, 0, 0); // Establecer horas, minutos, segundos y milisegundos a 0 en UTC
   
     const oneDayBeforeLaunch = new Date(launchDate);
