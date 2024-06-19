@@ -203,8 +203,7 @@ export class EmailService {
           <div class="ticket-info">
               <p><strong>Event:</strong> ${ticket.event.name}</p>
               <p><strong>Date:</strong> ${ticket.event.date}</p>
-              <p><strong>Latitude:</strong> ${ticket.event.latitude}</p>
-              <p><strong>Longitude:</strong> ${ticket.event.longitude}</p>
+              <p><strong>Address:</strong> ${ticket.event.address}</p>
               <p><strong>ID del Ticket:</strong> ${ticket.id}</p>
               <p><strong>Ticket Type:</strong> ${ticket.zone}</p>
           </div>
