@@ -33,7 +33,7 @@ Welcome to the repository of our Music Events Platform, built with the powerful 
 ## Acknowledgments
 
 A big thanks the amazing group who made this possible:
-- Said Aljure [Linkedin](www.linkedin.com/in/webdeveloper-saljure)
+- Said Aljure [Linkedin](https://www.linkedin.com/in/webdeveloper-saljure)
 - Agustin Alexis Cruz [Linkedin](https://www.linkedin.com/in/agustin-alexis-cruz/)
 - Lucas Ocaña [Linkedin](https://www.linkedin.com/in/lucas-oca%C3%B1a/)
 
