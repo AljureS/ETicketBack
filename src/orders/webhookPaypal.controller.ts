@@ -25,14 +25,14 @@ export class WebhookController {
         //   );
 
         //   break;
-        // case 'BILLING.SUBSCRIPTION.ACTIVATED':
-        //   // Lógica para manejar la creación de una suscripción
-        //   await this.userRepository.update(
-        //     { email: event.resource.subscriber.email_address },
-        //     { isPremium: true },
-        //   );
+        case 'BILLING.SUBSCRIPTION.ACTIVATED':
+          // Lógica para manejar la creación de una suscripción
+          await this.userRepository.update(
+            { email: event.resource.subscriber.email_address },
+            { isPremium: true },
+          );
 
-        //   break;
+          break;
         // case 'BILLING.SUBSCRIPTION.CANCELLED':
         //   // Lógica para manejar la cancelación de una suscripción
         //   await this.userRepository.update(
